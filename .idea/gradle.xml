@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="CHOOSE_PER_TEST" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="jbr-17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/bridge" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/lyric" />
+            <option value="$PROJECT_DIR$/lyric/bridge" />
+            <option value="$PROJECT_DIR$/lyric/bridge/central" />
+            <option value="$PROJECT_DIR$/lyric/bridge/core" />
+            <option value="$PROJECT_DIR$/lyric/bridge/provider" />
+            <option value="$PROJECT_DIR$/lyric/bridge/subscriber" />
+            <option value="$PROJECT_DIR$/lyric/model" />
+            <option value="$PROJECT_DIR$/lyric/style" />
+            <option value="$PROJECT_DIR$/lyric/view" />
+            <option value="$PROJECT_DIR$/lyricon" />
+            <option value="$PROJECT_DIR$/xposed" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

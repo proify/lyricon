@@ -1,0 +1,12 @@
+-dontwarn android.app.AndroidAppHelper
+-dontwarn android.content.res.XModuleResources
+-dontwarn android.content.res.XResources
+-dontwarn de.robv.android.xposed.IXposedHookLoadPackage
+-dontwarn de.robv.android.xposed.IXposedHookZygoteInit$StartupParam
+-dontwarn de.robv.android.xposed.IXposedHookZygoteInit
+-dontwarn de.robv.android.xposed.XC_MethodHook$Unhook
+-dontwarn de.robv.android.xposed.XC_MethodHook
+-dontwarn de.robv.android.xposed.XposedBridge
+-dontwarn de.robv.android.xposed.callbacks.XC_InitPackageResources$InitPackageResourcesParam
+-dontwarn de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam
+-dontwarn java.lang.reflect.AnnotatedType

@@ -1,0 +1,80 @@
+<resources>
+    <string name="app_name">词幕Next</string>
+    <string name="github_url" translatable="false">https://github.com/lyriconx/lyricon</string>
+    <string name="xposed_description">为状态栏拓展歌词功能🎵</string>
+
+    <string name="def">默认</string>
+    <string name="ok" translatable="false">@android:string/ok</string>
+    <string name="no" translatable="false">@android:string/no</string>
+    <string name="yes" translatable="false">@android:string/yes</string>
+    <string name="copy" translatable="false">@android:string/copy</string>
+    <string name="cancel" translatable="false">@android:string/cancel</string>
+
+    <string name="back">返回</string>
+    <string name="millisecond">毫秒</string>
+    <string name="restart">重启</string>
+    <string name="delete">删除</string>
+    <string name="add">添加</string>
+    <string name="restart_sui">重启系统界面</string>
+    <string name="hint_search">搜索..</string>
+
+    <string name="suffix_sp" translatable="false">sp</string>
+    <string name="suffix_dp" translatable="false">dp</string>
+    <string name="suffix_ms_px" translatable="false">ms/px</string>
+    <string name="suffix_ms" translatable="false">@string/millisecond</string>
+
+    <string name="activity_base_lyric_style">基本样式</string>
+
+    <string name="activity_package_style_manager">@string/package_style_manager</string>
+    <string name="package_style_manager">管理包样式</string>
+    <string name="add_package_style">添加包样式</string>
+
+    <string name="activity_settings">设置</string>
+    <string name="activity_about">关于</string>
+    <string name="activity_anchor">锚点</string>
+    <string name="activity_view_rules">视图控制器</string>
+    <string name="activity_open_source_license">开放源代码许可</string>
+    <string name="activity_lyric_provider">歌词提供者</string>
+
+    <string name="pref_title_base_lyric_style">基本样式</string>
+    <string name="pref_summary_base_lyric_style">设置歌词显示位置、大小、控制状态栏内容可见性等</string>
+
+    <string name="pref_title_package_style_manager">包样式</string>
+    <string name="pref_summary_package_style_manager">配置默认样式或者为不同包配置单独样式</string>
+
+    <string name="pref_title_about">关于</string>
+    <string name="pref_summary_about">软件信息</string>
+
+    <string name="pref_title_settings">设置</string>
+    <string name="pref_summary_settings">管理软件设置</string>
+
+    <string name="pref_title_provider">提供者管理</string>
+    <string name="pref_summary_provider">管理歌词提供者</string>
+
+    <string name="module_status_activated">已激活😋</string>
+    <string name="module_status_not_activated">未激活</string>
+
+    <string name="module_status_summary">v%s</string>
+    <string name="item_build_time">构建时间</string>
+    <string name="item_app_version">版本</string>
+    <string name="item_app_version_summary">%s (%s) %s</string>
+    <string name="item_title_view_on_github">在 Github 上查看</string>
+    <string name="item_title_open_source_license">@string/activity_open_source_license</string>
+
+    <string name="item_title_view_rules">配置视图可见性规则</string>
+    <string name="restart_fail">重启失败</string>
+    <string name="app_restart_fail">请检查是否已授予Root权限</string>
+    <string name="restart_app">重启软件</string>
+    <string name="save">保存</string>
+    <string name="section_other_apps">其它</string>
+    <string name="section_music_apps">相关</string>
+    <string name="search">搜索</string>
+    <string name="restore">还原</string>
+    <string name="default_style">默认样式</string>
+
+    <string name="status_enabled">已启用</string>
+    <string name="status_not_enabled">未启用</string>
+    <string name="confirm">确定</string>
+    <string name="other">其它</string>
+
+</resources>
