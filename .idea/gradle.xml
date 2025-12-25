@@ -11,7 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/app/bridge" />
+            <option value="$PROJECT_DIR$/bridge" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/lyric" />
             <option value="$PROJECT_DIR$/lyric/bridge" />

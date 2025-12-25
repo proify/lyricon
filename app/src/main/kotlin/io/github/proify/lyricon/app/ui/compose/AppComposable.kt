@@ -2,6 +2,7 @@ package io.github.proify.lyricon.app.ui.compose
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,10 +42,15 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @Composable
-fun NavigationBackIcon() {
-    val context = LocalContext.current
+fun NavigationBackIcon(
+    context: Context = LocalContext.current,
+    backEvent: () -> Unit = {
+        if (context is BaseActivity) context.onBackPressedDispatcher.onBackPressed()
+    },
+) {
+
     IconButton(onClick = {
-        if (context is BaseActivity) context.finish()
+        backEvent.invoke()
     }) {
         Icon(
             modifier = Modifier.size(26.dp),
@@ -109,6 +115,10 @@ fun getCurrentTitle(): String? {
 
 @Composable
 fun AppToolBarListContainer(
+    context: Context = LocalContext.current,
+    backEvent: () -> Unit = {
+        if (context is BaseActivity) context.onBackPressedDispatcher.onBackPressed()
+    },
     title: Any? = getCurrentTitle(),
     canBack: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
@@ -129,7 +139,7 @@ fun AppToolBarListContainer(
             topBar = {
                 BlurTopAppBar(
                     hazeState = hazeState,
-                    navigationIcon = { if (canBack) NavigationBackIcon() },
+                    navigationIcon = { if (canBack) NavigationBackIcon(backEvent = backEvent) },
                     title = if (title is Int) stringResource(title) else title.toString(),
                     scrollBehavior = scrollBehavior,
                     actions = actions,
@@ -169,6 +179,10 @@ fun AppToolBarListContainer(
 
 @Composable
 fun AppToolBarContainer(
+    context: Context = LocalContext.current,
+    backEvent: () -> Unit = {
+        if (context is BaseActivity) context.onBackPressedDispatcher.onBackPressed()
+    },
     title: Any? = getCurrentTitle(),
     canBack: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
@@ -186,7 +200,7 @@ fun AppToolBarContainer(
             topBar = {
                 BlurTopAppBar(
                     hazeState = hazeState,
-                    navigationIcon = { if (canBack) NavigationBackIcon() },
+                    navigationIcon = { if (canBack) NavigationBackIcon(backEvent = backEvent) },
                     title = if (title is Int) stringResource(title) else title.toString(),
                     scrollBehavior = scrollBehavior,
                     actions = actions,

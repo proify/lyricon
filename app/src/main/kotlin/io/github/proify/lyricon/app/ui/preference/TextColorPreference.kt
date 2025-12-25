@@ -98,22 +98,37 @@ fun TextColorPreference(
                 .overScrollVertical()
         ) {
             item("colors") {
+
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
                 ) {
                     ColorPickerItem(
-                        label = "正常颜色",
+                        title = stringResource(R.string.item_text_color_normal),
                         initialColor = getColor(textColor.normal),
                         defaultColor = defaultColor
                     ) {
                         textColor.normal = it
                         sharedPreferences.edit { putString(key, textColor.toJson()) }
                     }
-
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                ) {
                     ColorPickerItem(
-                        label = "高亮颜色",
+                        title = stringResource(R.string.item_text_color_background),
+                        initialColor = getColor(textColor.highlight),
+                        defaultColor = defaultColor
+                    ) {
+                        textColor.background = it
+                        sharedPreferences.edit { putString(key, textColor.toJson()) }
+                    }
+                    ColorPickerItem(
+                        title = stringResource(R.string.item_text_color_highlight),
                         initialColor = getColor(textColor.highlight),
                         defaultColor = defaultColor
                     ) {
@@ -146,7 +161,7 @@ fun TextColorPreference(
 
 @Composable
 private fun ColorPickerItem(
-    label: String,
+    title: String,
     initialColor: Color?,
     defaultColor: Color,
     leftAction: @Composable (() -> Unit)? = null,
@@ -156,7 +171,7 @@ private fun ColorPickerItem(
     val mcolor = remember { mutableStateOf(initialColor) }
 
     ColorPaletteDialog(
-        title = label,
+        title = title,
         showBottomSheet = showDialog,
         initialColor = mcolor.value ?: defaultColor,
         onDelect = {
@@ -168,7 +183,7 @@ private fun ColorPickerItem(
         onColorSelected(color.toArgb())
     }
     SuperArrow(
-        title = label,
+        title = title,
         leftAction = leftAction,
         rightActions = {
             mcolor.value?.let {
@@ -242,7 +257,7 @@ private fun ColorPaletteDialog(
                             customHex = it
                             runCatching { selectedColor = Color(toArgb(it)) }
                         },
-                        label = "自定义",
+                        label = stringResource(id = R.string.hint_custom_color),
                         singleLine = true
                     )
                     Spacer(modifier = Modifier.width(10.dp))

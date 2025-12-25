@@ -25,6 +25,7 @@ appcompat = "1.7.1"
 material = "1.13.0"
 roomKtx = "2.8.4"
 androidsvgAar = "1.4"
+jetbrainsKotlinJvm = "2.2.21"
 
 [libraries]
 # AndroidX 相关
@@ -78,3 +79,4 @@ android-library = { id = "com.android.library", version.ref = "android-library" 
 
 # Kotlin Symbol Processing
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }

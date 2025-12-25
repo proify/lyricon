@@ -3,6 +3,7 @@ package io.github.proify.lyricon.app.ui.activity.lyric.tree
 import android.os.Bundle
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.edit
+import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.ui.compose.custom.bonsai.core.node.Node
 import io.github.proify.lyricon.app.util.LyricPrefs
 import io.github.proify.lyricon.common.util.ViewTreeNode
@@ -21,6 +22,8 @@ class AnchorViewTreeActivity : ViewTreeActivity() {
             ?: currentAnchor
 
     }
+
+    override fun getToolBarTitle(): String = getString(R.string.activity_anchor)
 
     override fun onDestroy() {
         super.onDestroy()

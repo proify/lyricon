@@ -13,9 +13,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.ui.compose.custom.bonsai.core.node.Node
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperCheckbox
@@ -33,6 +35,8 @@ class ViewRulesTreeActivity : ViewTreeActivity() {
         val showOptions = mutableStateOf(false)
         val editId = mutableStateOf("")
     }
+
+    override fun getToolBarTitle(): String = getString(R.string.activity_view_rules)
 
     override fun getViewTreeNodeColor(node: ViewTreeNode): Color? {
         val rules = LyricPrefs.getViewVisibilityRule()
@@ -57,11 +61,11 @@ class ViewRulesTreeActivity : ViewTreeActivity() {
     override fun OnScaffoldCreated() {
         super.OnScaffoldCreated()
 
-        val items = listOf(
-            "默认",
-            "总是显示",
-            "总是隐藏",
-            "播放时隐藏"
+        val itemNameRes = listOf(
+            R.string.item_visibility_default,
+            R.string.item_visibility_always_visible,
+            R.string.item_visibility_always_hidden,
+            R.string.item_visibility_hide_when_playing
         )
         val itemValues = listOf(
             VisibilityRule.MODE_NORMAL,
@@ -94,9 +98,9 @@ class ViewRulesTreeActivity : ViewTreeActivity() {
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items.forEachIndexed { index, item ->
+                itemNameRes.forEachIndexed { index, item ->
                     SuperCheckbox(
-                        title = item,
+                        title = stringResource(item),
                         checked = checkedIndex == index,
                         onCheckedChange = {
                             if (checkedIndex == index) {

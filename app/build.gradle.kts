@@ -6,7 +6,10 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     kotlin("plugin.serialization") version "2.1.21"
+    id("io.github.philkes.auto-translation") version "+"
 }
+
+apply(from = "language-generator.gradle")
 
 val versionCode = rootProject.extra["appVersionCode"] as Int
 val versionName = rootProject.extra["appVersionName"] as String
@@ -68,10 +71,28 @@ android {
             version = "3.22.1"
         }
     }
+
+}
+
+autoTranslate {
+    //no use
+    sourceLanguage = "zh-CN"
+    targetLanguages = listOf()
+    excludeLanguages = listOf("zh-CN")
+
+    translateStringsXml {
+        enabled = true
+        resDirectory = project.layout.projectDirectory.dir("src/main/res")
+    }
+
+    provider = libreTranslate {
+        baseUrl = "http://127.0.0.1:5000/"
+    }
+
 }
 
 dependencies {
-    implementation(project(":app:bridge"))
+    implementation(project(":bridge"))
     implementation(project(":common"))
     implementation(project(":lyric:style"))
     // Kotlin 和 AndroidX 库
@@ -108,6 +129,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-layout:1.6.0")
     implementation(libs.androidx.room.ktx)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation(libs.androidx.appcompat)
     // 测试依赖
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

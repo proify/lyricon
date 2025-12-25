@@ -32,6 +32,10 @@
             android:label="@string/activity_about" />
 
         <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/activity_settings" />
+
+        <activity
             android:name=".ui.activity.LicensesActivity"
             android:label="@string/activity_open_source_license" />
 

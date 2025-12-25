@@ -59,7 +59,7 @@ dependencies {
     compileOnly(libs.xposed.api)
     ksp(libs.yukihookapi.ksp.xposed)
 
-    implementation(project(":app:bridge"))
+    implementation(project(":bridge"))
     implementation(project(":common"))
 
     implementation(project(":lyric:view"))

@@ -101,6 +101,8 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
         return getViewTreeNodeColor(node) ?: Color.Transparent
     }
 
+    abstract fun getToolBarTitle(): String
+
     @Composable
     private fun ViewTreeContent(jsonData: String) {
         AppTheme {
@@ -111,7 +113,7 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
                     ViewTreeTopBar(
-                        title = title.toString(),
+                        title = getToolBarTitle(),
                         hazeState = hazeState,
                         scrollBehavior = scrollBehavior
                     )

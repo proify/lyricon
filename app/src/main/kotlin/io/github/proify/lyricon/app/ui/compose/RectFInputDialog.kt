@@ -20,19 +20,6 @@ import io.github.proify.lyricon.common.extensions.formatToString
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.TextButton
 
-/**
- * RectF 输入对话框
- * @param title 对话框标题
- * @param show 控制对话框显示/隐藏的状态
- * @param initialLeft 初始左边距值
- * @param initialTop 初始上边距值
- * @param initialRight 初始右边距值
- * @param initialBottom 初始下边距值
- * @param allowNegative 是否允许负数，默认为 true
- * @param allowDecimal 是否允许小数，默认为 true
- * @param onConfirm 确认回调，返回 left, top, right, bottom 四个值
- * @param onCancel 取消回调
- */
 @Composable
 fun RectFInputDialog(
     title: String? = null,
@@ -47,10 +34,10 @@ fun RectFInputDialog(
     maxValue: Double? = 1000.0,
     minValue: Double? = -1000.0,
     selectAllOnFocus: Boolean = true,
-
-    ) {
+) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
     fun dismiss() {
         keyboardController?.hide()
         if (show.value) show.value = false
@@ -59,11 +46,9 @@ fun RectFInputDialog(
     SuperDialog(
         title = title,
         show = show,
-        onDismissRequest = {
-            dismiss()
-        }
+        onDismissRequest = { dismiss() }
     ) {
-        // 使用字符串状态来处理输入
+
         val leftText = remember { mutableStateOf(initialLeft.toDouble().formatToString()) }
         val topText = remember { mutableStateOf(initialTop.toDouble().formatToString()) }
         val rightText = remember { mutableStateOf(initialRight.toDouble().formatToString()) }
@@ -72,28 +57,25 @@ fun RectFInputDialog(
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 第一行：Left 和 Top
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
+
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 NumberTextField(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     value = leftText.value,
                     onValueChange = { leftText.value = it },
-                    label = "左边距",
+                    label = stringResource(R.string.rectf_left),
                     allowNegative = allowNegative,
                     allowDecimal = allowDecimal,
                     maxValue = maxValue,
                     minValue = minValue,
                     autoSelectOnFocus = selectAllOnFocus
                 )
+
                 NumberTextField(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     value = topText.value,
                     onValueChange = { topText.value = it },
-                    label = "上边距",
+                    label = stringResource(R.string.rectf_top),
                     allowNegative = allowNegative,
                     allowDecimal = allowDecimal,
                     maxValue = maxValue,
@@ -102,28 +84,24 @@ fun RectFInputDialog(
                 )
             }
 
-            // 第二行：Right 和 Bottom
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 NumberTextField(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     value = rightText.value,
                     onValueChange = { rightText.value = it },
-                    label = "右边距",
+                    label = stringResource(R.string.rectf_right),
                     allowNegative = allowNegative,
                     allowDecimal = allowDecimal,
                     maxValue = maxValue,
                     minValue = minValue,
                     autoSelectOnFocus = selectAllOnFocus
                 )
+
                 NumberTextField(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     value = bottomText.value,
                     onValueChange = { bottomText.value = it },
-                    label = "下边距",
+                    label = stringResource(R.string.rectf_bottom),
                     allowNegative = allowNegative,
                     allowDecimal = allowDecimal,
                     maxValue = maxValue,
@@ -133,23 +111,21 @@ fun RectFInputDialog(
             }
         }
 
-        // 按钮行
         Row(
             modifier = Modifier.padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextButton(
-                text = stringResource(id = R.string.cancel),
-                onClick = {
-                    dismiss()
-                },
+                text = stringResource(R.string.cancel),
+                onClick = { dismiss() },
                 modifier = Modifier.weight(1f)
             )
+
             Spacer(Modifier.width(20.dp))
+
             TextButton(
-                text = stringResource(id = R.string.confirm),
+                text = stringResource(R.string.confirm),
                 onClick = {
-                    // 转换为 Float，如果转换失败则使用初始值
                     val left = leftText.value.toFloatOrNull() ?: 0f
                     val top = topText.value.toFloatOrNull() ?: 0f
                     val right = rightText.value.toFloatOrNull() ?: 0f

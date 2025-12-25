@@ -1,0 +1,73 @@
+class GenerateLanguageCodeListTask extends DefaultTask {
+    @Input
+    String packageName = "io.github.proify.lyricon.app"
+    @Input
+    String className = "GeneratedLangs"
+    @InputDirectory
+    File resourceDir = project.file("src/main/res")
+    @OutputDirectory
+    File outputDir = project.file("${project.layout.buildDirectory.get()}/generated/source/lyricon/langs")
+
+    @TaskAction
+    void generate() {
+        // 收集 res/values* 目录
+        def langs = resourceDir.listFiles()
+                .findAll { it.isDirectory() && it.name.startsWith("values") }
+                .collect { dir ->
+                    def name = dir.name
+                    if (name == "values") return "default"
+
+                    // 支持 values-xx 和 values-xx-rYY
+                    def matcher = (name =~ /^values-([a-z]{2})(?:-r([A-Z]{2}))?$/)
+                    if (matcher.find()) {
+                        def lang = matcher.group(1)
+                        def country = matcher.group(2)
+                        return country ? "${lang}-${country}" : lang
+                    }
+
+                    // 支持 BCP47 格式 values-b+zh+Hans
+                    matcher = (name =~ /^values-b\+([a-z]{2,3})(?:\+([A-Za-z0-9]+))?$/)
+                    if (matcher.find()) {
+                        def lang = matcher.group(1)
+                        def region = matcher.group(2)
+                        return region ? "${lang}-${region}" : lang
+                    }
+
+                    return null
+                }
+                .findAll { it != null }
+                .unique()
+                .sort { a, b -> (a == "default" ? -1 : (b == "default" ? 1 : a <=> b)) }
+
+        def targetFile = new File(outputDir, "${packageName.replace('.', '/')}/${className}.kt")
+        targetFile.parentFile.mkdirs()
+        targetFile.text = """package ${packageName}
+
+/** Auto-generated. Do not modify. */
+import java.util.Locale
+
+object ${className} {
+    val LANGUAGES: List<String> = listOf(
+${langs.collect { "        \"$it\"" }.join(",\n")}
+    )
+
+    val LOCALES: Map<String, Locale> = LANGUAGES.associateWith { code ->
+        if (code == "default") Locale.getDefault()
+        else Locale.forLanguageTag(code.replace('-', '-'))
+    }
+}"""
+    }
+}
+
+// 注册任务
+def genTask = tasks.register("generateResLanguages", GenerateLanguageCodeListTask) {
+    outputs.upToDateWhen { false }
+}
+
+// 配置 Android 源集
+android.sourceSets.main.java.srcDir(genTask.map { it.outputDir })
+
+// 确保在编译 Kotlin 前运行
+tasks.matching { it.name.startsWith("compile") && it.name.contains("Kotlin") }.configureEach {
+    dependsOn genTask
+}

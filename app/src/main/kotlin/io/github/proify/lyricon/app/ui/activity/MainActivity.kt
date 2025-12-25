@@ -3,6 +3,7 @@ package io.github.proify.lyricon.app.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -54,6 +55,14 @@ import top.yukonga.miuix.kmp.utils.PressFeedbackType
 
 class MainActivity : BaseActivity() {
 
+    private val languageSettingsLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            recreate()
+        }
+    }
+
     private val model = MyViewModel()
 
     class MyViewModel : ViewModel() {
@@ -73,6 +82,7 @@ class MainActivity : BaseActivity() {
     @Composable
     private fun MainContent() {
         AppToolBarListContainer(
+            title = stringResource(id = R.string.app_name),
             actions = { Actions() },
             scaffoldContent = {
                 RestartFailDialog()
@@ -155,8 +165,8 @@ class MainActivity : BaseActivity() {
                                 )
                             }
                         },
-                        title = stringResource(id = R.string.pref_title_base_lyric_style),
-                        summary = stringResource(id = R.string.pref_summary_base_lyric_style),
+                        title = stringResource(id = R.string.item_base_lyric_style),
+                        summary = stringResource(id = R.string.item_summary_base_lyric_style),
                         onClick = {
                             context.startActivity(
                                 Intent(
@@ -183,8 +193,8 @@ class MainActivity : BaseActivity() {
                                 )
                             }
                         },
-                        title = stringResource(id = R.string.pref_title_package_style_manager),
-                        summary = stringResource(id = R.string.pref_summary_package_style_manager),
+                        title = stringResource(id = R.string.item_package_style_manager),
+                        summary = stringResource(id = R.string.item_summary_package_style_manager),
                         onClick = {
                             context.startActivity(
                                 Intent(
@@ -221,8 +231,8 @@ class MainActivity : BaseActivity() {
                                 )
                             }
                         },
-                        title = stringResource(id = R.string.pref_title_provider),
-                        summary = stringResource(id = R.string.pref_summary_provider),
+                        title = stringResource(id = R.string.item_provider_manager),
+                        summary = stringResource(id = R.string.item_summary_provider_manager),
                         onClick = {
                             startActivity(
                                 Intent(
@@ -257,9 +267,16 @@ class MainActivity : BaseActivity() {
                                 )
                             }
                         },
-                        title = stringResource(id = R.string.pref_title_settings),
-                        summary = stringResource(id = R.string.pref_summary_settings),
-                        onClick = {}
+                        title = stringResource(id = R.string.item_app_settings),
+                        summary = stringResource(id = R.string.item_summary_app_settings),
+                        onClick = {
+                            languageSettingsLauncher.launch(
+                                Intent(
+                                    context,
+                                    SettingsActivity::class.java
+                                )
+                            )
+                        }
                     )
                     SuperArrow(
                         leftAction = {
@@ -277,8 +294,8 @@ class MainActivity : BaseActivity() {
                                 )
                             }
                         },
-                        title = stringResource(id = R.string.pref_title_about),
-                        summary = stringResource(id = R.string.pref_summary_about),
+                        title = stringResource(id = R.string.item_about_app),
+                        summary = stringResource(id = R.string.item_summary_about_app),
                         onClick = {
                             context.startActivity(
                                 Intent(
@@ -297,7 +314,7 @@ class MainActivity : BaseActivity() {
     private fun RestartFailDialog() {
         SuperDialog(
             title = stringResource(id = R.string.restart_fail),
-            summary = stringResource(id = R.string.app_restart_fail),
+            summary = stringResource(id = R.string.message_app_restart_fail),
             show = model.showRestartFailDialog,
             onDismissRequest = { model.showRestartFailDialog.value = false }
         ) {

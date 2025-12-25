@@ -33,14 +33,12 @@ import top.yukonga.miuix.kmp.extra.SuperSpinner
 
 class BasicLyricStyleActivity : BaseLyricActivity() {
 
-    val preferences by lazy { LyricPrefs.basicStylePrefs }
+    private val preferences by lazy { LyricPrefs.basicStylePrefs }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferences.registerOnSharedPreferenceChangeListener(this)
-        setContent {
-            Content()
-        }
+        setContent { Content() }
     }
 
     override fun onDestroy() {
@@ -50,7 +48,10 @@ class BasicLyricStyleActivity : BaseLyricActivity() {
 
     @Composable
     private fun Content() {
-        AppToolBarListContainer(canBack = true) { scope ->
+        AppToolBarListContainer(
+            title = stringResource(R.string.activity_base_lyric_style),
+            canBack = true
+        ) { scope ->
             scope.item {
                 MainContent()
             }
@@ -63,96 +64,135 @@ class BasicLyricStyleActivity : BaseLyricActivity() {
 
         Card(
             modifier = Modifier
-                .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 0.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth(),
         ) {
+
+            /* ---------- Anchor ---------- */
+
             val anchor = rememberStringPreference(
-                preferences, "lyric_style_base_anchor",
+                preferences,
+                "lyric_style_base_anchor",
                 BasicStyle.Defaults.ANCHOR
             )
 
             SuperArrow(
-                title = "锚点",
-                leftAction = { IconActions(painterResource(R.drawable.ic_locationon)) },
+                title = stringResource(R.string.item_base_anchor),
+                leftAction = {
+                    IconActions(painterResource(R.drawable.ic_locationon))
+                },
                 summary = anchor.value,
                 onClick = {
-                    context.startActivity(Intent(context, AnchorViewTreeActivity::class.java))
-                })
+                    context.startActivity(
+                        Intent(context, AnchorViewTreeActivity::class.java)
+                    )
+                }
+            )
+
+            /* ---------- Insertion order ---------- */
 
             val insertionOrder = preferences.getInt(
                 "lyric_style_base_insertion_order",
                 BasicStyle.Defaults.INSERTION_ORDER
             )
-            val insertionOrderSelectedIndex = remember { mutableIntStateOf(0) }
 
-            val insertionOrderOptions = listOf(
-                SpinnerEntry(title = "之前"),
-                SpinnerEntry(title = "之后"),
-            )
-            val insertionOrderOptionKeys = listOf(
+            val selectedIndex = remember { mutableIntStateOf(0) }
+
+            val optionKeys = listOf(
                 BasicStyle.INSERTION_ORDER_BEFORE,
                 BasicStyle.INSERTION_ORDER_AFTER
             )
 
-            insertionOrderOptionKeys.forEachIndexed { index, key ->
+            val options = listOf(
+                SpinnerEntry(title = stringResource(R.string.item_base_insertion_before)),
+                SpinnerEntry(title = stringResource(R.string.item_base_insertion_after)),
+            )
+
+            optionKeys.forEachIndexed { index, key ->
                 if (insertionOrder == key) {
-                    insertionOrderSelectedIndex.intValue = index
+                    selectedIndex.intValue = index
                 }
             }
 
             SuperSpinner(
-                leftAction = { IconActions(painterResource(R.drawable.ic_stack)) },
-                title = "插入顺序",
-                items = insertionOrderOptions,
-                selectedIndex = insertionOrderSelectedIndex.intValue,
+                leftAction = {
+                    IconActions(painterResource(R.drawable.ic_stack))
+                },
+                title = stringResource(R.string.item_base_insertion_order),
+                items = options,
+                selectedIndex = selectedIndex.intValue,
                 onSelectedIndexChange = {
-                    insertionOrderSelectedIndex.intValue = it
+                    selectedIndex.intValue = it
                     preferences.edit {
-                        putInt("lyric_style_base_insertion_order", insertionOrderOptionKeys[it])
+                        putInt(
+                            "lyric_style_base_insertion_order",
+                            optionKeys[it]
+                        )
                     }
                 }
             )
 
+            /* ---------- Size ---------- */
+
             InputPreference(
                 preferences,
                 "lyric_style_base_width",
-                leftAction = { IconActions(painterResource(R.drawable.ic_width_normal)) },
+                leftAction = {
+                    IconActions(painterResource(R.drawable.ic_width_normal))
+                },
                 inputType = InputType.DOUBLE,
                 maxValue = 1000.0,
-                title = "宽度",
+                title = stringResource(R.string.item_base_width),
             )
+
             InputPreference(
                 preferences,
                 "lyric_style_base_width_in_coloros_capsule_mode",
-                leftAction = { IconActions(painterResource(R.drawable.ic_width_normal)) },
+                leftAction = {
+                    IconActions(painterResource(R.drawable.ic_width_normal))
+                },
                 inputType = InputType.DOUBLE,
                 maxValue = 1000.0,
-                title = "宽度（流体云模式下）",
+                title = stringResource(R.string.item_base_width_coloros_capsule),
             )
+
+            /* ---------- Spacing ---------- */
+
             RectInputPreference(
                 preferences,
                 "lyric_style_base_margins",
-                "边距",
-                leftAction = { IconActions(painterResource(R.drawable.ic_margin)) },
+                stringResource(R.string.item_base_margins),
+                leftAction = {
+                    IconActions(painterResource(R.drawable.ic_margin))
+                },
             )
+
             RectInputPreference(
                 preferences,
                 "lyric_style_base_paddings",
-                "内边距",
-                leftAction = { IconActions(painterResource(R.drawable.ic_padding)) },
+                stringResource(R.string.item_base_paddings),
+                leftAction = {
+                    IconActions(painterResource(R.drawable.ic_padding))
+                },
             )
         }
 
+        /* ---------- View rules ---------- */
+
         Card(
             modifier = Modifier
-                .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(16.dp)
                 .fillMaxWidth(),
         ) {
             SuperArrow(
-                leftAction = { IconActions(painterResource(R.drawable.ic_visibility)) },
-                title = stringResource(id = R.string.item_title_view_rules),
+                leftAction = {
+                    IconActions(painterResource(R.drawable.ic_visibility))
+                },
+                title = stringResource(R.string.item_config_view_rules),
                 onClick = {
-                    context.startActivity(Intent(context, ViewRulesTreeActivity::class.java))
+                    context.startActivity(
+                        Intent(context, ViewRulesTreeActivity::class.java)
+                    )
                 }
             )
         }
@@ -163,5 +203,4 @@ class BasicLyricStyleActivity : BaseLyricActivity() {
     private fun ContentPreview() {
         Content()
     }
-
 }

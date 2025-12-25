@@ -3,6 +3,7 @@ package io.github.proify.lyricon.app.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,7 +60,10 @@ class AboutActivity : BaseActivity() {
 
     @Composable
     private fun AboutContent() {
-        AppToolBarListContainer(canBack = true) { scope ->
+        AppToolBarListContainer(
+            title = stringResource(id = R.string.activity_about),
+            canBack = true
+        ) { scope ->
             scope.item {
                 val context = LocalContext.current
                 Card(
@@ -68,7 +72,8 @@ class AboutActivity : BaseActivity() {
                         .fillMaxWidth(),
                     pressFeedbackType = PressFeedbackType.Sink,
                 ) {
-                    val drawable = getDrawable(R.mipmap.ic_launcher)
+                    val drawable =
+                        AppCompatResources.getDrawable(this@AboutActivity, R.mipmap.ic_launcher)
                     Box(modifier = Modifier.fillMaxSize()) {
                         Row(
                             modifier = Modifier
@@ -82,7 +87,12 @@ class AboutActivity : BaseActivity() {
                                     .fillMaxHeight()
                                     .scale(2f)
                                     .rotate(40f),
-                                painter = rememberDrawablePainter(getDrawable(R.mipmap.ic_launcher)),
+                                painter = rememberDrawablePainter(
+                                    AppCompatResources.getDrawable(
+                                        this@AboutActivity,
+                                        R.mipmap.ic_launcher
+                                    )
+                                ),
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop
                             )
@@ -150,11 +160,11 @@ class AboutActivity : BaseActivity() {
                         .fillMaxWidth(),
                     insideMargin = PaddingValues(0.dp)
                 ) {
-                    val url = stringResource(id = R.string.github_url)
+                    val url = stringResource(id = R.string.github_home)
                     val toolbarColor = MiuixTheme.colorScheme.surface.toArgb()
                     SuperArrow(
                         leftAction = { IconActions(painterResource(R.drawable.ic_github)) },
-                        title = stringResource(id = R.string.item_title_view_on_github),
+                        title = stringResource(id = R.string.item_view_on_github),
                         onClick = {
                             Utils.launchBrowser(
                                 context,
@@ -165,7 +175,7 @@ class AboutActivity : BaseActivity() {
                     )
                     SuperArrow(
                         leftAction = { IconActions(painterResource(R.drawable.ic_license)) },
-                        title = stringResource(id = R.string.item_title_open_source_license),
+                        title = stringResource(id = R.string.item_open_source_license),
                         onClick = {
                             val intent = Intent(context, LicensesActivity::class.java)
                             context.startActivity(intent)

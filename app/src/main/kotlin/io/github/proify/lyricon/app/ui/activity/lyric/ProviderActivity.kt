@@ -194,6 +194,7 @@ class LyricProviderActivity : BaseActivity() {
         }
 
         AppToolBarListContainer(
+            title = getString(R.string.activity_lyric_provider),
             showEmpty = showEmpty.value,
             canBack = true,
             emptyContent = {

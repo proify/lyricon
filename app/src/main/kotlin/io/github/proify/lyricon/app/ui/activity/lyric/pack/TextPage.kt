@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
@@ -38,7 +39,7 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
     ) {
         item(key = "base") {
             SmallTitle(
-                text = "基本",
+                text = stringResource(R.string.base),
                 insideMargin = PaddingValues(
                     start = 26.dp,
                     top = 0.dp,
@@ -56,20 +57,20 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                     "lyric_style_text_size",
                     inputType = InputType.DOUBLE,
                     maxValue = 100.0,
-                    title = "大小",
+                    title = stringResource(R.string.item_text_size),
                     leftAction = { IconActions(painterResource(R.drawable.ic_format_size)) },
                 )
                 RectInputPreference(
                     currentSp,
                     "lyric_style_text_margins",
-                    "边距",
+                    stringResource(R.string.item_text_margins),
                     defaultValue = TextStyle.Defaults.MARGINS,
                     leftAction = { IconActions(painterResource(R.drawable.ic_margin)) },
                 )
                 RectInputPreference(
                     currentSp,
                     "lyric_style_text_paddings",
-                    "内边距",
+                    stringResource(R.string.item_text_paddings),
                     defaultValue = TextStyle.Defaults.PADDINGS,
                     leftAction = { IconActions(painterResource(R.drawable.ic_padding)) },
                 )
@@ -77,7 +78,7 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
         }
         item(key = "color") {
             SmallTitle(
-                text = "颜色",
+                text = stringResource(R.string.item_text_color),
                 insideMargin = PaddingValues(
                     start = 26.dp,
                     top = 16.dp,
@@ -93,20 +94,20 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                 SwitchPreference(
                     currentSp,
                     "lyric_style_text_enable_custom_color",
-                    title = "自定义颜色",
+                    title = stringResource(R.string.item_text_enable_custom_color),
                     leftAction = { IconActions(painterResource(R.drawable.ic_alette)) },
                 )
                 TextColorPreference(
                     currentSp,
                     "lyric_style_text_color_light_mode",
-                    title = "亮场景下颜色",
+                    title = stringResource(R.string.item_text_color_light_mode),
                     defaultColor = Color.Black,
                     leftAction = { IconActions(painterResource(R.drawable.ic_brightness7)) },
                 )
                 TextColorPreference(
                     currentSp,
                     "lyric_style_text_color_dark_mode",
-                    title = "暗场景下颜色",
+                    title = stringResource(R.string.item_text_color_dark_mode),
                     defaultColor = Color.White,
                     leftAction = { IconActions(painterResource(R.drawable.ic_darkmode)) },
                 )
@@ -114,7 +115,7 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
         }
         item(key = "font") {
             SmallTitle(
-                text = "字体",
+                text = stringResource(R.string.item_text_font),
                 insideMargin = PaddingValues(
                     start = 26.dp,
                     top = 16.dp,
@@ -130,7 +131,7 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                 InputPreference(
                     currentSp,
                     "lyric_style_text_typeface",
-                    title = "自定义字体",
+                    title = stringResource(R.string.item_text_typeface),
                     leftAction = { IconActions(painterResource(R.drawable.ic_fontdownload)) },
                 )
                 InputPreference(
@@ -138,26 +139,26 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                     inputType = InputType.INTEGER,
                     maxValue = 1000.0,
                     key = "lyric_style_text_weight",
-                    title = "字重大小",
+                    title = stringResource(R.string.item_text_weight),
                     leftAction = { IconActions(painterResource(R.drawable.ic_fontdownload)) },
                 )
                 CheckboxPreference(
                     currentSp,
                     key = "lyric_style_text_typeface_bold",
-                    title = "加粗样式",
+                    title = stringResource(R.string.item_text_typeface_bold),
                     leftAction = { IconActions(painterResource(R.drawable.ic_formatbold)) },
                 )
                 CheckboxPreference(
                     currentSp,
                     key = "lyric_style_text_typeface_italic",
-                    title = "斜体样式",
+                    title = stringResource(R.string.item_text_typeface_italic),
                     leftAction = { IconActions(painterResource(R.drawable.ic_format_italic)) },
                 )
             }
         }
         item(key = "marquee") {
             SmallTitle(
-                text = "跑马灯",
+                text = stringResource(R.string.item_text_marquee),
                 insideMargin = PaddingValues(
                     start = 26.dp,
                     top = 16.dp,
@@ -175,7 +176,7 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                     "lyric_style_text_marquee_speed",
                     inputType = InputType.INTEGER,
                     maxValue = 200.0,
-                    title = "速度",
+                    title = stringResource(R.string.item_text_marquee_speed),
                     leftAction = { IconActions(painterResource(R.drawable.ic_speed)) },
                 )
                 InputPreference(
@@ -183,7 +184,7 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                     "lyric_style_text_marquee_space",
                     inputType = InputType.INTEGER,
                     maxValue = 200.0,
-                    title = "鬼影距离",
+                    title = stringResource(R.string.item_text_marquee_space),
                     leftAction = { IconActions(painterResource(R.drawable.ic_space_bar)) },
                 )
 //                SwitchPreference(
@@ -194,10 +195,10 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
 //                )
                 InputPreference(
                     currentSp,
-                    "lyric_style_text_marquee_first_delay",
+                    "lyric_style_text_marquee_initial_delay",
                     inputType = InputType.INTEGER,
                     maxValue = 1000.0,
-                    title = "初始滚动延迟",
+                    title = stringResource(R.string.item_text_marquee_initial_delay),
                     leftAction = { IconActions(painterResource(R.drawable.ic_autopause)) },
                 )
                 InputPreference(
@@ -205,14 +206,14 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                     "lyric_style_text_marquee_delay",
                     inputType = InputType.INTEGER,
                     maxValue = 1000.0,
-                    title = "滚动延迟",
+                    title = stringResource(R.string.item_text_marquee_delay),
                     leftAction = { IconActions(painterResource(R.drawable.ic_autopause)) },
                 )
                 SwitchPreference(
                     currentSp,
                     "lyric_style_text_marquee_repeat_unlimited",
                     defaultValue = true,
-                    title = "启用无限滚动",
+                    title = stringResource(R.string.item_text_marquee_repeat_unlimited),
                     leftAction = { IconActions(painterResource(R.drawable.ic_all_inclusive)) },
                 )
                 InputPreference(
@@ -221,19 +222,19 @@ fun TextPage(scrollBehavior: ScrollBehavior, currentSp: SharedPreferences) {
                     inputType = InputType.INTEGER,
                     minValue = -1.0,
                     maxValue = 100.0,
-                    title = "滚动次数",
+                    title = stringResource(R.string.item_text_marquee_repeat_count),
                     leftAction = { IconActions(painterResource(R.drawable.ic_pin)) },
                 )
                 SwitchPreference(
                     currentSp,
                     "lyric_style_text_marquee_stop_at_end",
-                    title = "结束时在末尾停止",
+                    title = stringResource(R.string.item_text_marquee_stop_at_end),
                     leftAction = { IconActions(painterResource(R.drawable.ic_stop_circle)) },
                 )
                 SwitchPreference(
                     currentSp,
                     "lyric_style_text_gradient_progress_style",
-                    title = "渐变进度样式",
+                    title = stringResource(R.string.item_text_gradient_progress_style),
                     leftAction = { IconActions(painterResource(R.drawable.ic_gradient)) },
                 )
             }

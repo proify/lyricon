@@ -118,7 +118,13 @@ class PackageStyleActivity : BaseLyricActivity() {
 
     @Composable
     private fun StyleTabRow(pagerState: PagerState, scrollBehavior: ScrollBehavior) {
-        val tabs = remember { listOf("文字", "图标", "动画") }
+        val tabs = remember {
+            listOf(
+                getString(R.string.tab_style_text),
+                getString(R.string.tab_style_icon),
+                getString(R.string.tab_style_anim)
+            )
+        }
         val selectedTabIndex = remember { mutableIntStateOf(0) }
         val coroutineScope = rememberCoroutineScope()
 

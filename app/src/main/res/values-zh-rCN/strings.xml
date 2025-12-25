@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.DayNight" parent="Theme.Dark" />
+    <string name="app_name">词幕</string>
 
 </resources>

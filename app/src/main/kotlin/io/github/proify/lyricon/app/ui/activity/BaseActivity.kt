@@ -1,9 +1,10 @@
 package io.github.proify.lyricon.app.ui.activity
 
-import android.content.SharedPreferences
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import io.github.proify.lyricon.app.util.LocaleHelper
 
 open class BaseActivity : ComponentActivity() {
 
@@ -12,14 +13,7 @@ open class BaseActivity : ComponentActivity() {
         enableEdgeToEdge()
     }
 
-    @Deprecated("Deprecated")
-    override fun getSharedPreferences(name: String?, mode: Int): SharedPreferences? {
-        return try {
-            @Suppress("DEPRECATION")
-            super.getSharedPreferences(name, MODE_WORLD_READABLE)
-        } catch (_: Throwable) {
-            super.getSharedPreferences(name, mode)
-        }
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(base))
     }
-
 }

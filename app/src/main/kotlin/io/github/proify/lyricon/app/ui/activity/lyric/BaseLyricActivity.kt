@@ -9,7 +9,8 @@ import io.github.proify.lyricon.app.bridge.BridgeConstants
 import io.github.proify.lyricon.app.ui.activity.BaseActivity
 import io.github.proify.lyricon.common.PackageNames
 
-open class BaseLyricActivity : BaseActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+abstract class BaseLyricActivity : BaseActivity(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
     val systemUIChannel by lazy { dataChannel(packageName = PackageNames.SYSTEM_UI) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
