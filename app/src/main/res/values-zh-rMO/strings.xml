@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">詞幕</string>
+
+    <string name="xposed_description">為狀態列擴展歌詞功能🎵</string>
+
+    <string name="confirm">確定</string>
+    <string name="save">儲存</string>
+    <string name="add">新增</string>
+    <string name="delete">刪除</string>
+    <string name="restore">還原</string>
+    <string name="back">返回</string>
+    <string name="other">其他</string>
+    <string name="restart">重新啟動</string>
+    <string name="search">搜尋</string>
+    <string name="hint_search">搜尋..</string>
+    <string name="def">預設</string>
+    <string name="base">基本</string>
+
+    <string name="status_enabled">已啟用</string>
+    <string name="status_not_enabled">未啟用</string>
+    <string name="module_status_activated">已啟動😋</string>
+    <string name="module_status_not_activated">未啟動</string>
+
+    <string name="restart_sui">重新啟動系統介面</string>
+    <string name="restart_app">重新啟動軟件</string>
+    <string name="restart_fail">重新啟動失敗</string>
+    <string name="message_app_restart_fail">請檢查是否已授予Root權限</string>
+
+    <string name="millisecond">毫秒</string>
+
+    <string name="activity_settings">設定</string>
+    <string name="activity_about">關於</string>
+    <string name="activity_anchor">錨點</string>
+    <string name="activity_view_rules">視圖控制器</string>
+    <string name="activity_base_lyric_style">基本樣式</string>
+    <string name="activity_package_style_manager">管理套件樣式</string>
+    <string name="activity_lyric_provider">歌詞提供者</string>
+    <string name="activity_open_source_license">開放原始碼授權</string>
+
+    <string name="item_base_lyric_style">基本樣式</string>
+    <string name="item_summary_base_lyric_style">設定歌詞顯示位置、大小、控制狀態列內容可見性等</string>
+    <string name="item_package_style_manager">套件樣式</string>
+    <string name="item_summary_package_style_manager">設定預設樣式或為不同套件設定個別樣式</string>
+    <string name="item_provider_manager">提供者管理</string>
+    <string name="item_summary_provider_manager">管理歌詞提供者</string>
+    <string name="item_config_view_rules">設定視圖可見性規則</string>
+    <string name="item_app_settings">設定</string>
+    <string name="item_summary_app_settings">管理軟件設定</string>
+    <string name="item_about_app">關於</string>
+    <string name="item_summary_about_app">軟件資訊</string>
+
+    <string name="package_style_manager">管理套件樣式</string>
+    <string name="add_package_style">新增套件樣式</string>
+    <string name="default_style">預設樣式</string>
+
+    <string name="item_app_version">版本</string>
+    <string name="item_build_time">建置時間</string>
+    <string name="item_view_on_github">在 Github 上檢視</string>
+    <string name="item_open_source_license">開放原始碼授權</string>
+
+    <string name="section_music_apps">相關</string>
+    <string name="section_other_apps">其他</string>
+    <string name="language_system_default">跟隨系統</string>
+    <string name="item_app_language">語言</string>
+
+    <string name="tab_style_text">文字</string>
+    <string name="tab_style_icon">圖示</string>
+    <string name="tab_style_anim">動畫</string>
+
+    <!-- Text lyric style -->
+    <string name="item_text_size">大小</string>
+    <string name="item_text_margins">邊距</string>
+    <string name="item_text_paddings">內邊距</string>
+
+    <string name="item_text_color">顏色</string>
+    <string name="item_text_enable_custom_color">自訂顏色</string>
+    <string name="item_text_color_light_mode">亮場景下顏色</string>
+    <string name="item_text_color_dark_mode">暗場景下顏色</string>
+
+    <string name="item_text_font">字型</string>
+    <string name="item_text_typeface">自訂字型</string>
+    <string name="item_text_weight">字重大小</string>
+    <string name="item_text_typeface_bold">粗體樣式</string>
+    <string name="item_text_typeface_italic">斜體樣式</string>
+
+    <string name="item_text_marquee">跑馬燈</string>
+    <string name="item_text_marquee_speed">速度</string>
+    <string name="item_text_marquee_space">鬼影距離</string>
+    <string name="item_text_marquee_initial_delay">初始捲動延遲</string>
+    <string name="item_text_marquee_delay">捲動延遲</string>
+    <string name="item_text_marquee_repeat_unlimited">啟用無限捲動</string>
+    <string name="item_text_marquee_repeat_count">捲動次數</string>
+    <string name="item_text_marquee_stop_at_end">結束時在末尾停止</string>
+    <string name="item_text_gradient_progress_style">漸變進度樣式</string>
+
+    <!-- Logo -->
+    <string name="item_logo_enable">啟用</string>
+    <string name="item_logo_margins">邊距</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">在流體雲模式下隱藏</string>
+
+    <string name="item_logo_style">樣式</string>
+    <string name="item_logo_style_default">預設</string>
+    <string name="item_logo_style_cover_square">音樂封面(方形)</string>
+    <string name="item_logo_style_cover_circle">音樂封面(圓形)</string>
+
+    <string name="item_logo_color">顏色</string>
+    <string name="item_logo_custom_color">自訂顏色</string>
+    <string name="item_logo_color_light">亮場景下顏色</string>
+    <string name="item_logo_color_dark">暗場景下顏色</string>
+
+    <!-- Base lyric style -->
+    <string name="item_base_anchor">錨點</string>
+    <string name="item_base_insertion_order">插入順序</string>
+    <string name="item_base_insertion_before">之前</string>
+    <string name="item_base_insertion_after">之後</string>
+    <string name="item_base_width">寬度</string>
+    <string name="item_base_width_coloros_capsule">寬度(流體雲模式下)</string>
+    <string name="item_base_margins">邊距</string>
+    <string name="item_base_paddings">內邊距</string>
+
+    <!-- Visibility rule -->
+    <string name="item_visibility_default">預設</string>
+    <string name="item_visibility_always_visible">總是顯示</string>
+    <string name="item_visibility_always_hidden">總是隱藏</string>
+    <string name="item_visibility_hide_when_playing">播放時隱藏</string>
+
+    <string name="rectf_left">左邊距</string>
+    <string name="rectf_top">上邊距</string>
+    <string name="rectf_right">右邊距</string>
+    <string name="rectf_bottom">下邊距</string>
+
+    <string name="hint_custom_color">自訂</string>
+    <string name="item_text_color_normal">正常顏色</string>
+    <string name="item_text_color_background">背景顏色</string>
+    <string name="item_text_color_highlight">醒目提示顏色</string>
+
+</resources>

@@ -1,0 +1,138 @@
+<resources>
+    <string name="xposed_description">상태 표시줄에 가사 기능 확장🎵</string>
+
+    <string name="confirm">확인</string>
+    <string name="save">저장</string>
+    <string name="add">추가</string>
+    <string name="delete">삭제</string>
+    <string name="restore">복원</string>
+    <string name="back">뒤로</string>
+    <string name="other">기타</string>
+    <string name="restart">재시작</string>
+    <string name="search">검색</string>
+    <string name="hint_search">검색..</string>
+    <string name="def">기본</string>
+    <string name="base">기본</string>
+
+    <string name="status_enabled">활성화됨</string>
+    <string name="status_not_enabled">비활성화됨</string>
+    <string name="module_status_activated">활성화됨😋</string>
+    <string name="module_status_not_activated">비활성화됨</string>
+
+    <string name="restart_sui">시스템 UI 재시작</string>
+    <string name="restart_app">앱 재시작</string>
+    <string name="restart_fail">재시작 실패</string>
+    <string name="message_app_restart_fail">Root 권한이 부여되었는지 확인하세요</string>
+
+    <string name="millisecond">밀리초</string>
+
+    <string name="activity_settings">설정</string>
+    <string name="activity_about">정보</string>
+    <string name="activity_anchor">앵커</string>
+    <string name="activity_view_rules">뷰 컨트롤러</string>
+    <string name="activity_base_lyric_style">기본 스타일</string>
+    <string name="activity_package_style_manager">패키지 스타일 관리</string>
+    <string name="activity_lyric_provider">가사 제공자</string>
+    <string name="activity_open_source_license">오픈 소스 라이선스</string>
+
+    <string name="item_base_lyric_style">기본 스타일</string>
+    <string name="item_summary_base_lyric_style">가사 표시 위치, 크기, 상태 표시줄 콘텐츠 가시성 제어 등 설정</string>
+    <string name="item_package_style_manager">패키지 스타일</string>
+    <string name="item_summary_package_style_manager">기본 스타일 설정 또는 패키지별 개별 스타일 구성</string>
+    <string name="item_provider_manager">제공자 관리</string>
+    <string name="item_summary_provider_manager">가사 제공자 관리</string>
+    <string name="item_config_view_rules">뷰 가시성 규칙 설정</string>
+    <string name="item_app_settings">설정</string>
+    <string name="item_summary_app_settings">앱 설정 관리</string>
+    <string name="item_about_app">정보</string>
+    <string name="item_summary_about_app">앱 정보</string>
+
+    <string name="package_style_manager">패키지 스타일 관리</string>
+    <string name="add_package_style">패키지 스타일 추가</string>
+    <string name="default_style">기본 스타일</string>
+
+    <string name="item_app_version">버전</string>
+    <string name="item_build_time">빌드 시간</string>
+    <string name="item_view_on_github">Github에서 보기</string>
+    <string name="item_open_source_license">오픈 소스 라이선스</string>
+
+    <string name="section_music_apps">관련</string>
+    <string name="section_other_apps">기타</string>
+    <string name="language_system_default">시스템 기본값</string>
+    <string name="item_app_language">언어</string>
+
+    <string name="tab_style_text">텍스트</string>
+    <string name="tab_style_icon">아이콘</string>
+    <string name="tab_style_anim">애니메이션</string>
+
+    <!-- Text lyric style -->
+    <string name="item_text_size">크기</string>
+    <string name="item_text_margins">여백</string>
+    <string name="item_text_paddings">안쪽 여백</string>
+
+    <string name="item_text_color">색상</string>
+    <string name="item_text_enable_custom_color">사용자 지정 색상</string>
+    <string name="item_text_color_light_mode">밝은 모드 색상</string>
+    <string name="item_text_color_dark_mode">어두운 모드 색상</string>
+
+    <string name="item_text_font">글꼴</string>
+    <string name="item_text_typeface">사용자 지정 글꼴</string>
+    <string name="item_text_weight">글꼴 두께</string>
+    <string name="item_text_typeface_bold">굵게 스타일</string>
+    <string name="item_text_typeface_italic">기울임꼴 스타일</string>
+
+    <string name="item_text_marquee">마키</string>
+    <string name="item_text_marquee_speed">속도</string>
+    <string name="item_text_marquee_space">잔상 거리</string>
+    <string name="item_text_marquee_initial_delay">초기 스크롤 지연</string>
+    <string name="item_text_marquee_delay">스크롤 지연</string>
+    <string name="item_text_marquee_repeat_unlimited">무한 스크롤 활성화</string>
+    <string name="item_text_marquee_repeat_count">스크롤 횟수</string>
+    <string name="item_text_marquee_stop_at_end">끝에서 정지</string>
+    <string name="item_text_gradient_progress_style">그라데이션 진행률 스타일</string>
+
+    <!-- Logo -->
+    <string name="item_logo_enable">활성화</string>
+    <string name="item_logo_margins">여백</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">캡슐 모드에서 숨기기</string>
+
+    <string name="item_logo_style">스타일</string>
+    <string name="item_logo_style_default">기본</string>
+    <string name="item_logo_style_cover_square">앨범 커버(사각형)</string>
+    <string name="item_logo_style_cover_circle">앨범 커버(원형)</string>
+
+    <string name="item_logo_color">색상</string>
+    <string name="item_logo_custom_color">사용자 지정 색상</string>
+    <string name="item_logo_color_light">밝은 모드 색상</string>
+    <string name="item_logo_color_dark">어두운 모드 색상</string>
+
+    <!-- Base lyric style -->
+    <string name="item_base_anchor">앵커</string>
+    <string name="item_base_insertion_order">삽입 순서</string>
+    <string name="item_base_insertion_before">이전</string>
+    <string name="item_base_insertion_after">이후</string>
+    <string name="item_base_width">너비</string>
+    <string name="item_base_width_coloros_capsule">너비(캡슐 모드)</string>
+    <string name="item_base_margins">여백</string>
+    <string name="item_base_paddings">안쪽 여백</string>
+
+    <!-- Visibility rule -->
+    <string name="item_visibility_default">기본</string>
+    <string name="item_visibility_always_visible">항상 표시</string>
+    <string name="item_visibility_always_hidden">항상 숨김</string>
+    <string name="item_visibility_hide_when_playing">재생 중 숨김</string>
+
+    <string name="rectf_left">왼쪽 여백</string>
+    <string name="rectf_top">위쪽 여백</string>
+    <string name="rectf_right">오른쪽 여백</string>
+    <string name="rectf_bottom">아래쪽 여백</string>
+
+    <string name="hint_custom_color">사용자 지정</string>
+    <string name="item_text_color_normal">일반 색상</string>
+    <string name="item_text_color_background">배경 색상</string>
+    <string name="item_text_color_highlight">강조 색상</string>
+    <string name="app_name">Lyricon</string>
+
+</resources>

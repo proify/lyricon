@@ -69,5 +69,6 @@ android.sourceSets.main.java.srcDir(genTask.map { it.outputDir })
 
 // 确保在编译 Kotlin 前运行
 tasks.matching { it.name.startsWith("compile") && it.name.contains("Kotlin") }.configureEach {
+
     dependsOn genTask
 }

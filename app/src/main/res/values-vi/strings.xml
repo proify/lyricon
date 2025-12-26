@@ -1,0 +1,138 @@
+<resources>
+    <string name="xposed_description">Mở rộng chức năng lời bài hát cho thanh trạng thái🎵</string>
+
+    <string name="confirm">Xác nhận</string>
+    <string name="save">Lưu</string>
+    <string name="add">Thêm</string>
+    <string name="delete">Xóa</string>
+    <string name="restore">Khôi phục</string>
+    <string name="back">Quay lại</string>
+    <string name="other">Khác</string>
+    <string name="restart">Khởi động lại</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="hint_search">Tìm kiếm..</string>
+    <string name="def">Mặc định</string>
+    <string name="base">Cơ bản</string>
+
+    <string name="status_enabled">Đã bật</string>
+    <string name="status_not_enabled">Chưa bật</string>
+    <string name="module_status_activated">Đã kích hoạt😋</string>
+    <string name="module_status_not_activated">Chưa kích hoạt</string>
+
+    <string name="restart_sui">Khởi động lại giao diện hệ thống</string>
+    <string name="restart_app">Khởi động lại ứng dụng</string>
+    <string name="restart_fail">Khởi động lại thất bại</string>
+    <string name="message_app_restart_fail">Vui lòng kiểm tra xem đã cấp quyền Root chưa</string>
+
+    <string name="millisecond">mili giây</string>
+
+    <string name="activity_settings">Cài đặt</string>
+    <string name="activity_about">Giới thiệu</string>
+    <string name="activity_anchor">Điểm neo</string>
+    <string name="activity_view_rules">Bộ điều khiển chế độ xem</string>
+    <string name="activity_base_lyric_style">Kiểu cơ bản</string>
+    <string name="activity_package_style_manager">Quản lý kiểu gói</string>
+    <string name="activity_lyric_provider">Nhà cung cấp lời bài hát</string>
+    <string name="activity_open_source_license">Giấy phép mã nguồn mở</string>
+
+    <string name="item_base_lyric_style">Kiểu cơ bản</string>
+    <string name="item_summary_base_lyric_style">Đặt vị trí hiển thị lời bài hát, kích thước, điều khiển khả năng hiển thị nội dung thanh trạng thái, v.v.</string>
+    <string name="item_package_style_manager">Kiểu gói</string>
+    <string name="item_summary_package_style_manager">Cấu hình kiểu mặc định hoặc cấu hình kiểu riêng cho từng gói</string>
+    <string name="item_provider_manager">Quản lý nhà cung cấp</string>
+    <string name="item_summary_provider_manager">Quản lý nhà cung cấp lời bài hát</string>
+    <string name="item_config_view_rules">Cấu hình quy tắc hiển thị chế độ xem</string>
+    <string name="item_app_settings">Cài đặt</string>
+    <string name="item_summary_app_settings">Quản lý cài đặt ứng dụng</string>
+    <string name="item_about_app">Giới thiệu</string>
+    <string name="item_summary_about_app">Thông tin ứng dụng</string>
+
+    <string name="package_style_manager">Quản lý kiểu gói</string>
+    <string name="add_package_style">Thêm kiểu gói</string>
+    <string name="default_style">Kiểu mặc định</string>
+
+    <string name="item_app_version">Phiên bản</string>
+    <string name="item_build_time">Thời gian xây dựng</string>
+    <string name="item_view_on_github">Xem trên Github</string>
+    <string name="item_open_source_license">Giấy phép mã nguồn mở</string>
+
+    <string name="section_music_apps">Liên quan</string>
+    <string name="section_other_apps">Khác</string>
+    <string name="language_system_default">Theo hệ thống</string>
+    <string name="item_app_language">Ngôn ngữ</string>
+
+    <string name="tab_style_text">Văn bản</string>
+    <string name="tab_style_icon">Biểu tượng</string>
+    <string name="tab_style_anim">Hoạt ảnh</string>
+
+    <!-- Text lyric style -->
+    <string name="item_text_size">Kích thước</string>
+    <string name="item_text_margins">Lề</string>
+    <string name="item_text_paddings">Lề trong</string>
+
+    <string name="item_text_color">Màu sắc</string>
+    <string name="item_text_enable_custom_color">Màu tùy chỉnh</string>
+    <string name="item_text_color_light_mode">Màu chế độ sáng</string>
+    <string name="item_text_color_dark_mode">Màu chế độ tối</string>
+
+    <string name="item_text_font">Phông chữ</string>
+    <string name="item_text_typeface">Phông chữ tùy chỉnh</string>
+    <string name="item_text_weight">Độ dày phông chữ</string>
+    <string name="item_text_typeface_bold">Kiểu đậm</string>
+    <string name="item_text_typeface_italic">Kiểu nghiêng</string>
+
+    <string name="item_text_marquee">Chạy chữ</string>
+    <string name="item_text_marquee_speed">Tốc độ</string>
+    <string name="item_text_marquee_space">Khoảng cách bóng mờ</string>
+    <string name="item_text_marquee_initial_delay">Độ trễ cuộn ban đầu</string>
+    <string name="item_text_marquee_delay">Độ trễ cuộn</string>
+    <string name="item_text_marquee_repeat_unlimited">Bật cuộn vô hạn</string>
+    <string name="item_text_marquee_repeat_count">Số lần cuộn</string>
+    <string name="item_text_marquee_stop_at_end">Dừng ở cuối khi kết thúc</string>
+    <string name="item_text_gradient_progress_style">Kiểu tiến trình gradient</string>
+
+    <!-- Logo -->
+    <string name="item_logo_enable">Bật</string>
+    <string name="item_logo_margins">Lề</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">Ẩn trong chế độ viên nang</string>
+
+    <string name="item_logo_style">Kiểu</string>
+    <string name="item_logo_style_default">Mặc định</string>
+    <string name="item_logo_style_cover_square">Bìa nhạc (vuông)</string>
+    <string name="item_logo_style_cover_circle">Bìa nhạc (tròn)</string>
+
+    <string name="item_logo_color">Màu sắc</string>
+    <string name="item_logo_custom_color">Màu tùy chỉnh</string>
+    <string name="item_logo_color_light">Màu chế độ sáng</string>
+    <string name="item_logo_color_dark">Màu chế độ tối</string>
+
+    <!-- Base lyric style -->
+    <string name="item_base_anchor">Điểm neo</string>
+    <string name="item_base_insertion_order">Thứ tự chèn</string>
+    <string name="item_base_insertion_before">Trước</string>
+    <string name="item_base_insertion_after">Sau</string>
+    <string name="item_base_width">Chiều rộng</string>
+    <string name="item_base_width_coloros_capsule">Chiều rộng (chế độ viên nang)</string>
+    <string name="item_base_margins">Lề</string>
+    <string name="item_base_paddings">Lề trong</string>
+
+    <!-- Visibility rule -->
+    <string name="item_visibility_default">Mặc định</string>
+    <string name="item_visibility_always_visible">Luôn hiển thị</string>
+    <string name="item_visibility_always_hidden">Luôn ẩn</string>
+    <string name="item_visibility_hide_when_playing">Ẩn khi phát</string>
+
+    <string name="rectf_left">Lề trái</string>
+    <string name="rectf_top">Lề trên</string>
+    <string name="rectf_right">Lề phải</string>
+    <string name="rectf_bottom">Lề dưới</string>
+
+    <string name="hint_custom_color">Tùy chỉnh</string>
+    <string name="item_text_color_normal">Màu bình thường</string>
+    <string name="item_text_color_background">Màu nền</string>
+    <string name="item_text_color_highlight">Màu nổi bật</string>
+    <string name="app_name">Lyricon</string>
+
+</resources>

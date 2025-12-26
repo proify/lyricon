@@ -1,0 +1,134 @@
+<resources>
+    <string name="xposed_description">स्टेटस बार के लिए लिरिक्स फ़ंक्शन का विस्तार करें 🎵</string>
+
+    <string name="confirm">पुष्टि करें</string>
+    <string name="save">सहेजें</string>
+    <string name="add">जोड़ें</string>
+    <string name="delete">हटाएँ</string>
+    <string name="restore">पुनर्स्थापित करें</string>
+    <string name="back">पीछे</string>
+    <string name="other">अन्य</string>
+    <string name="restart">रीस्टार्ट करें</string>
+    <string name="search">खोजें</string>
+    <string name="hint_search">खोजें..</string>
+    <string name="def">डिफ़ॉल्ट</string>
+    <string name="base">बुनियादी</string>
+
+    <string name="status_enabled">सक्षम</string>
+    <string name="status_not_enabled">अक्षम</string>
+    <string name="module_status_activated">सक्रिय 😋</string>
+    <string name="module_status_not_activated">सक्रिय नहीं</string>
+
+    <string name="restart_sui">SystemUI को रीस्टार्ट करें</string>
+    <string name="restart_app">ऐप को रीस्टार्ट करें</string>
+    <string name="restart_fail">रीस्टार्ट विफल रहा</string>
+    <string name="message_app_restart_fail">कृपया जाँचें कि क्या रूट (Root) अनुमति दी गई है</string>
+
+    <string name="millisecond">मिलीसेकंड</string>
+
+    <string name="activity_settings">सेटिंग्स</string>
+    <string name="activity_about">के बारे में</string>
+    <string name="activity_anchor">एंकर (Anchor)</string>
+    <string name="activity_view_rules">व्यू कंट्रोलर</string>
+    <string name="activity_base_lyric_style">बुनियादी स्टाइल</string>
+    <string name="activity_package_style_manager">पैकेज स्टाइल प्रबंधित करें</string>
+    <string name="activity_lyric_provider">लिरिक्स प्रदाता</string>
+    <string name="activity_open_source_license">ओपन सोर्स लाइसेंस</string>
+
+    <string name="item_base_lyric_style">बुनियादी स्टाइल</string>
+    <string name="item_summary_base_lyric_style">लिरिक्स की स्थिति, आकार सेट करें और स्टेटस बार सामग्री की दृश्यता नियंत्रित करें</string>
+    <string name="item_package_style_manager">पैकेज स्टाइल</string>
+    <string name="item_summary_package_style_manager">डिफ़ॉल्ट स्टाइल या अलग-अलग पैकेज के लिए अलग स्टाइल कॉन्फ़िगर करें</string>
+    <string name="item_provider_manager">प्रदाता प्रबंधन</string>
+    <string name="item_summary_provider_manager">लिरिक्स प्रदाताओं को प्रबंधित करें</string>
+    <string name="item_config_view_rules">दृश्यता नियम कॉन्फ़िगर करें</string>
+    <string name="item_app_settings">सेटिंग्स</string>
+    <string name="item_summary_app_settings">ऐप सेटिंग्स प्रबंधित करें</string>
+    <string name="item_about_app">के बारे में</string>
+    <string name="item_summary_about_app">ऐप की जानकारी</string>
+
+    <string name="package_style_manager">पैकेज स्टाइल प्रबंधित करें</string>
+    <string name="add_package_style">पैकेज स्टाइल जोड़ें</string>
+    <string name="default_style">डिफ़ॉल्ट स्टाइल</string>
+
+    <string name="item_app_version">वर्जन</string>
+    <string name="item_build_time">बिल्ड समय</string>
+    <string name="item_view_on_github">Github पर देखें</string>
+    <string name="item_open_source_license">ओपन सोर्स लाइसेंस</string>
+
+    <string name="section_music_apps">संबंधित</string>
+    <string name="section_other_apps">अन्य</string>
+    <string name="language_system_default">सिस्टम डिफ़ॉल्ट</string>
+    <string name="item_app_language">भाषा</string>
+
+    <string name="tab_style_text">टेक्स्ट</string>
+    <string name="tab_style_icon">आइकन</string>
+    <string name="tab_style_anim">एनीमेशन</string>
+
+    <string name="item_text_size">आकार</string>
+    <string name="item_text_margins">मार्जिन (Margins)</string>
+    <string name="item_text_paddings">पैडिंग (Paddings)</string>
+
+    <string name="item_text_color">रंग</string>
+    <string name="item_text_enable_custom_color">कस्टम रंग</string>
+    <string name="item_text_color_light_mode">लाइट मोड में रंग</string>
+    <string name="item_text_color_dark_mode">डार्क मोड में रंग</string>
+
+    <string name="item_text_font">फ़ॉन्ट</string>
+    <string name="item_text_typeface">कस्टम फ़ॉन्ट</string>
+    <string name="item_text_weight">फ़ॉन्ट वेट</string>
+    <string name="item_text_typeface_bold">बोल्ड स्टाइल</string>
+    <string name="item_text_typeface_italic">इटैलिक स्टाइल</string>
+
+    <string name="item_text_marquee">मार्की (Marquee)</string>
+    <string name="item_text_marquee_speed">गति</string>
+    <string name="item_text_marquee_space">घोस्ट डिस्टेंस</string>
+    <string name="item_text_marquee_initial_delay">प्रारंभिक स्क्रॉल विलंब</string>
+    <string name="item_text_marquee_delay">स्क्रॉल विलंब</string>
+    <string name="item_text_marquee_repeat_unlimited">अनलिमिटेड स्क्रॉल सक्षम करें</string>
+    <string name="item_text_marquee_repeat_count">स्क्रॉल संख्या</string>
+    <string name="item_text_marquee_stop_at_end">अंत में रुकें</string>
+    <string name="item_text_gradient_progress_style">ग्रेडिएंट प्रोग्रेस स्टाइल</string>
+
+    <string name="item_logo_enable">सक्षम करें</string>
+    <string name="item_logo_margins">मार्जिन</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">फ्लुइड क्लाउड मोड में छिपाएँ</string>
+
+    <string name="item_logo_style">स्टाइल</string>
+    <string name="item_logo_style_default">डिफ़ॉल्ट</string>
+    <string name="item_logo_style_cover_square">म्यूजिक कवर (चौकोर)</string>
+    <string name="item_logo_style_cover_circle">म्यूजिक कवर (गोल)</string>
+
+    <string name="item_logo_color">रंग</string>
+    <string name="item_logo_custom_color">कस्टम रंग</string>
+    <string name="item_logo_color_light">लाइट मोड में रंग</string>
+    <string name="item_logo_color_dark">डार्क मोड में रंग</string>
+
+    <string name="item_base_anchor">एंकर</string>
+    <string name="item_base_insertion_order">सम्मिलन क्रम</string>
+    <string name="item_base_insertion_before">पहले</string>
+    <string name="item_base_insertion_after">बाद में</string>
+    <string name="item_base_width">चौड़ाई</string>
+    <string name="item_base_width_coloros_capsule">चौड़ाई (फ्लुइड क्लाउड मोड में)</string>
+    <string name="item_base_margins">मार्जिन</string>
+    <string name="item_base_paddings">पैडिंग</string>
+
+    <string name="item_visibility_default">डिफ़ॉल्ट</string>
+    <string name="item_visibility_always_visible">हमेशा दिखाएँ</string>
+    <string name="item_visibility_always_hidden">हमेशा छिपाएँ</string>
+    <string name="item_visibility_hide_when_playing">चलाते समय छिपाएँ</string>
+
+    <string name="rectf_left">बायां मार्जिन</string>
+    <string name="rectf_top">ऊपरी मार्जिन</string>
+    <string name="rectf_right">दायां मार्जिन</string>
+    <string name="rectf_bottom">निचला मार्जिन</string>
+
+    <string name="hint_custom_color">कस्टम</string>
+    <string name="item_text_color_normal">सामान्य रंग</string>
+    <string name="item_text_color_background">पृष्ठभूमि रंग</string>
+    <string name="item_text_color_highlight">हाइलाइट रंग</string>
+    <string name="app_name">Lyricon</string>
+
+</resources>

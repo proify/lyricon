@@ -20,8 +20,9 @@ import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.ui.compose.AppToolBarListContainer
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.IconActions
+import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SpinnerEntry
+import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperSpinner
 import io.github.proify.lyricon.app.util.LocaleHelper
-import top.yukonga.miuix.kmp.extra.SuperDropdown
 import java.util.Locale
 
 class SettingsActivity : BaseActivity() {
@@ -84,7 +85,7 @@ class SettingsActivity : BaseActivity() {
             mutableIntStateOf(languages.indexOf(currentLanguage).coerceAtLeast(0))
         }
 
-        SuperDropdown(
+        SuperSpinner(
             leftAction = {
                 IconActions(painterResource(R.drawable.ic_language))
             },
@@ -100,22 +101,50 @@ class SettingsActivity : BaseActivity() {
         )
     }
 
-    private fun buildLanguageOptions(languages: List<String>): List<Pair<String, String>> {
+    private fun buildLanguageOptions(languages: List<String>): List<Pair<String, SpinnerEntry>> {
         return languages.map { languageCode ->
-            languageCode to getLanguageDisplayName(languageCode)
+            languageCode to createSpinnerEntry(languageCode)
         }
     }
 
-    private fun getLanguageDisplayName(languageCode: String): String {
+    private fun createSpinnerEntry(
+        languageCode: String,
+    ): SpinnerEntry {
+        val title = getLanguageDisplayName(languageCode)
+        val summary = getLanguageTranslationName(languageCode)
+        return SpinnerEntry(
+            title = title,
+            summary = if (title == summary) null else summary
+        )
+    }
 
+    private fun getLanguageDisplayName(
+        languageCode: String,
+    ): String {
         return when (languageCode) {
             LocaleHelper.DEFAULT_LANGUAGE -> Application.unwrapContext.getString(R.string.language_system_default)
             else -> runCatching {
                 val locale = Locale.forLanguageTag(languageCode)
-                locale.getDisplayName(LocaleHelper.DEFAULT_LOCALE).replaceFirstChar {
-                    if (it.isLowerCase()) it.titlecase(locale) else it.toString()
-                }
+                locale.getDisplayName(locale)
+                    .replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(locale) else it.toString()
+                    }
             }.getOrElse { languageCode }
+        }
+    }
+
+    private fun getLanguageTranslationName(
+        languageCode: String,
+    ): String? {
+        return when (languageCode) {
+            LocaleHelper.DEFAULT_LANGUAGE -> null
+            else -> runCatching {
+                val locale = Locale.forLanguageTag(languageCode)
+                locale.getDisplayName(LocaleHelper.DEFAULT_LOCALE)
+                    .replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(locale) else it.toString()
+                    }
+            }.getOrElse { null }
         }
     }
 

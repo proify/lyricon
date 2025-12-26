@@ -1,0 +1,133 @@
+<resources>
+    <string name="xposed_description">Palawakin ang function ng lyrics para sa status bar 🎵</string>
+
+    <string name="confirm">Kumpirmahin</string>
+    <string name="save">I-save</string>
+    <string name="add">Magdagdag</string>
+    <string name="delete">I-delete</string>
+    <string name="restore">I-restore</string>
+    <string name="back">Bumalik</string>
+    <string name="other">Iba pa</string>
+    <string name="restart">I-restart</string>
+    <string name="search">Maghanap</string>
+    <string name="hint_search">Maghanap...</string>
+    <string name="def">Default</string>
+    <string name="base">Base</string>
+
+    <string name="status_enabled">Naka-enable</string>
+    <string name="status_not_enabled">Naka-disable</string>
+    <string name="module_status_activated">Na-activate na 😋</string>
+    <string name="module_status_not_activated">Hindi pa na-activate</string>
+
+    <string name="restart_sui">I-restart ang SystemUI</string>
+    <string name="restart_app">I-restart ang App</string>
+    <string name="restart_fail">Bigo ang pag-restart</string>
+    <string name="message_app_restart_fail">Paki-check kung may Root permission</string>
+
+    <string name="millisecond">ms</string>
+
+    <string name="activity_settings">Settings</string>
+    <string name="activity_about">Tungkol</string>
+    <string name="activity_anchor">Anchor</string>
+    <string name="activity_view_rules">View Controller</string>
+    <string name="activity_base_lyric_style">Base Style</string>
+    <string name="activity_package_style_manager">Manage Package Styles</string>
+    <string name="activity_lyric_provider">Lyric Provider</string>
+    <string name="activity_open_source_license">Open Source Licenses</string>
+
+    <string name="item_base_lyric_style">Base Style</string>
+    <string name="item_summary_base_lyric_style">I-set ang posisyon, laki ng lyrics, at visibility ng status bar</string>
+    <string name="item_package_style_manager">Package Styles</string>
+    <string name="item_summary_package_style_manager">I-configure ang default o per-package na styles</string>
+    <string name="item_provider_manager">Provider Management</string>
+    <string name="item_summary_provider_manager">I-manage ang mga lyric provider</string>
+    <string name="item_config_view_rules">I-set ang View Visibility Rules</string>
+    <string name="item_app_settings">Settings</string>
+    <string name="item_summary_app_settings">I-manage ang settings ng app</string>
+    <string name="item_about_app">Tungkol</string>
+    <string name="item_summary_about_app">Impormasyon ng app</string>
+
+    <string name="package_style_manager">Manage Package Styles</string>
+    <string name="add_package_style">Magdagdag ng Package Style</string>
+    <string name="default_style">Default Style</string>
+
+    <string name="item_app_version">Bersyon</string>
+    <string name="item_build_time">Build Time</string>
+    <string name="item_view_on_github">Tingnan sa GitHub</string>
+    <string name="item_open_source_license">Open Source Licenses</string>
+
+    <string name="section_music_apps">Music Apps</string>
+    <string name="section_other_apps">Iba pa</string>
+    <string name="language_system_default">System Default</string>
+    <string name="item_app_language">Wika</string>
+
+    <string name="tab_style_text">Text</string>
+    <string name="tab_style_icon">Icon</string>
+    <string name="tab_style_anim">Animation</string>
+
+    <string name="item_text_size">Laki</string>
+    <string name="item_text_margins">Margins</string>
+    <string name="item_text_paddings">Paddings</string>
+
+    <string name="item_text_color">Kulay</string>
+    <string name="item_text_enable_custom_color">Custom Color</string>
+    <string name="item_text_color_light_mode">Light Mode Color</string>
+    <string name="item_text_color_dark_mode">Dark Mode Color</string>
+
+    <string name="item_text_font">Font</string>
+    <string name="item_text_typeface">Custom Typeface</string>
+    <string name="item_text_weight">Font Weight</string>
+    <string name="item_text_typeface_bold">Bold Style</string>
+    <string name="item_text_typeface_italic">Italic Style</string>
+
+    <string name="item_text_marquee">Marquee (Gumagalaw na Text)</string>
+    <string name="item_text_marquee_speed">Bilis</string>
+    <string name="item_text_marquee_space">Ghost Distance</string>
+    <string name="item_text_marquee_initial_delay">Initial Delay</string>
+    <string name="item_text_marquee_delay">Scroll Delay</string>
+    <string name="item_text_marquee_repeat_unlimited">Infinite Scroll</string>
+    <string name="item_text_marquee_repeat_count">Repeat Count</string>
+    <string name="item_text_marquee_stop_at_end">Hinto sa Dulo</string>
+    <string name="item_text_gradient_progress_style">Gradient Progress Style</string>
+
+    <string name="item_logo_enable">I-enable ang Icon</string>
+    <string name="item_logo_margins">Logo Margins</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">Itago sa Fluid Cloud mode</string>
+
+    <string name="item_logo_style">Icon Style</string>
+    <string name="item_logo_style_default">Default</string>
+    <string name="item_logo_style_cover_square">Music Cover (Square)</string>
+    <string name="item_logo_style_cover_circle">Music Cover (Circle)</string>
+
+    <string name="item_logo_color">Kulay ng Icon</string>
+    <string name="item_logo_custom_color">Custom Color</string>
+    <string name="item_logo_color_light">Light Mode Color</string>
+    <string name="item_logo_color_dark">Dark Mode Color</string>
+
+    <string name="item_base_anchor">Anchor</string>
+    <string name="item_base_insertion_order">Insertion Order</string>
+    <string name="item_base_insertion_before">Bago (Before)</string>
+    <string name="item_base_insertion_after">Pagkatapos (After)</string>
+    <string name="item_base_width">Lapad (Width)</string>
+    <string name="item_base_width_coloros_capsule">Lapad (Fluid Cloud mode)</string>
+    <string name="item_base_margins">Margins</string>
+    <string name="item_base_paddings">Paddings</string>
+
+    <string name="item_visibility_default">Default</string>
+    <string name="item_visibility_always_visible">Laging Nakikita</string>
+    <string name="item_visibility_always_hidden">Laging Nakatago</string>
+    <string name="item_visibility_hide_when_playing">Itago kapag Nagpe-play</string>
+
+    <string name="rectf_left">Left Margin</string>
+    <string name="rectf_top">Top Margin</string>
+    <string name="rectf_right">Right Margin</string>
+    <string name="rectf_bottom">Bottom Margin</string>
+
+    <string name="hint_custom_color">Custom</string>
+    <string name="item_text_color_normal">Normal Color</string>
+    <string name="item_text_color_background">Background Color</string>
+    <string name="item_text_color_highlight">Highlight Color</string>
+    <string name="app_name">Lyricon</string>
+</resources>

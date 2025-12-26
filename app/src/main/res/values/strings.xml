@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Lyricon</string>
+    <string name="app_name">词幕</string>
     <string name="github_home" translatable="false">https://github.com/proify/lyricon</string>
     <string name="xposed_description">为状态栏拓展歌词功能🎵</string>
 

@@ -1,0 +1,133 @@
+<resources>
+    <string name="xposed_description">Rozšiřte funkci textů písní pro stavový řádek 🎵</string>
+
+    <string name="confirm">Potvrdit</string>
+    <string name="save">Uložit</string>
+    <string name="add">Přidat</string>
+    <string name="delete">Smazat</string>
+    <string name="restore">Obnovit</string>
+    <string name="back">Zpět</string>
+    <string name="other">Ostatní</string>
+    <string name="restart">Restartovat</string>
+    <string name="search">Hledat</string>
+    <string name="hint_search">Hledat...</string>
+    <string name="def">Výchozí</string>
+    <string name="base">Základní</string>
+
+    <string name="status_enabled">Povoleno</string>
+    <string name="status_not_enabled">Zakázáno</string>
+    <string name="module_status_activated">Aktivováno 😋</string>
+    <string name="module_status_not_activated">Neaktivováno</string>
+
+    <string name="restart_sui">Restartovat SystemUI</string>
+    <string name="restart_app">Restartovat aplikaci</string>
+    <string name="restart_fail">Restartování selhalo</string>
+    <string name="message_app_restart_fail">Zkontrolujte, zda bylo uděleno oprávnění Root</string>
+
+    <string name="millisecond">milisekunda</string>
+
+    <string name="activity_settings">Nastavení</string>
+    <string name="activity_about">O aplikaci</string>
+    <string name="activity_anchor">Kotva</string>
+    <string name="activity_view_rules">Ovladač zobrazení</string>
+    <string name="activity_base_lyric_style">Základní styl</string>
+    <string name="activity_package_style_manager">Správa stylů balíčků</string>
+    <string name="activity_lyric_provider">Poskytovatel textů</string>
+    <string name="activity_open_source_license">Open source licence</string>
+
+    <string name="item_base_lyric_style">Základní styl</string>
+    <string name="item_summary_base_lyric_style">Nastavte pozici a velikost textů a ovládejte viditelnost prvků stavového řádku</string>
+    <string name="item_package_style_manager">Styly balíčků</string>
+    <string name="item_summary_package_style_manager">Konfigurujte výchozí styl nebo specifické styly pro různé balíčky</string>
+    <string name="item_provider_manager">Správa poskytovatelů</string>
+    <string name="item_summary_provider_manager">Spravujte poskytovatele textů písní</string>
+    <string name="item_config_view_rules">Konfigurovat pravidla viditelnosti</string>
+    <string name="item_app_settings">Nastavení</string>
+    <string name="item_summary_app_settings">Správa nastavení aplikace</string>
+    <string name="item_about_app">O aplikaci</string>
+    <string name="item_summary_about_app">Informace o aplikaci</string>
+
+    <string name="package_style_manager">Správa stylů balíčků</string>
+    <string name="add_package_style">Přidat styl balíčku</string>
+    <string name="default_style">Výchozí styl</string>
+
+    <string name="item_app_version">Verze</string>
+    <string name="item_build_time">Čas sestavení</string>
+    <string name="item_view_on_github">Zobrazit na GitHubu</string>
+    <string name="item_open_source_license">Open source licence</string>
+
+    <string name="section_music_apps">Související</string>
+    <string name="section_other_apps">Ostatní</string>
+    <string name="language_system_default">Výchozí systémová</string>
+    <string name="item_app_language">Jazyk</string>
+
+    <string name="tab_style_text">Text</string>
+    <string name="tab_style_icon">Ikona</string>
+    <string name="tab_style_anim">Animace</string>
+
+    <string name="item_text_size">Velikost</string>
+    <string name="item_text_margins">Okraje (Margins)</string>
+    <string name="item_text_paddings">Odsazení (Paddings)</string>
+
+    <string name="item_text_color">Barva</string>
+    <string name="item_text_enable_custom_color">Vlastní barva</string>
+    <string name="item_text_color_light_mode">Barva pro světlý režim</string>
+    <string name="item_text_color_dark_mode">Barva pro tmavý režim</string>
+
+    <string name="item_text_font">Písmo</string>
+    <string name="item_text_typeface">Vlastní řez písma</string>
+    <string name="item_text_weight">Tloušťka písma</string>
+    <string name="item_text_typeface_bold">Tučný styl</string>
+    <string name="item_text_typeface_italic">Kurzíva</string>
+
+    <string name="item_text_marquee">Běžící text (Marquee)</string>
+    <string name="item_text_marquee_speed">Rychlost</string>
+    <string name="item_text_marquee_space">Vzdálenost opakování</string>
+    <string name="item_text_marquee_initial_delay">Počáteční prodleva</string>
+    <string name="item_text_marquee_delay">Prodleva posunu</string>
+    <string name="item_text_marquee_repeat_unlimited">Povolit nekonečné posouvání</string>
+    <string name="item_text_marquee_repeat_count">Počet opakování</string>
+    <string name="item_text_marquee_stop_at_end">Zastavit na konci</string>
+    <string name="item_text_gradient_progress_style">Styl přechodu průběhu</string>
+
+    <string name="item_logo_enable">Povolit</string>
+    <string name="item_logo_margins">Okraje loga</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">Skrýt v režimu Fluid Cloud</string>
+
+    <string name="item_logo_style">Styl</string>
+    <string name="item_logo_style_default">Výchozí</string>
+    <string name="item_logo_style_cover_square">Obal hudby (čtverec)</string>
+    <string name="item_logo_style_cover_circle">Obal hudby (kruh)</string>
+
+    <string name="item_logo_color">Barva</string>
+    <string name="item_logo_custom_color">Vlastní barva</string>
+    <string name="item_logo_color_light">Barva pro světlý režim</string>
+    <string name="item_logo_color_dark">Barva pro tmavý režim</string>
+
+    <string name="item_base_anchor">Kotva</string>
+    <string name="item_base_insertion_order">Pořadí vložení</string>
+    <string name="item_base_insertion_before">Před</string>
+    <string name="item_base_insertion_after">Za</string>
+    <string name="item_base_width">Šířka</string>
+    <string name="item_base_width_coloros_capsule">Šířka (v režimu Fluid Cloud)</string>
+    <string name="item_base_margins">Okraje</string>
+    <string name="item_base_paddings">Odsazení</string>
+
+    <string name="item_visibility_default">Výchozí</string>
+    <string name="item_visibility_always_visible">Vždy viditelné</string>
+    <string name="item_visibility_always_hidden">Vždy skryté</string>
+    <string name="item_visibility_hide_when_playing">Skrýt při přehrávání</string>
+
+    <string name="rectf_left">Levý okraj</string>
+    <string name="rectf_top">Horní okraj</string>
+    <string name="rectf_right">Pravý okraj</string>
+    <string name="rectf_bottom">Dolní okraj</string>
+
+    <string name="hint_custom_color">Vlastní</string>
+    <string name="item_text_color_normal">Normální barva</string>
+    <string name="item_text_color_background">Barva pozadí</string>
+    <string name="item_text_color_highlight">Barva zvýraznění</string>
+    <string name="app_name">Lyricon</string>
+</resources>

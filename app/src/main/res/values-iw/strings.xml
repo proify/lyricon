@@ -1,0 +1,133 @@
+<resources>
+    <string name="xposed_description">הרחבת פונקציית מילות השירים לשורת המצב 🎵</string>
+
+    <string name="confirm">אישור</string>
+    <string name="save">שמירה</string>
+    <string name="add">הוספה</string>
+    <string name="delete">מחיקה</string>
+    <string name="restore">שחזור</string>
+    <string name="back">חזרה</string>
+    <string name="other">אחר</string>
+    <string name="restart">הפעלה מחדש</string>
+    <string name="search">חיפוש</string>
+    <string name="hint_search">חיפוש...</string>
+    <string name="def">ברירת מחדל</string>
+    <string name="base">בסיסי</string>
+
+    <string name="status_enabled">פעיל</string>
+    <string name="status_not_enabled">לא פעיל</string>
+    <string name="module_status_activated">מופעל 😋</string>
+    <string name="module_status_not_activated">לא מופעל</string>
+
+    <string name="restart_sui">הפעלה מחדש של ממשק המערכת (SystemUI)</string>
+    <string name="restart_app">הפעלה מחדש של האפליקציה</string>
+    <string name="restart_fail">הפעלה מחדש נכשלה</string>
+    <string name="message_app_restart_fail">אנא בדקו האם ניתנה הרשאת Root</string>
+
+    <string name="millisecond">מילי-שנייה</string>
+
+    <string name="activity_settings">הגדרות</string>
+    <string name="activity_about">אודות</string>
+    <string name="activity_anchor">נקודת עגינה</string>
+    <string name="activity_view_rules">בקר תצוגה</string>
+    <string name="activity_base_lyric_style">סגנון בסיסי</string>
+    <string name="activity_package_style_manager">ניהול סגנונות חבילה</string>
+    <string name="activity_lyric_provider">ספק מילות שירים</string>
+    <string name="activity_open_source_license">רישיונות קוד פתוח</string>
+
+    <string name="item_base_lyric_style">סגנון בסיסי</string>
+    <string name="item_summary_base_lyric_style">הגדרת מיקום, גודל מילות השירים ושליטה בנראות תוכן שורת המצב</string>
+    <string name="item_package_style_manager">סגנון חבילה</string>
+    <string name="item_summary_package_style_manager">הגדרת סגנון ברירת מחדל או סגנונות נפרדים לחבילות שונות</string>
+    <string name="item_provider_manager">ניהול ספקים</string>
+    <string name="item_summary_provider_manager">ניהול ספקי מילות שירים</string>
+    <string name="item_config_view_rules">הגדרת כללי נראות</string>
+    <string name="item_app_settings">הגדרות</string>
+    <string name="item_summary_app_settings">ניהול הגדרות אפליקציה</string>
+    <string name="item_about_app">אודות</string>
+    <string name="item_summary_about_app">מידע על האפליקציה</string>
+
+    <string name="package_style_manager">ניהול סגנונות חבילה</string>
+    <string name="add_package_style">הוספת סגנון חבילה</string>
+    <string name="default_style">סגנון ברירת מחדל</string>
+
+    <string name="item_app_version">גרסה</string>
+    <string name="item_build_time">זמן בנייה</string>
+    <string name="item_view_on_github">צפייה ב-Github</string>
+    <string name="item_open_source_license">רישיונות קוד פתוח</string>
+
+    <string name="section_music_apps">קשור</string>
+    <string name="section_other_apps">אחר</string>
+    <string name="language_system_default">ברירת מחדל של המערכת</string>
+    <string name="item_app_language">שפה</string>
+
+    <string name="tab_style_text">טקסט</string>
+    <string name="tab_style_icon">סמל</string>
+    <string name="tab_style_anim">אנימציה</string>
+
+    <string name="item_text_size">גודל</string>
+    <string name="item_text_margins">שוליים חיצוניים</string>
+    <string name="item_text_paddings">שוליים פנימיים</string>
+
+    <string name="item_text_color">צבע</string>
+    <string name="item_text_enable_custom_color">צבע מותאם אישית</string>
+    <string name="item_text_color_light_mode">צבע במצב בהיר</string>
+    <string name="item_text_color_dark_mode">צבע במצב כהה</string>
+
+    <string name="item_text_font">גופן</string>
+    <string name="item_text_typeface">גופן מותאם אישית</string>
+    <string name="item_text_weight">משקל גופן</string>
+    <string name="item_text_typeface_bold">מודגש</string>
+    <string name="item_text_typeface_italic">נטוי</string>
+
+    <string name="item_text_marquee">טקסט רץ (Marquee)</string>
+    <string name="item_text_marquee_speed">מהירות</string>
+    <string name="item_text_marquee_space">מרחק חזרה</string>
+    <string name="item_text_marquee_initial_delay">השהיית התחלה</string>
+    <string name="item_text_marquee_delay">השהיית גלילה</string>
+    <string name="item_text_marquee_repeat_unlimited">אפשר גלילה אינסופית</string>
+    <string name="item_text_marquee_repeat_count">מספר חזרות</string>
+    <string name="item_text_marquee_stop_at_end">עצור בסוף</string>
+    <string name="item_text_gradient_progress_style">סגנון התקדמות מדורג</string>
+
+    <string name="item_logo_enable">אפשר</string>
+    <string name="item_logo_margins">שוליים חיצוניים</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">הסתר במצב Fluid Cloud</string>
+
+    <string name="item_logo_style">סגנון</string>
+    <string name="item_logo_style_default">ברירת מחדל</string>
+    <string name="item_logo_style_cover_square">עטיפת אלבום (ריבוע)</string>
+    <string name="item_logo_style_cover_circle">עטיפת אלבום (עיגול)</string>
+
+    <string name="item_logo_color">צבע</string>
+    <string name="item_logo_custom_color">צבע מותאם אישית</string>
+    <string name="item_logo_color_light">צבע במצב בהיר</string>
+    <string name="item_logo_color_dark">צבע במצב כהה</string>
+
+    <string name="item_base_anchor">נקודת עגינה</string>
+    <string name="item_base_insertion_order">סדר הכנסה</string>
+    <string name="item_base_insertion_before">לפני</string>
+    <string name="item_base_insertion_after">אחרי</string>
+    <string name="item_base_width">רוחב</string>
+    <string name="item_base_width_coloros_capsule">רוחב (במצב Fluid Cloud)</string>
+    <string name="item_base_margins">שוליים חיצוניים</string>
+    <string name="item_base_paddings">שוליים פנימיים</string>
+
+    <string name="item_visibility_default">ברירת מחדל</string>
+    <string name="item_visibility_always_visible">תמיד גלוי</string>
+    <string name="item_visibility_always_hidden">תמיד מוסתר</string>
+    <string name="item_visibility_hide_when_playing">הסתר בזמן נגינה</string>
+
+    <string name="rectf_left">שוליים משמאל</string>
+    <string name="rectf_top">שוליים מלמעלה</string>
+    <string name="rectf_right">שוליים מימין</string>
+    <string name="rectf_bottom">שוליים מלמטה</string>
+
+    <string name="hint_custom_color">מותאם אישית</string>
+    <string name="item_text_color_normal">צבע רגיל</string>
+    <string name="item_text_color_background">צבע רקע</string>
+    <string name="item_text_color_highlight">צבע דגש</string>
+    <string name="app_name">Lyricon</string>
+</resources>

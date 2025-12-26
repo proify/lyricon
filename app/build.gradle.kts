@@ -75,9 +75,43 @@ android {
 }
 
 autoTranslate {
-    //no use
     sourceLanguage = "zh-CN"
-    targetLanguages = listOf()
+    targetLanguages = listOf(
+        "ar",
+        "bn",
+        "cs",
+        "de",
+        "el",
+        "en",
+        "en-GB",
+        "es",
+        "fa",
+        "fr",
+        "hi",
+        "hu",
+        "in",
+        "it",
+        "iw",
+        "ja",
+        "ko",
+        "ms",
+        "nl",
+        "pl",
+        "pt",
+        "pt-BR",
+        "ru",
+        "sv",
+        "th",
+        "tl",
+        "tr",
+        "uk",
+        "vi",
+        "zh-CN",
+        "zh-HK",
+        "zh-MO",
+        "zh-SG",
+        "zh-TW"
+    )
     excludeLanguages = listOf("zh-CN")
 
     translateStringsXml {

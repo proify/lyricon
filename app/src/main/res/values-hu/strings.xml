@@ -1,0 +1,133 @@
+<resources>
+    <string name="xposed_description">Dalszöveg funkció kiterjesztése az állapotsorra 🎵</string>
+
+    <string name="confirm">Megerősítés</string>
+    <string name="save">Mentés</string>
+    <string name="add">Hozzáadás</string>
+    <string name="delete">Törlés</string>
+    <string name="restore">Visszaállítás</string>
+    <string name="back">Vissza</string>
+    <string name="other">Egyéb</string>
+    <string name="restart">Újraindítás</string>
+    <string name="search">Keresés</string>
+    <string name="hint_search">Keresés...</string>
+    <string name="def">Alapértelmezett</string>
+    <string name="base">Alap</string>
+
+    <string name="status_enabled">Engedélyezve</string>
+    <string name="status_not_enabled">Letiltva</string>
+    <string name="module_status_activated">Aktiválva 😋</string>
+    <string name="module_status_not_activated">Nincs aktiválva</string>
+
+    <string name="restart_sui">SystemUI újraindítása</string>
+    <string name="restart_app">Alkalmazás újraindítása</string>
+    <string name="restart_fail">Az újraindítás sikertelen</string>
+    <string name="message_app_restart_fail">Kérjük, ellenőrizze, hogy a Root jogosultság meg van-e adva</string>
+
+    <string name="millisecond">ezredmásodperc</string>
+
+    <string name="activity_settings">Beállítások</string>
+    <string name="activity_about">Névjegy</string>
+    <string name="activity_anchor">Horgony</string>
+    <string name="activity_view_rules">Megjelenítés vezérlő</string>
+    <string name="activity_base_lyric_style">Alapstílus</string>
+    <string name="activity_package_style_manager">Csomagstílusok kezelése</string>
+    <string name="activity_lyric_provider">Dalszöveg szolgáltató</string>
+    <string name="activity_open_source_license">Nyílt forráskódú licencek</string>
+
+    <string name="item_base_lyric_style">Alapstílus</string>
+    <string name="item_summary_base_lyric_style">Dalszöveg pozíciója, mérete és az állapotsor láthatóságának vezérlése</string>
+    <string name="item_package_style_manager">Csomagstílusok</string>
+    <string name="item_summary_package_style_manager">Alapértelmezett vagy csomagonkénti stílusok beállítása</string>
+    <string name="item_provider_manager">Szolgáltatók kezelése</string>
+    <string name="item_summary_provider_manager">Dalszöveg szolgáltatók kezelése</string>
+    <string name="item_config_view_rules">Láthatósági szabályok beállítása</string>
+    <string name="item_app_settings">Beállítások</string>
+    <string name="item_summary_app_settings">Alkalmazásbeállítások kezelése</string>
+    <string name="item_about_app">Névjegy</string>
+    <string name="item_summary_about_app">Alkalmazás adatai</string>
+
+    <string name="package_style_manager">Csomagstílusok kezelése</string>
+    <string name="add_package_style">Csomagstílus hozzáadása</string>
+    <string name="default_style">Alapértelmezett stílus</string>
+
+    <string name="item_app_version">Verzió</string>
+    <string name="item_build_time">Build ideje</string>
+    <string name="item_view_on_github">Megtekintés Githubon</string>
+    <string name="item_open_source_license">Nyílt forráskódú licencek</string>
+
+    <string name="section_music_apps">Kapcsolódó</string>
+    <string name="section_other_apps">Egyéb</string>
+    <string name="language_system_default">Rendszer alapértelmezett</string>
+    <string name="item_app_language">Nyelv</string>
+
+    <string name="tab_style_text">Szöveg</string>
+    <string name="tab_style_icon">Ikon</string>
+    <string name="tab_style_anim">Animáció</string>
+
+    <string name="item_text_size">Méret</string>
+    <string name="item_text_margins">Margók</string>
+    <string name="item_text_paddings">Kitöltés</string>
+
+    <string name="item_text_color">Szín</string>
+    <string name="item_text_enable_custom_color">Egyéni szín</string>
+    <string name="item_text_color_light_mode">Világos mód színe</string>
+    <string name="item_text_color_dark_mode">Sötét mód színe</string>
+
+    <string name="item_text_font">Betűtípus</string>
+    <string name="item_text_typeface">Egyéni betűkészlet</string>
+    <string name="item_text_weight">Betűvastagság</string>
+    <string name="item_text_typeface_bold">Félkövér stílus</string>
+    <string name="item_text_typeface_italic">Dőlt stílus</string>
+
+    <string name="item_text_marquee">Futószöveg (Marquee)</string>
+    <string name="item_text_marquee_speed">Sebesség</string>
+    <string name="item_text_marquee_space">Ismétlési távolság</string>
+    <string name="item_text_marquee_initial_delay">Kezdeti késleltetés</string>
+    <string name="item_text_marquee_delay">Görgetési késleltetés</string>
+    <string name="item_text_marquee_repeat_unlimited">Végtelen görgetés engedélyezése</string>
+    <string name="item_text_marquee_repeat_count">Ismétlések száma</string>
+    <string name="item_text_marquee_stop_at_end">Megállás a végén</string>
+    <string name="item_text_gradient_progress_style">Gradiens haladási stílus</string>
+
+    <string name="item_logo_enable">Engedélyezés</string>
+    <string name="item_logo_margins">Logó margók</string>
+
+    <string name="item_logo_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule">Elrejtés Fluid Cloud módban</string>
+
+    <string name="item_logo_style">Stílus</string>
+    <string name="item_logo_style_default">Alapértelmezett</string>
+    <string name="item_logo_style_cover_square">Albumborító (négyzet)</string>
+    <string name="item_logo_style_cover_circle">Albumborító (kör)</string>
+
+    <string name="item_logo_color">Szín</string>
+    <string name="item_logo_custom_color">Egyéni szín</string>
+    <string name="item_logo_color_light">Világos mód színe</string>
+    <string name="item_logo_color_dark">Sötét mód színe</string>
+
+    <string name="item_base_anchor">Horgony</string>
+    <string name="item_base_insertion_order">Beillesztési sorrend</string>
+    <string name="item_base_insertion_before">Előtte</string>
+    <string name="item_base_insertion_after">Utána</string>
+    <string name="item_base_width">Szélesség</string>
+    <string name="item_base_width_coloros_capsule">Szélesség (Fluid Cloud módban)</string>
+    <string name="item_base_margins">Margók</string>
+    <string name="item_base_paddings">Kitöltés</string>
+
+    <string name="item_visibility_default">Alapértelmezett</string>
+    <string name="item_visibility_always_visible">Mindig látható</string>
+    <string name="item_visibility_always_hidden">Mindig rejtett</string>
+    <string name="item_visibility_hide_when_playing">Elrejtés lejátszáskor</string>
+
+    <string name="rectf_left">Bal margó</string>
+    <string name="rectf_top">Felső margó</string>
+    <string name="rectf_right">Jobb margó</string>
+    <string name="rectf_bottom">Alsó margó</string>
+
+    <string name="hint_custom_color">Egyéni</string>
+    <string name="item_text_color_normal">Normál szín</string>
+    <string name="item_text_color_background">Háttérszín</string>
+    <string name="item_text_color_highlight">Kiemelés színe</string>
+    <string name="app_name">Lyricon</string>
+</resources>
