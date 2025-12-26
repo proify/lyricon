@@ -1,133 +1,146 @@
 <resources>
-    <string name="xposed_description">Durum çubuğu için şarkı sözü işlevini genişletin 🎵</string>
+    <string name="app_name">Lyricon</string>
+
+    <string name="xposed_description">Durum çubuğuna şarkı sözü özelliği ekler🎵</string>
 
     <string name="confirm">Onayla</string>
     <string name="save">Kaydet</string>
     <string name="add">Ekle</string>
     <string name="delete">Sil</string>
-    <string name="restore">Geri Yükle</string>
+    <string name="reset">Sıfırla</string>
     <string name="back">Geri</string>
     <string name="other">Diğer</string>
-    <string name="restart">Yeniden Başlat</string>
+    <string name="restart">Yeniden başlat</string>
     <string name="search">Ara</string>
-    <string name="hint_search">Ara...</string>
+    <string name="hint_search">Ara…</string>
     <string name="def">Varsayılan</string>
-    <string name="base">Temel</string>
+    <string name="basic">Temel</string>
 
     <string name="status_enabled">Etkin</string>
-    <string name="status_not_enabled">Devre Dışı</string>
-    <string name="module_status_activated">Etkinleştirildi 😋</string>
-    <string name="module_status_not_activated">Etkin Değil</string>
+    <string name="status_not_enabled">Etkin değil</string>
+    <string name="module_status_activated">Etkinleştirildi😋</string>
+    <string name="module_status_not_activated">Etkinleştirilmedi</string>
 
-    <string name="restart_sui">SystemUI\'yı Yeniden Başlat</string>
-    <string name="restart_app">Uygulamayı Yeniden Başlat</string>
+    <string name="restart_sui">Sistem arayüzünü yeniden başlat</string>
+    <string name="restart_app">Uygulamayı yeniden başlat</string>
     <string name="restart_fail">Yeniden başlatma başarısız</string>
-    <string name="message_app_restart_fail">Lütfen Root izni verilip verilmediğini kontrol edin</string>
+    <string name="message_app_restart_fail">Lütfen Root izninin verilip verilmediğini kontrol edin</string>
 
     <string name="millisecond">milisaniye</string>
 
     <string name="activity_settings">Ayarlar</string>
     <string name="activity_about">Hakkında</string>
-    <string name="activity_anchor">Bağlantı Noktası</string>
-    <string name="activity_view_rules">Görünüm Denetleyicisi</string>
-    <string name="activity_base_lyric_style">Temel Stil</string>
-    <string name="activity_package_style_manager">Paket Stili Yönetimi</string>
-    <string name="activity_lyric_provider">Söz Sağlayıcı</string>
-    <string name="activity_open_source_license">Açık Kaynak Lisansları</string>
+    <string name="activity_anchor">Sabitleme noktası</string>
+    <string name="activity_view_rules">Görünüm denetleyicisi</string>
+    <string name="activity_base_lyric_style">Temel stil</string>
+    <string name="activity_package_style_manager">Paket stillerini yönet</string>
+    <string name="activity_lyric_provider">Şarkı sözü sağlayıcısı</string>
+    <string name="activity_open_source_license">Açık kaynak lisansları</string>
 
-    <string name="item_base_lyric_style">Temel Stil</string>
-    <string name="item_summary_base_lyric_style">Sözlerin konumunu, boyutunu ayarlayın ve durum çubuğu içeriğinin görünürlüğünü kontrol edin</string>
-    <string name="item_package_style_manager">Paket Stili</string>
-    <string name="item_summary_package_style_manager">Varsayılan stili yapılandırın veya farklı paketler için özel stiller belirleyin</string>
-    <string name="item_provider_manager">Sağlayıcı Yönetimi</string>
-    <string name="item_summary_provider_manager">Şarkı sözü sağlayıcılarını yönetin</string>
-    <string name="item_config_view_rules">Görünürlük kurallarını yapılandırın</string>
+    <string name="item_base_lyric_style">Temel stil</string>
+    <string name="item_summary_base_lyric_style">Şarkı sözü görüntüleme konumu, boyutu, durum çubuğu içerik görünürlüğü vb. ayarla</string>
+    <string name="item_package_style_manager">Paket stilleri</string>
+    <string name="item_summary_package_style_manager">Varsayılan stil veya farklı paketler için ayrı stiller yapılandır</string>
+    <string name="item_provider_manager">Şarkı sözü sağlayıcısı</string>
+    <string name="item_summary_provider_manager">Şarkı sözü sağlayıcılarını yönet</string>
+    <string name="item_config_view_rules">Görünüm görünürlük kurallarını yapılandır</string>
     <string name="item_app_settings">Ayarlar</string>
-    <string name="item_summary_app_settings">Uygulama ayarlarını yönetin</string>
+    <string name="item_summary_app_settings">Dil, tema vb. yapılandır</string>
     <string name="item_about_app">Hakkında</string>
     <string name="item_summary_about_app">Uygulama bilgisi</string>
 
-    <string name="package_style_manager">Paket Stili Yönetimi</string>
-    <string name="add_package_style">Paket Stili Ekle</string>
-    <string name="default_style">Varsayılan Stil</string>
+    <string name="app_style_manager">Paket stillerini yönet</string>
+    <string name="add_app_style">Paket stili ekle</string>
+    <string name="default_style">Varsayılan stil</string>
 
     <string name="item_app_version">Sürüm</string>
-    <string name="item_build_time">Derleme Zamanı</string>
-    <string name="item_view_on_github">Github\'da Görüntüle</string>
-    <string name="item_open_source_license">Açık Kaynak Lisansları</string>
+    <string name="item_build_time">Derleme zamanı</string>
+    <string name="item_view_on_github">GitHub\'da görüntüle</string>
+    <string name="item_open_source_license">Açık kaynak lisansları</string>
 
     <string name="section_music_apps">İlgili</string>
     <string name="section_other_apps">Diğer</string>
-    <string name="language_system_default">Sistem Varsayılanı</string>
+    <string name="option_language_follow_system">Sistemi takip et</string>
     <string name="item_app_language">Dil</string>
 
     <string name="tab_style_text">Metin</string>
     <string name="tab_style_icon">Simge</string>
     <string name="tab_style_anim">Animasyon</string>
 
+    <!-- Text lyric style -->
     <string name="item_text_size">Boyut</string>
-    <string name="item_text_margins">Kenar Boşlukları</string>
-    <string name="item_text_paddings">İç Boşluklar</string>
+    <string name="item_text_margins">Dış boşluklar</string>
+    <string name="item_text_paddings">İç boşluklar</string>
 
     <string name="item_text_color">Renk</string>
-    <string name="item_text_enable_custom_color">Özel Renk</string>
-    <string name="item_text_color_light_mode">Açık Mod Rengi</string>
-    <string name="item_text_color_dark_mode">Koyu Mod Rengi</string>
+    <string name="item_text_enable_custom_color">Özel renk</string>
+    <string name="item_text_color_light_mode">Açık mod rengi</string>
+    <string name="item_text_color_dark_mode">Koyu mod rengi</string>
 
-    <string name="item_text_font">Yazı Tipi</string>
-    <string name="item_text_typeface">Özel Yazı Tipi</string>
-    <string name="item_text_weight">Yazı Tipi Ağırlığı</string>
-    <string name="item_text_typeface_bold">Kalın</string>
-    <string name="item_text_typeface_italic">İtalik</string>
+    <string name="item_text_font">Yazı tipi</string>
+    <string name="item_text_typeface">Özel yazı tipi</string>
+    <string name="item_text_weight">Yazı tipi kalınlığı</string>
+    <string name="item_text_typeface_bold">Kalın stil</string>
+    <string name="item_text_typeface_italic">İtalik stil</string>
 
-    <string name="item_text_marquee">Kayan Yazı</string>
+    <string name="item_text_marquee">Kayan yazı</string>
     <string name="item_text_marquee_speed">Hız</string>
-    <string name="item_text_marquee_space">Tekrar Mesafesi</string>
-    <string name="item_text_marquee_initial_delay">Başlangıç Gecikmesi</string>
-    <string name="item_text_marquee_delay">Kaydırma Gecikmesi</string>
-    <string name="item_text_marquee_repeat_unlimited">Sınırsız Kaydırmayı Etkinleştir</string>
-    <string name="item_text_marquee_repeat_count">Tekrar Sayısı</string>
-    <string name="item_text_marquee_stop_at_end">Sonda Dur</string>
-    <string name="item_text_gradient_progress_style">Gradyan İlerleme Stili</string>
+    <string name="item_text_marquee_space">Hayalet mesafesi</string>
+    <string name="item_text_marquee_initial_delay">İlk kaydırma gecikmesi</string>
+    <string name="item_text_marquee_delay">Kaydırma gecikmesi</string>
+    <string name="item_text_marquee_repeat_unlimited">Sonsuz kaydırmayı etkinleştir</string>
+    <string name="item_text_marquee_repeat_count">Tekrar sayısı</string>
+    <string name="item_text_marquee_stop_at_end">Sonda dur</string>
+    <string name="item_text_gradient_progress_style">Geçiş ilerleme stili</string>
 
+    <!-- Logo -->
+    <string name="item_logo_section_basic">Temel</string>
     <string name="item_logo_enable">Etkinleştir</string>
-    <string name="item_logo_margins">Kenar Boşlukları</string>
+    <string name="item_logo_margins">Dış boşluklar</string>
 
-    <string name="item_logo_coloros">ColorOS</string>
-    <string name="item_logo_hide_in_coloros_capsule">Fluid Cloud Modunda Gizle</string>
+    <string name="item_logo_section_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule_mode">Fluid Cloud modunda gizle</string>
 
-    <string name="item_logo_style">Stil</string>
+    <string name="item_logo_section_style">Stil</string>
     <string name="item_logo_style_default">Varsayılan</string>
-    <string name="item_logo_style_cover_square">Müzik Kapağı (Kare)</string>
-    <string name="item_logo_style_cover_circle">Müzik Kapağı (Daire)</string>
+    <string name="item_logo_style_cover_square">Albüm kapağı (kare)</string>
+    <string name="item_logo_style_cover_circle">Albüm kapağı (yuvarlak)</string>
 
-    <string name="item_logo_color">Renk</string>
-    <string name="item_logo_custom_color">Özel Renk</string>
-    <string name="item_logo_color_light">Açık Mod Rengi</string>
-    <string name="item_logo_color_dark">Koyu Mod Rengi</string>
+    <string name="item_logo_section_color">Renk</string>
+    <string name="item_logo_custom_color">Özel renk</string>
+    <string name="item_logo_color_light">Açık mod rengi</string>
+    <string name="item_logo_color_dark">Koyu mod rengi</string>
 
-    <string name="item_base_anchor">Bağlantı Noktası</string>
-    <string name="item_base_insertion_order">Ekleme Sırası</string>
+    <!-- Base lyric style -->
+    <string name="item_base_anchor">Sabitleme noktası</string>
+    <string name="item_base_insertion_order">Ekleme sırası</string>
     <string name="item_base_insertion_before">Önce</string>
     <string name="item_base_insertion_after">Sonra</string>
     <string name="item_base_width">Genişlik</string>
-    <string name="item_base_width_coloros_capsule">Genişlik (Fluid Cloud Modunda)</string>
-    <string name="item_base_margins">Kenar Boşlukları</string>
-    <string name="item_base_paddings">İç Boşluklar</string>
+    <string name="item_base_width_coloros_capsule">Genişlik (Fluid Cloud modu)</string>
+    <string name="item_base_margins">Dış boşluklar</string>
+    <string name="item_base_paddings">İç boşluklar</string>
 
-    <string name="item_visibility_default">Varsayılan</string>
-    <string name="item_visibility_always_visible">Her Zaman Görünür</string>
-    <string name="item_visibility_always_hidden">Her Zaman Gizli</string>
-    <string name="item_visibility_hide_when_playing">Oynatırken Gizle</string>
+    <!-- Visibility rule -->
+    <string name="option_visibility_default">Varsayılan</string>
+    <string name="option_visibility_always_visible">Her zaman görünür</string>
+    <string name="option_visibility_always_hidden">Her zaman gizli</string>
+    <string name="option_visibility_hide_when_playing">Çalarken gizle</string>
 
-    <string name="rectf_left">Sol Kenar Boşluğu</string>
-    <string name="rectf_top">Üst Kenar Boşluğu</string>
-    <string name="rectf_right">Sağ Kenar Boşluğu</string>
-    <string name="rectf_bottom">Alt Kenar Boşluğu</string>
+    <string name="rectf_left">Sol boşluk</string>
+    <string name="rectf_top">Üst boşluk</string>
+    <string name="rectf_right">Sağ boşluk</string>
+    <string name="rectf_bottom">Alt boşluk</string>
 
     <string name="hint_custom_color">Özel</string>
-    <string name="item_text_color_normal">Normal Renk</string>
-    <string name="item_text_color_background">Arka Plan Rengi</string>
-    <string name="item_text_color_highlight">Vurgu Rengi</string>
-    <string name="app_name">Lyricon</string>
+    <string name="item_text_color_normal">Normal renk</string>
+    <string name="item_text_color_background">Arka plan rengi</string>
+    <string name="item_text_color_highlight">Vurgu rengi</string>
+
+    <string name="item_app_theme_mode">Tema modu</string>
+    <string name="option_app_theme_mode_light">Açık</string>
+    <string name="option_app_theme_mode_dark">Koyu</string>
+    <string name="option_app_theme_mode_follow_system">Sistemi takip et</string>
+    <string name="item_app_theme_monet_color">Dinamik Renk</string>
+
 </resources>

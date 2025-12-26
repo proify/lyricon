@@ -190,7 +190,7 @@ open class MiniLyricsView(context: Context, attrs: AttributeSet? = null) :
     }
 
     private fun findActiveLines(progress: Int): List<DoubleLyricLine> {
-        return song!!.lyrics.filterByPositionOrPrevious(progress)
+        return song?.lyrics?.filterByPositionOrPrevious(progress) ?: emptyList()
     }
 
     private fun updateViewsPosition(progress: Int) {
@@ -213,24 +213,31 @@ open class MiniLyricsView(context: Context, attrs: AttributeSet? = null) :
     fun fillGapAtStart(song: Song) {
         val songTitle = getSongTitle(song) ?: return
 
-        val lyrics = song.lyrics.toMutableList()
+        val lyrics = song.lyrics?.toMutableList() ?: mutableListOf()
+
         if (lyrics.isEmpty()) {
-            val duration = if (song.duration <= 0) Int.MAX_VALUE else song.duration
-            val line = SongTitleLine(songTitle)
-            line.begin = duration
-            line.duration = duration
-            lyrics.add(line)
+            val duration = if (song.duration > 0) song.duration else 1145141919
+            lyrics.add(SongTitleLine(songTitle).apply {
+                begin = duration
+                end = duration
+                this.duration = duration
+            })
         } else {
-            val first = lyrics.first()
-            if (first.begin > 0) {
-                val line = SongTitleLine(songTitle)
-                line.begin = 0
-                line.end = first.begin
-                line.duration = first.begin
-                lyrics.add(0, line)
+            val firstLine = lyrics.first()
+            if (firstLine.begin > 0) {
+                lyrics.add(0, SongTitleLine(songTitle).apply {
+                    begin = 0
+                    end = firstLine.begin
+                    duration = firstLine.begin
+                })
             }
         }
+
         song.lyrics = lyrics
+    }
+
+    private fun SongTitleLine(songTitle: String): DoubleLyricLine {
+        return DoubleLyricLine(text = songTitle)
     }
 
     private fun getSongTitle(song: Song): String? {
@@ -243,7 +250,5 @@ open class MiniLyricsView(context: Context, attrs: AttributeSet? = null) :
             else -> null
         }
     }
-
-    class SongTitleLine(text: String) : DoubleLyricLine(text)
 
 }

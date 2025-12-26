@@ -64,9 +64,10 @@ dependencies {
 
     implementation(project(":lyric:view"))
     implementation(project(":lyric:model"))
-    implementation(project(":lyric:bridge:core"))
+
     implementation(project(":lyric:bridge:central"))
     implementation(project(":lyric:bridge:subscriber"))
+
     implementation(project(":lyric:style"))
 
     testImplementation(libs.junit)

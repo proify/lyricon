@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.log.YLog
-import io.github.proify.lyricon.common.extensions.dp
+import io.github.proify.android.extensions.dp
 import io.github.proify.lyricon.lyric.style.BasicStyle
 import io.github.proify.lyricon.xposed.hook.systemui.lyric.LyricView
 import io.github.proify.lyricon.xposed.util.LyricPrefs

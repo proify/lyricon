@@ -1,133 +1,0 @@
-<resources>
-    <string name="xposed_description">گسترش قابلیت نمایش متن ترانه در نوار وضعیت 🎵</string>
-
-    <string name="confirm">تأیید</string>
-    <string name="save">ذخیره</string>
-    <string name="add">افزودن</string>
-    <string name="delete">حذف</string>
-    <string name="restore">بازیابی</string>
-    <string name="back">بازگشت</string>
-    <string name="other">موارد دیگر</string>
-    <string name="restart">بازنشانی</string>
-    <string name="search">جستجو</string>
-    <string name="hint_search">جستجو...</string>
-    <string name="def">پیش‌فرض</string>
-    <string name="base">پایه</string>
-
-    <string name="status_enabled">فعال شده</string>
-    <string name="status_not_enabled">فعال نشده</string>
-    <string name="module_status_activated">فعال شد 😋</string>
-    <string name="module_status_not_activated">فعال نشده</string>
-
-    <string name="restart_sui">بازنشانی واسط کاربری سیستم (SystemUI)</string>
-    <string name="restart_app">بازنشانی برنامه</string>
-    <string name="restart_fail">بازنشانی ناموفق بود</string>
-    <string name="message_app_restart_fail">لطفاً بررسی کنید که آیا دسترسی روت (Root) داده شده است یا خیر</string>
-
-    <string name="millisecond">میلی‌ثانیه</string>
-
-    <string name="activity_settings">تنظیمات</string>
-    <string name="activity_about">درباره</string>
-    <string name="activity_anchor">نقطه لنگر</string>
-    <string name="activity_view_rules">کنترل‌کننده نما</string>
-    <string name="activity_base_lyric_style">سبک پایه</string>
-    <string name="activity_package_style_manager">مدیریت سبک بسته</string>
-    <string name="activity_lyric_provider">ارائه‌دهنده متن ترانه</string>
-    <string name="activity_open_source_license">مجوزهای متن‌باز</string>
-
-    <string name="item_base_lyric_style">سبک پایه</string>
-    <string name="item_summary_base_lyric_style">تنظیم موقعیت، اندازه متن ترانه و کنترل نمایش محتوای نوار وضعیت</string>
-    <string name="item_package_style_manager">سبک بسته</string>
-    <string name="item_summary_package_style_manager">پیکربندی سبک پیش‌فرض یا تنظیم سبک اختصاصی برای بسته‌های مختلف</string>
-    <string name="item_provider_manager">مدیریت ارائه‌دهندگان</string>
-    <string name="item_summary_provider_manager">مدیریت ارائه‌دهندگان متن ترانه</string>
-    <string name="item_config_view_rules">پیکربندی قوانین نمایش</string>
-    <string name="item_app_settings">تنظیمات</string>
-    <string name="item_summary_app_settings">مدیریت تنظیمات برنامه</string>
-    <string name="item_about_app">درباره برنامه</string>
-    <string name="item_summary_about_app">اطلاعات برنامه</string>
-
-    <string name="package_style_manager">مدیریت سبک بسته</string>
-    <string name="add_package_style">افزودن سبک بسته</string>
-    <string name="default_style">سبک پیش‌فرض</string>
-
-    <string name="item_app_version">نسخه</string>
-    <string name="item_build_time">زمان ساخت</string>
-    <string name="item_view_on_github">مشاهده در Github</string>
-    <string name="item_open_source_license">مجوزهای متن‌باز</string>
-
-    <string name="section_music_apps">مرتبط</string>
-    <string name="section_other_apps">موارد دیگر</string>
-    <string name="language_system_default">پیش‌فرض سیستم</string>
-    <string name="item_app_language">زبان</string>
-
-    <string name="tab_style_text">متن</string>
-    <string name="tab_style_icon">آیکون</string>
-    <string name="tab_style_anim">انیمیشن</string>
-
-    <string name="item_text_size">اندازه</string>
-    <string name="item_text_margins">حاشیه خارجی</string>
-    <string name="item_text_paddings">حاشیه داخلی</string>
-
-    <string name="item_text_color">رنگ</string>
-    <string name="item_text_enable_custom_color">رنگ سفارشی</string>
-    <string name="item_text_color_light_mode">رنگ در حالت روشن</string>
-    <string name="item_text_color_dark_mode">رنگ در حالت تاریک</string>
-
-    <string name="item_text_font">قلم</string>
-    <string name="item_text_typeface">قلم سفارشی</string>
-    <string name="item_text_weight">وزن قلم</string>
-    <string name="item_text_typeface_bold">ضخیم (Bold)</string>
-    <string name="item_text_typeface_italic">کج (Italic)</string>
-
-    <string name="item_text_marquee">متن متحرک</string>
-    <string name="item_text_marquee_speed">سرعت</string>
-    <string name="item_text_marquee_space">فاصله تکرار</string>
-    <string name="item_text_marquee_initial_delay">تأخیر اولیه</string>
-    <string name="item_text_marquee_delay">تأخیر پیمایش</string>
-    <string name="item_text_marquee_repeat_unlimited">فعال‌سازی پیمایش نامحدود</string>
-    <string name="item_text_marquee_repeat_count">تعداد دفعات پیمایش</string>
-    <string name="item_text_marquee_stop_at_end">توقف در پایان</string>
-    <string name="item_text_gradient_progress_style">سبک گرادینت پیشرفت</string>
-
-    <string name="item_logo_enable">فعال‌سازی</string>
-    <string name="item_logo_margins">حاشیه خارجی</string>
-
-    <string name="item_logo_coloros">ColorOS</string>
-    <string name="item_logo_hide_in_coloros_capsule">پنهان‌سازی در حالت Fluid Cloud</string>
-
-    <string name="item_logo_style">سبک</string>
-    <string name="item_logo_style_default">پیش‌فرض</string>
-    <string name="item_logo_style_cover_square">کاور موسیقی (مربع)</string>
-    <string name="item_logo_style_cover_circle">کاور موسیقی (دایره)</string>
-
-    <string name="item_logo_color">رنگ</string>
-    <string name="item_logo_custom_color">رنگ سفارشی</string>
-    <string name="item_logo_color_light">رنگ در حالت روشن</string>
-    <string name="item_logo_color_dark">رنگ در حالت تاریک</string>
-
-    <string name="item_base_anchor">نقطه لنگر</string>
-    <string name="item_base_insertion_order">ترتیب درج</string>
-    <string name="item_base_insertion_before">قبل از</string>
-    <string name="item_base_insertion_after">بعد از</string>
-    <string name="item_base_width">عرض</string>
-    <string name="item_base_width_coloros_capsule">عرض (در حالت Fluid Cloud)</string>
-    <string name="item_base_margins">حاشیه خارجی</string>
-    <string name="item_base_paddings">حاشیه داخلی</string>
-
-    <string name="item_visibility_default">پیش‌فرض</string>
-    <string name="item_visibility_always_visible">همیشه نمایان</string>
-    <string name="item_visibility_always_hidden">همیشه پنهان</string>
-    <string name="item_visibility_hide_when_playing">پنهان‌سازی هنگام پخش</string>
-
-    <string name="rectf_left">حاشیه چپ</string>
-    <string name="rectf_top">حاشیه بالا</string>
-    <string name="rectf_right">حاشیه راست</string>
-    <string name="rectf_bottom">حاشیه پایین</string>
-
-    <string name="hint_custom_color">سفارشی</string>
-    <string name="item_text_color_normal">رنگ عادی</string>
-    <string name="item_text_color_background">رنگ پس‌زمینه</string>
-    <string name="item_text_color_highlight">رنگ برجسته</string>
-    <string name="app_name">Lyricon</string>
-</resources>

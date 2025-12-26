@@ -2,15 +2,15 @@ package io.github.proify.lyricon.lyric.style
 
 import android.content.SharedPreferences
 import android.os.Parcelable
-import io.github.proify.lyricon.common.extensions.jsonx
-import io.github.proify.lyricon.common.extensions.safeDecode
-import io.github.proify.lyricon.common.extensions.toJson
+import io.github.proify.android.extensions.jsonx
+import io.github.proify.android.extensions.safeDecode
+import io.github.proify.android.extensions.toJson
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-class TextStyle(
+data class TextStyle(
     var textSize: Float = Defaults.TEXT_SIZE,
     var margins: RectF = Defaults.MARGINS,
     var paddings: RectF = Defaults.PADDINGS,
@@ -68,7 +68,7 @@ class TextStyle(
         const val ENABLE_GRADIENT_PROGRESS_STYLE = true
     }
 
-    fun color(isLight: Boolean) = if (isLight) lightModeColor else darkModeColor
+    fun color(lightMode: Boolean) = if (lightMode) lightModeColor else darkModeColor
 
     override fun onLoad(preferences: SharedPreferences) {
         textSize = preferences.getFloat("lyric_style_text_size", Defaults.TEXT_SIZE)

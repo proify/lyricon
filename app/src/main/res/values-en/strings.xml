@@ -1,0 +1,146 @@
+<resources>
+    <string name="app_name">Lyricon</string>
+
+    <string name="xposed_description">Extend status bar with lyrics functionality🎵</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="reset">Reset</string>
+    <string name="back">Back</string>
+    <string name="other">Other</string>
+    <string name="restart">Restart</string>
+    <string name="search">Search</string>
+    <string name="hint_search">Search…</string>
+    <string name="def">Default</string>
+    <string name="basic">Basic</string>
+
+    <string name="status_enabled">Enabled</string>
+    <string name="status_not_enabled">Not Enabled</string>
+    <string name="module_status_activated">Activated😋</string>
+    <string name="module_status_not_activated">Not Activated</string>
+
+    <string name="restart_sui">Restart System UI</string>
+    <string name="restart_app">Restart App</string>
+    <string name="restart_fail">Restart Failed</string>
+    <string name="message_app_restart_fail">Please check if Root permission has been granted</string>
+
+    <string name="millisecond">millisecond</string>
+
+    <string name="activity_settings">Settings</string>
+    <string name="activity_about">About</string>
+    <string name="activity_anchor">Anchor</string>
+    <string name="activity_view_rules">View Controller</string>
+    <string name="activity_base_lyric_style">Base Style</string>
+    <string name="activity_package_style_manager">Manage Package Styles</string>
+    <string name="activity_lyric_provider">Lyric Provider</string>
+    <string name="activity_open_source_license">Open Source Licenses</string>
+
+    <string name="item_base_lyric_style">Base Style</string>
+    <string name="item_summary_base_lyric_style">Configure lyric display position, size, status bar content visibility, etc.</string>
+    <string name="item_package_style_manager">Package Styles</string>
+    <string name="item_summary_package_style_manager">Configure default style or individual styles for different packages</string>
+    <string name="item_provider_manager">Lyric Provider</string>
+    <string name="item_summary_provider_manager">Manage lyric providers</string>
+    <string name="item_config_view_rules">Configure View Visibility Rules</string>
+    <string name="item_app_settings">Settings</string>
+    <string name="item_summary_app_settings">Configure language, theme, etc.</string>
+    <string name="item_about_app">About</string>
+    <string name="item_summary_about_app">App information</string>
+
+    <string name="app_style_manager">Manage Package Styles</string>
+    <string name="add_app_style">Add Package Style</string>
+    <string name="default_style">Default Style</string>
+
+    <string name="item_app_version">Version</string>
+    <string name="item_build_time">Build Time</string>
+    <string name="item_view_on_github">View on GitHub</string>
+    <string name="item_open_source_license">Open Source Licenses</string>
+
+    <string name="section_music_apps">Related</string>
+    <string name="section_other_apps">Other</string>
+    <string name="option_language_follow_system">Follow System</string>
+    <string name="item_app_language">Language</string>
+
+    <string name="tab_style_text">Text</string>
+    <string name="tab_style_icon">Icon</string>
+    <string name="tab_style_anim">Animation</string>
+
+    <!-- Text lyric style -->
+    <string name="item_text_size">Size</string>
+    <string name="item_text_margins">Margins</string>
+    <string name="item_text_paddings">Padding</string>
+
+    <string name="item_text_color">Color</string>
+    <string name="item_text_enable_custom_color">Custom Color</string>
+    <string name="item_text_color_light_mode">Light Mode Color</string>
+    <string name="item_text_color_dark_mode">Dark Mode Color</string>
+
+    <string name="item_text_font">Font</string>
+    <string name="item_text_typeface">Custom Font</string>
+    <string name="item_text_weight">Font Weight</string>
+    <string name="item_text_typeface_bold">Bold Style</string>
+    <string name="item_text_typeface_italic">Italic Style</string>
+
+    <string name="item_text_marquee">Marquee</string>
+    <string name="item_text_marquee_speed">Speed</string>
+    <string name="item_text_marquee_space">Ghost Distance</string>
+    <string name="item_text_marquee_initial_delay">Initial Scroll Delay</string>
+    <string name="item_text_marquee_delay">Scroll Delay</string>
+    <string name="item_text_marquee_repeat_unlimited">Enable Infinite Scroll</string>
+    <string name="item_text_marquee_repeat_count">Repeat Count</string>
+    <string name="item_text_marquee_stop_at_end">Stop at End</string>
+    <string name="item_text_gradient_progress_style">Gradient Progress Style</string>
+
+    <!-- Logo -->
+    <string name="item_logo_section_basic">Basic</string>
+    <string name="item_logo_enable">Enable</string>
+    <string name="item_logo_margins">Margins</string>
+
+    <string name="item_logo_section_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule_mode">Hide in Fluid Cloud Mode</string>
+
+    <string name="item_logo_section_style">Style</string>
+    <string name="item_logo_style_default">Default</string>
+    <string name="item_logo_style_cover_square">Album Cover (Square)</string>
+    <string name="item_logo_style_cover_circle">Album Cover (Circle)</string>
+
+    <string name="item_logo_section_color">Color</string>
+    <string name="item_logo_custom_color">Custom Color</string>
+    <string name="item_logo_color_light">Light Mode Color</string>
+    <string name="item_logo_color_dark">Dark Mode Color</string>
+
+    <!-- Base lyric style -->
+    <string name="item_base_anchor">Anchor</string>
+    <string name="item_base_insertion_order">Insertion Order</string>
+    <string name="item_base_insertion_before">Before</string>
+    <string name="item_base_insertion_after">After</string>
+    <string name="item_base_width">Width</string>
+    <string name="item_base_width_coloros_capsule">Width (Fluid Cloud Mode)</string>
+    <string name="item_base_margins">Margins</string>
+    <string name="item_base_paddings">Padding</string>
+
+    <!-- Visibility rule -->
+    <string name="option_visibility_default">Default</string>
+    <string name="option_visibility_always_visible">Always Visible</string>
+    <string name="option_visibility_always_hidden">Always Hidden</string>
+    <string name="option_visibility_hide_when_playing">Hide When Playing</string>
+
+    <string name="rectf_left">Left</string>
+    <string name="rectf_top">Top</string>
+    <string name="rectf_right">Right</string>
+    <string name="rectf_bottom">Bottom</string>
+
+    <string name="hint_custom_color">Custom</string>
+    <string name="item_text_color_normal">Normal Color</string>
+    <string name="item_text_color_background">Background Color</string>
+    <string name="item_text_color_highlight">Highlight Color</string>
+
+    <string name="item_app_theme_mode">Theme Mode</string>
+    <string name="option_app_theme_mode_light">Light</string>
+    <string name="option_app_theme_mode_dark">Dark</string>
+    <string name="option_app_theme_mode_follow_system">Follow System</string>
+    <string name="item_app_theme_monet_color">Dynamic Color</string>
+
+</resources>

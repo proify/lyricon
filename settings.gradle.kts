@@ -29,7 +29,6 @@ include(
     ":common",
 )
 
-include(":lyric:bridge:core")
 include(":lyric:bridge:central")
 include(":lyric:bridge:provider")
 include(":lyric:bridge:subscriber")

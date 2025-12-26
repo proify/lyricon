@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import io.github.proify.android.extensions.formatToString
 import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperDialog
-import io.github.proify.lyricon.common.extensions.formatToString
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.TextButton
 

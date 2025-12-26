@@ -1,162 +1,179 @@
 package io.github.proify.lyricon.app.ui.activity
 
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.proify.lyricon.app.Application
 import io.github.proify.lyricon.app.R
+import io.github.proify.lyricon.app.event.SettingChangedEvent
 import io.github.proify.lyricon.app.ui.compose.AppToolBarListContainer
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.IconActions
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SpinnerEntry
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperSpinner
-import io.github.proify.lyricon.app.util.LocaleHelper
+import io.github.proify.lyricon.app.util.AppLangUtils
+import io.github.proify.lyricon.app.util.AppThemeUtils
+import io.github.proify.lyricon.app.util.EventBus
+import top.yukonga.miuix.kmp.extra.SuperDropdown
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 import java.util.Locale
 
 class SettingsActivity : BaseActivity() {
 
-    companion object {
-        private var changedLanguage = false
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupBackPressHandler()
-        setContent { Content() }
+        setContent {
+            SettingsScreen(onSettingsChanged = ::restartActivity)
+        }
     }
 
-    /**
-     * 配置返回按钮处理逻辑
-     */
-    private fun setupBackPressHandler() {
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (changedLanguage) {
-                    setResult(RESULT_OK)
-                    finish()
-                } else {
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
-                }
+    private fun restartActivity() {
+        EventBus.post(SettingChangedEvent())
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+        @Suppress("DEPRECATION")
+        overridePendingTransition(0, 0)
+        finish()
+    }
+}
+
+@Composable
+private fun SettingsScreen(onSettingsChanged: () -> Unit) {
+    AppToolBarListContainer(
+        title = stringResource(id = R.string.activity_settings),
+        canBack = true
+    ) { scope ->
+        scope.item("language_section") {
+            SettingsCard {
+                LanguageSelector(onSettingsChanged)
             }
-        })
-    }
-
-    @Composable
-    private fun Content() {
-        AppToolBarListContainer(
-            title = stringResource(id = R.string.activity_settings),
-            canBack = true
-        ) { scope ->
-            scope.item("settings") {
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                ) {
-                    LanguageSelector()
-                }
+        }
+        scope.item("theme_section") {
+            SettingsCard(topPadding = 16.dp) {
+                ThemeModeSelector(onSettingsChanged)
             }
         }
     }
+}
 
-    @Composable
-    private fun LanguageSelector() {
-        val languages = LocaleHelper.getLanguages()
-        val currentLanguage = LocaleHelper.getLanguage(this)
+@Composable
+private fun SettingsCard(
+    topPadding: androidx.compose.ui.unit.Dp = 0.dp,
+    content: @Composable () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .padding(start = 16.dp, top = topPadding, end = 16.dp)
+            .fillMaxWidth(),
+    ) {
+        content()
+    }
+}
 
-        val languageOptions = remember(languages) {
-            buildLanguageOptions(languages)
-        }
+@Composable
+private fun ThemeModeSelector(onChanged: () -> Unit) {
+    val context = LocalContext.current
 
-        var selectedIndex by remember(currentLanguage) {
-            mutableIntStateOf(languages.indexOf(currentLanguage).coerceAtLeast(0))
-        }
+    val themeOptions = listOf(
+        R.string.option_app_theme_mode_follow_system to AppThemeUtils.MODE_SYSTEM,
+        R.string.option_app_theme_mode_light to AppThemeUtils.MODE_LIGHT,
+        R.string.option_app_theme_mode_dark to AppThemeUtils.MODE_DARK
+    )
 
-        SuperSpinner(
-            leftAction = {
-                IconActions(painterResource(R.drawable.ic_language))
-            },
-            title = stringResource(id = R.string.item_app_language),
-            items = languageOptions.map { it.second },
-            selectedIndex = selectedIndex,
-            onSelectedIndexChange = { newIndex ->
-                if (newIndex != selectedIndex) {
-                    selectedIndex = newIndex
-                    handleLanguageChange(languages[newIndex])
-                }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val isMonetEnabled = remember { AppThemeUtils.isEnableMonetColor(context) }
+        SuperSwitch(
+            leftAction = { IconActions(painterResource(R.drawable.ic_palette)) },
+            title = stringResource(R.string.item_app_theme_monet_color),
+            checked = isMonetEnabled,
+            onCheckedChange = {
+                AppThemeUtils.setEnableMonetColor(context, it)
+                onChanged()
             }
         )
     }
 
-    private fun buildLanguageOptions(languages: List<String>): List<Pair<String, SpinnerEntry>> {
-        return languages.map { languageCode ->
-            languageCode to createSpinnerEntry(languageCode)
+    val currentMode = remember { AppThemeUtils.getMode(context) }
+    val selectedIndex = remember(currentMode) {
+        themeOptions.indexOfFirst { it.second == currentMode }.coerceAtLeast(0)
+    }
+
+    SuperDropdown(
+        leftAction = { IconActions(painterResource(R.drawable.ic_routine)) },
+        title = stringResource(id = R.string.item_app_theme_mode),
+        items = themeOptions.map { stringResource(it.first) },
+        selectedIndex = selectedIndex,
+        onSelectedIndexChange = { index ->
+            if (index != selectedIndex) {
+                AppThemeUtils.setMode(context, themeOptions[index].second)
+                onChanged()
+            }
+        }
+    )
+}
+
+@Composable
+private fun LanguageSelector(onChanged: () -> Unit) {
+    val context = LocalContext.current
+    val languages = remember { AppLangUtils.getLanguages() }
+    val currentLanguage = remember { AppLangUtils.getCurrentLanguage(context) }
+
+    val spinnerEntries = remember(languages) {
+        languages.map { code ->
+            val title = context.getLanguageDisplayName(code)
+            val summary = context.getLanguageTranslationName(code)
+            SpinnerEntry(
+                title = title,
+                // summary = if (title == summary) null else summary
+            )
         }
     }
 
-    private fun createSpinnerEntry(
-        languageCode: String,
-    ): SpinnerEntry {
-        val title = getLanguageDisplayName(languageCode)
-        val summary = getLanguageTranslationName(languageCode)
-        return SpinnerEntry(
-            title = title,
-            summary = if (title == summary) null else summary
-        )
+    var selectedIndex = remember(currentLanguage) {
+        languages.indexOf(currentLanguage).coerceAtLeast(0)
     }
 
-    private fun getLanguageDisplayName(
-        languageCode: String,
-    ): String {
-        return when (languageCode) {
-            LocaleHelper.DEFAULT_LANGUAGE -> Application.unwrapContext.getString(R.string.language_system_default)
-            else -> runCatching {
-                val locale = Locale.forLanguageTag(languageCode)
-                locale.getDisplayName(locale)
-                    .replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(locale) else it.toString()
-                    }
-            }.getOrElse { languageCode }
+    SuperSpinner(
+        leftAction = { IconActions(painterResource(R.drawable.ic_language)) },
+        title = stringResource(id = R.string.item_app_language),
+        items = spinnerEntries,
+        selectedIndex = selectedIndex,
+        onSelectedIndexChange = { index ->
+            //selectedIndex = index
+            AppLangUtils.setLanguage(context, languages[index])
+            onChanged()
         }
-    }
+    )
+}
 
-    private fun getLanguageTranslationName(
-        languageCode: String,
-    ): String? {
-        return when (languageCode) {
-            LocaleHelper.DEFAULT_LANGUAGE -> null
-            else -> runCatching {
-                val locale = Locale.forLanguageTag(languageCode)
-                locale.getDisplayName(LocaleHelper.DEFAULT_LOCALE)
-                    .replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(locale) else it.toString()
-                    }
-            }.getOrElse { null }
-        }
+private fun Context.getLanguageDisplayName(languageCode: String): String {
+    if (languageCode == AppLangUtils.DEFAULT_LANGUAGE) {
+        return getString(R.string.option_language_follow_system)
     }
+    return runCatching {
+        val locale = Locale.forLanguageTag(languageCode)
+        locale.getDisplayName(locale).capitalize(locale)
+    }.getOrDefault(languageCode)
+}
 
-    private fun handleLanguageChange(newLanguage: String) {
-        LocaleHelper.setLanguage(this, newLanguage)
-        changedLanguage = true
-        recreate()
-    }
+private fun Context.getLanguageTranslationName(languageCode: String): String? {
+    if (languageCode == AppLangUtils.DEFAULT_LANGUAGE) return null
+    return runCatching {
+        val locale = Locale.forLanguageTag(languageCode)
+        locale.getDisplayName(AppLangUtils.DEFAULT_LOCALE).capitalize(locale)
+    }.getOrNull()
+}
 
-    @Preview(showBackground = true)
-    @Composable
-    private fun ContentPreview() {
-        Content()
-    }
+private fun String.capitalize(locale: Locale): String = replaceFirstChar {
+    if (it.isLowerCase()) it.titlecase(locale) else it.toString()
 }

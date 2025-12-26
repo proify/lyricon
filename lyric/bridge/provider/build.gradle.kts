@@ -3,11 +3,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("com.vanniktech.maven.publish") version "0.35.0"
+    kotlin("plugin.serialization") version "2.1.21"
+    id("kotlin-parcelize")
     signing
+    id("com.vanniktech.maven.publish")
 }
 
-val version = "0.1.3-SNAPSHOT"
+val version = "0.1.42-SNAPSHOT"
 
 android {
     namespace = "io.github.proify.lyricon.provider"
@@ -47,7 +49,6 @@ android {
 }
 
 dependencies {
-    api(project(":lyric:bridge:core"))
     api(project(":lyric:model"))
     api(libs.androidx.core.ktx)
 
@@ -58,14 +59,14 @@ dependencies {
 
 mavenPublishing {
     coordinates(
-        "io.github.proify.lyricon.lyric",
+        "io.github.proify.lyricon",
         "provider",
         version
     )
 
     pom {
         name.set("provider")
-        description.set("provider")
+        description.set("Provide lyrics services for Lyricon")
         inceptionYear.set("2025")
         url.set("https://github.com/proify/lyricon")
         licenses {
@@ -92,6 +93,8 @@ mavenPublishing {
     signAllPublications()
 }
 
-signing {
-    useGpgCmd()
+afterEvaluate {
+    signing {
+        useGpgCmd()
+    }
 }

@@ -1,0 +1,145 @@
+<resources>
+    <string name="app_name">Lyricon</string>
+
+    <string name="xposed_description">Extiende la barra de estado con funcionalidad de letras🎵</string>
+
+    <string name="confirm">Confirmar</string>
+    <string name="save">Guardar</string>
+    <string name="add">Añadir</string>
+    <string name="delete">Eliminar</string>
+    <string name="reset">Restablecer</string>
+    <string name="back">Atrás</string>
+    <string name="other">Otros</string>
+    <string name="restart">Reiniciar</string>
+    <string name="search">Buscar</string>
+    <string name="hint_search">Buscar…</string>
+    <string name="def">Predeterminado</string>
+    <string name="basic">Básico</string>
+
+    <string name="status_enabled">Activado</string>
+    <string name="status_not_enabled">No activado</string>
+    <string name="module_status_activated">Activado😋</string>
+    <string name="module_status_not_activated">No activado</string>
+
+    <string name="restart_sui">Reiniciar interfaz del sistema</string>
+    <string name="restart_app">Reiniciar aplicación</string>
+    <string name="restart_fail">Error al reiniciar</string>
+    <string name="message_app_restart_fail">Por favor, verifica si se ha otorgado permiso de Root</string>
+
+    <string name="millisecond">milisegundo</string>
+
+    <string name="activity_settings">Ajustes</string>
+    <string name="activity_about">Acerca de</string>
+    <string name="activity_anchor">Ancla</string>
+    <string name="activity_view_rules">Controlador de vistas</string>
+    <string name="activity_base_lyric_style">Estilo base</string>
+    <string name="activity_package_style_manager">Gestionar estilos de paquetes</string>
+    <string name="activity_lyric_provider">Proveedor de letras</string>
+    <string name="activity_open_source_license">Licencias de código abierto</string>
+
+    <string name="item_base_lyric_style">Estilo base</string>
+    <string name="item_summary_base_lyric_style">Configura la posición de las letras, tamaño, visibilidad del contenido de la barra de estado, etc.</string>
+    <string name="item_package_style_manager">Estilos de paquetes</string>
+    <string name="item_summary_package_style_manager">Configura el estilo predeterminado o estilos individuales para diferentes paquetes</string>
+    <string name="item_provider_manager">Proveedor de letras</string>
+    <string name="item_summary_provider_manager">Gestionar proveedores de letras</string>
+    <string name="item_config_view_rules">Configurar reglas de visibilidad de vistas</string>
+    <string name="item_app_settings">Ajustes</string>
+    <string name="item_summary_app_settings">Configurar idioma, tema, etc.</string>
+    <string name="item_about_app">Acerca de</string>
+    <string name="item_summary_about_app">Información de la aplicación</string>
+
+    <string name="app_style_manager">Gestionar estilos de paquetes</string>
+    <string name="add_app_style">Añadir estilo de paquete</string>
+    <string name="default_style">Estilo predeterminado</string>
+
+    <string name="item_app_version">Versión</string>
+    <string name="item_build_time">Fecha de compilación</string>
+    <string name="item_view_on_github">Ver en GitHub</string>
+    <string name="item_open_source_license">Licencias de código abierto</string>
+
+    <string name="section_music_apps">Relacionados</string>
+    <string name="section_other_apps">Otros</string>
+    <string name="option_language_follow_system">Seguir el sistema</string>
+    <string name="item_app_language">Idioma</string>
+
+    <string name="tab_style_text">Texto</string>
+    <string name="tab_style_icon">Icono</string>
+    <string name="tab_style_anim">Animación</string>
+
+    <!-- Text lyric style -->
+    <string name="item_text_size">Tamaño</string>
+    <string name="item_text_margins">Márgenes</string>
+    <string name="item_text_paddings">Relleno</string>
+
+    <string name="item_text_color">Color</string>
+    <string name="item_text_enable_custom_color">Color personalizado</string>
+    <string name="item_text_color_light_mode">Color en modo claro</string>
+    <string name="item_text_color_dark_mode">Color en modo oscuro</string>
+
+    <string name="item_text_font">Fuente</string>
+    <string name="item_text_typeface">Fuente personalizada</string>
+    <string name="item_text_weight">Grosor de fuente</string>
+    <string name="item_text_typeface_bold">Estilo negrita</string>
+    <string name="item_text_typeface_italic">Estilo cursiva</string>
+
+    <string name="item_text_marquee">Marquesina</string>
+    <string name="item_text_marquee_speed">Velocidad</string>
+    <string name="item_text_marquee_space">Distancia fantasma</string>
+    <string name="item_text_marquee_initial_delay">Retraso inicial de desplazamiento</string>
+    <string name="item_text_marquee_delay">Retraso de desplazamiento</string>
+    <string name="item_text_marquee_repeat_unlimited">Activar desplazamiento infinito</string>
+    <string name="item_text_marquee_repeat_count">Número de repeticiones</string>
+    <string name="item_text_marquee_stop_at_end">Detener al final</string>
+    <string name="item_text_gradient_progress_style">Estilo de progreso degradado</string>
+
+    <!-- Logo -->
+    <string name="item_logo_section_basic">Básico</string>
+    <string name="item_logo_enable">Activar</string>
+    <string name="item_logo_margins">Márgenes</string>
+
+    <string name="item_logo_section_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule_mode">Ocultar en modo Fluid Cloud</string>
+
+    <string name="item_logo_section_style">Estilo</string>
+    <string name="item_logo_style_default">Predeterminado</string>
+    <string name="item_logo_style_cover_square">Carátula del álbum (cuadrada)</string>
+    <string name="item_logo_style_cover_circle">Carátula del álbum (circular)</string>
+
+    <string name="item_logo_section_color">Color</string>
+    <string name="item_logo_custom_color">Color personalizado</string>
+    <string name="item_logo_color_light">Color en modo claro</string>
+    <string name="item_logo_color_dark">Color en modo oscuro</string>
+
+    <!-- Base lyric style -->
+    <string name="item_base_anchor">Ancla</string>
+    <string name="item_base_insertion_order">Orden de inserción</string>
+    <string name="item_base_insertion_before">Antes</string>
+    <string name="item_base_insertion_after">Después</string>
+    <string name="item_base_width">Ancho</string>
+    <string name="item_base_width_coloros_capsule">Ancho (en modo Fluid Cloud)</string>
+    <string name="item_base_margins">Márgenes</string>
+    <string name="item_base_paddings">Relleno</string>
+
+    <!-- Visibility rule -->
+    <string name="option_visibility_default">Predeterminado</string>
+    <string name="option_visibility_always_visible">Siempre visible</string>
+    <string name="option_visibility_always_hidden">Siempre oculto</string>
+    <string name="option_visibility_hide_when_playing">Ocultar durante la reproducción</string>
+
+    <string name="rectf_left">Margen izquierdo</string>
+    <string name="rectf_top">Margen superior</string>
+    <string name="rectf_right">Margen derecho</string>
+    <string name="rectf_bottom">Margen inferior</string>
+
+    <string name="hint_custom_color">Personalizado</string>
+    <string name="item_text_color_normal">Color normal</string>
+    <string name="item_text_color_background">Color de fondo</string>
+    <string name="item_text_color_highlight">Color de resaltado</string>
+
+    <string name="item_app_theme_mode">Modo de tema</string>
+    <string name="option_app_theme_mode_light">Claro</string>
+    <string name="option_app_theme_mode_dark">Oscuro</string>
+    <string name="option_app_theme_mode_follow_system">Seguir el sistema</string>
+    <string name="item_app_theme_monet_color">Color dinámico</string>
+</resources>

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-class AnimStyle(var enable: Boolean = false) : AbstractStyle(), Parcelable {
+data class AnimStyle(var enable: Boolean = false) : AbstractStyle(), Parcelable {
 
     override fun onLoad(preferences: SharedPreferences) {
         enable = preferences.getBoolean("lyric_style_anim_enable", true)

@@ -6,14 +6,14 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.core.content.edit
+import io.github.proify.android.extensions.formatToString
+import io.github.proify.android.extensions.fromJsonOrNull
+import io.github.proify.android.extensions.toJson
 import io.github.proify.lyricon.app.ui.compose.RectFInputDialog
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentColors
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentDefaults
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperArrow
-import io.github.proify.lyricon.common.extensions.formatToString
-import io.github.proify.lyricon.common.extensions.fromJsonOrNull
-import io.github.proify.lyricon.common.extensions.toJson
+import io.github.proify.lyricon.app.util.Utils.commitEdit
 import io.github.proify.lyricon.lyric.style.RectF
 
 @Composable
@@ -50,7 +50,7 @@ fun RectInputPreference(
             title = title,
             onConfirm = { left, top, right, bottom ->
                 val rectF = RectF(left, top, right, bottom)
-                sharedPreferences.edit {
+                sharedPreferences.commitEdit {
                     putString(key, rectF.toJson())
                 }
             }

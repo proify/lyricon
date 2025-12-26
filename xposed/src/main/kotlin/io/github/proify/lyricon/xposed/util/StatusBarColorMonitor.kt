@@ -1,12 +1,14 @@
 package io.github.proify.lyricon.xposed.util
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.log.YLog
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
+import io.github.proify.android.extensions.isDarkAgainst
 import java.lang.reflect.Member
 import java.util.concurrent.CopyOnWriteArraySet
 
@@ -81,7 +83,7 @@ object StatusBarColorMonitor {
             colorChangeListeners.forEach {
                 runCatching {
                     val isLight = colorCache.getOrPut(color) {
-                        ColorLuminanceCalculator.isLightColor(color)
+                        color.isDarkAgainst(Color.BLACK)
                     }
                     it.onColorChange(StatusColor(color, isLight))
                 }.onFailure { it -> YLog.error(it) }

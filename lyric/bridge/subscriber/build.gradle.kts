@@ -3,10 +3,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization") version "2.1.21"
+    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "io.github.proify.lyricon.lyric.subscriber"
+    namespace = "io.github.proify.lyricon.subscriber"
     compileSdk {
         version = release(rootProject.extra.get("compileSdkVersion") as Int)
     }
@@ -43,8 +45,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":lyric:bridge:core"))
-    implementation(project(":lyric:model"))
+    api(project(":lyric:bridge:provider"))
+    api(project(":lyric:model"))
+
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

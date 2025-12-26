@@ -16,7 +16,6 @@
             <option value="$PROJECT_DIR$/lyric" />
             <option value="$PROJECT_DIR$/lyric/bridge" />
             <option value="$PROJECT_DIR$/lyric/bridge/central" />
-            <option value="$PROJECT_DIR$/lyric/bridge/core" />
             <option value="$PROJECT_DIR$/lyric/bridge/provider" />
             <option value="$PROJECT_DIR$/lyric/bridge/subscriber" />
             <option value="$PROJECT_DIR$/lyric/model" />

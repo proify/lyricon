@@ -3,7 +3,6 @@ package io.github.proify.lyricon.app.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,13 +26,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import io.github.proify.lyricon.app.BuildConfig
 import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.bridge.Bridge
+import io.github.proify.lyricon.app.event.SettingChangedEvent
 import io.github.proify.lyricon.app.ui.activity.lyric.BasicLyricStyleActivity
 import io.github.proify.lyricon.app.ui.activity.lyric.LyricProviderActivity
-import io.github.proify.lyricon.app.ui.activity.lyric.pack.PackageStyleActivity
+import io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.PackageStyleActivity
 import io.github.proify.lyricon.app.ui.compose.AppToolBarListContainer
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponent
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentColors
@@ -42,6 +43,7 @@ import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.CardColors
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperArrow
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperDialog
 import io.github.proify.lyricon.app.util.Utils
+import io.github.proify.lyricon.app.util.collectEvent
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.ListPopup
 import top.yukonga.miuix.kmp.basic.ListPopupColumn
@@ -54,20 +56,10 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
 
 class MainActivity : BaseActivity() {
-
-    private val languageSettingsLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            recreate()
-        }
-    }
-
     private val model = MyViewModel()
 
     class MyViewModel : ViewModel() {
         val showRestartFailDialog = mutableStateOf(false)
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +68,10 @@ class MainActivity : BaseActivity() {
             Box(Modifier.fillMaxSize()) {
                 MainContent()
             }
+        }
+
+        collectEvent<SettingChangedEvent>(state = Lifecycle.State.CREATED) {
+            recreate()
         }
     }
 
@@ -270,12 +266,7 @@ class MainActivity : BaseActivity() {
                         title = stringResource(id = R.string.item_app_settings),
                         summary = stringResource(id = R.string.item_summary_app_settings),
                         onClick = {
-                            languageSettingsLauncher.launch(
-                                Intent(
-                                    context,
-                                    SettingsActivity::class.java
-                                )
-                            )
+                            startActivity(Intent(context, SettingsActivity::class.java))
                         }
                     )
                     SuperArrow(

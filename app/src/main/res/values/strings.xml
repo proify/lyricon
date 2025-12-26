@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">词幕</string>
+
     <string name="github_home" translatable="false">https://github.com/proify/lyricon</string>
     <string name="xposed_description">为状态栏拓展歌词功能🎵</string>
 
@@ -8,18 +9,19 @@
     <string name="no" translatable="false">@android:string/no</string>
     <string name="cancel" translatable="false">@android:string/cancel</string>
     <string name="copy" translatable="false">@android:string/copy</string>
+    <string name="paste">@android:string/paste</string>
     <string name="confirm">确定</string>
     <string name="save">保存</string>
     <string name="add">添加</string>
     <string name="delete">删除</string>
-    <string name="restore">还原</string>
+    <string name="reset">重置</string>
     <string name="back">返回</string>
     <string name="other">其它</string>
     <string name="restart">重启</string>
     <string name="search">搜索</string>
-    <string name="hint_search">搜索..</string>
+    <string name="hint_search">搜索…</string>
     <string name="def">默认</string>
-    <string name="base">基本</string>
+    <string name="basic">基本</string>
 
     <string name="status_enabled">已启用</string>
     <string name="status_not_enabled">未启用</string>
@@ -51,16 +53,16 @@
     <string name="item_summary_base_lyric_style">设置歌词显示位置、大小、控制状态栏内容可见性等</string>
     <string name="item_package_style_manager">包样式</string>
     <string name="item_summary_package_style_manager">配置默认样式或者为不同包配置单独样式</string>
-    <string name="item_provider_manager">提供者管理</string>
+    <string name="item_provider_manager">歌词提供者</string>
     <string name="item_summary_provider_manager">管理歌词提供者</string>
     <string name="item_config_view_rules">配置视图可见性规则</string>
     <string name="item_app_settings">设置</string>
-    <string name="item_summary_app_settings">管理软件设置</string>
+    <string name="item_summary_app_settings">设置语言，主题等</string>
     <string name="item_about_app">关于</string>
     <string name="item_summary_about_app">软件信息</string>
 
-    <string name="package_style_manager">管理包样式</string>
-    <string name="add_package_style">添加包样式</string>
+    <string name="app_style_manager">管理包样式</string>
+    <string name="add_app_style">添加包样式</string>
     <string name="default_style">默认样式</string>
 
     <string name="item_app_version">版本</string>
@@ -71,7 +73,7 @@
 
     <string name="section_music_apps">相关</string>
     <string name="section_other_apps">其它</string>
-    <string name="language_system_default">跟随系统</string>
+    <string name="option_language_follow_system">跟随系统</string>
     <string name="item_app_language">语言</string>
 
     <string name="tab_style_text">文字</string>
@@ -105,18 +107,19 @@
     <string name="item_text_gradient_progress_style">渐变进度样式</string>
 
     <!-- Logo -->
+    <string name="item_logo_section_basic">基本</string>
     <string name="item_logo_enable">启用</string>
     <string name="item_logo_margins">边距</string>
 
-    <string name="item_logo_coloros">ColorOS</string>
-    <string name="item_logo_hide_in_coloros_capsule">在流体云模式下隐藏</string>
+    <string name="item_logo_section_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule_mode">在流体云模式下隐藏</string>
 
-    <string name="item_logo_style">样式</string>
+    <string name="item_logo_section_style">样式</string>
     <string name="item_logo_style_default">默认</string>
     <string name="item_logo_style_cover_square">音乐封面（方形）</string>
     <string name="item_logo_style_cover_circle">音乐封面（圆形）</string>
 
-    <string name="item_logo_color">颜色</string>
+    <string name="item_logo_section_color">颜色</string>
     <string name="item_logo_custom_color">自定义颜色</string>
     <string name="item_logo_color_light">亮场景下颜色</string>
     <string name="item_logo_color_dark">暗场景下颜色</string>
@@ -132,10 +135,10 @@
     <string name="item_base_paddings">内边距</string>
 
     <!-- Visibility rule -->
-    <string name="item_visibility_default">默认</string>
-    <string name="item_visibility_always_visible">总是显示</string>
-    <string name="item_visibility_always_hidden">总是隐藏</string>
-    <string name="item_visibility_hide_when_playing">播放时隐藏</string>
+    <string name="option_visibility_default">默认</string>
+    <string name="option_visibility_always_visible">总是显示</string>
+    <string name="option_visibility_always_hidden">总是隐藏</string>
+    <string name="option_visibility_hide_when_playing">播放时隐藏</string>
 
     <string name="rectf_left">左边距</string>
     <string name="rectf_top">上边距</string>
@@ -146,5 +149,13 @@
     <string name="item_text_color_normal">正常颜色</string>
     <string name="item_text_color_background">背景颜色</string>
     <string name="item_text_color_highlight">高亮颜色</string>
+
+    <string name="item_app_theme_mode">主题模式</string>
+    <string name="option_app_theme_mode_light">亮色</string>
+    <string name="option_app_theme_mode_dark">暗色</string>
+    <string name="option_app_theme_mode_follow_system">跟随系统</string>
+    <string name="item_app_theme_monet_color">莫奈配色</string>
+    <string name="item_logo_size">大小</string>
+    <string name="option_logo_color_follow_text_color">跟随文字颜色</string>
 
 </resources>

@@ -6,6 +6,8 @@ package io.github.proify.lyricon.app.ui.compose.custom.miuix.extra
 
 //package top.yukonga.miuix.kmp.extra
 
+import android.R.attr.contentDescription
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -17,7 +19,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentColors
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentDefaults
@@ -49,13 +54,13 @@ fun SuperArrow(
     summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
     leftAction: @Composable (() -> Unit)? = null,
     rightActions: @Composable RowScope.() -> Unit = {},
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     insideMargin: PaddingValues = BasicComponentDefaults.InsideMargin,
     onClick: (() -> Unit)? = null,
     holdDownState: Boolean = false,
     enabled: Boolean = true
 ) {
-    _root_ide_package_.io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponent(
+    io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponent(
         modifier = modifier,
         insideMargin = insideMargin,
         title = title,
@@ -84,9 +89,13 @@ private fun RowScope.SuperArrowRightActions(
     val tintFilter = ColorFilter.tint(
         color = SuperArrowDefaults.rightActionColors().color(enabled = enabled)
     )
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     Image(
         modifier = Modifier
-            .size(width = 10.dp, height = 16.dp),
+            .size(width = 10.dp, height = 16.dp)
+            .graphicsLayer {
+                scaleX = if (isRtl) -1f else 1f
+            },
         imageVector = MiuixIcons.Basic.ArrowRight,
         contentDescription = null,
         colorFilter = tintFilter,
@@ -119,15 +128,14 @@ class RightActionColors(
 fun IconActions(
     painter: Painter,
     contentDescription: String? = null,
-    modifier: Modifier = Modifier
-        .padding(
-            start = 0.dp, end = 16.dp
-        )
-        .size(24.dp),
-    tint: Color = MiuixTheme.colorScheme.onSurfaceSecondary
+    tint: Color = MiuixTheme.colorScheme.onSurfaceSecondary,
 ) {
     Icon(
-        modifier = modifier,
+        modifier = Modifier
+            .padding(
+                start = 0.dp, end = 16.dp
+            )
+            .size(24.dp),
         painter = painter,
         contentDescription = contentDescription,
         tint = tint

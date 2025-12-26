@@ -42,8 +42,8 @@ import androidx.lifecycle.viewModelScope
 import io.github.proify.lyricon.app.Application
 import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.ui.activity.BaseActivity
-import io.github.proify.lyricon.app.ui.activity.lyric.pack.sheet.AppCache
-import io.github.proify.lyricon.app.ui.activity.lyric.pack.sheet.AsyncAppIcon
+import io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet.AppCache
+import io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet.AsyncAppIcon
 import io.github.proify.lyricon.app.ui.compose.AppToolBarListContainer
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentDefaults
 import io.github.proify.lyricon.app.util.LyricPrefs.DEFAULT_PACKAGE_NAME
@@ -64,7 +64,7 @@ class LyricProviderActivity : BaseActivity() {
     companion object {
         private val CERTIFIED_SIGNATURE =
             arrayOf(
-                //proifyApps
+                //proifySign
                 "d75a43f76dbe80d816046f952b8d0f5f7abd71c9bd7b57786d5367c488bd5816"
             )
     }
@@ -310,7 +310,6 @@ class LyricProviderActivity : BaseActivity() {
 
                                     Spacer(modifier = Modifier.width(10.dp))
                                     Switch(checked, onCheckedChange = {})
-
                                 }
                             }
 

@@ -5,11 +5,11 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
     kotlin("plugin.serialization") version "2.1.21"
-    id("signing")
-    id("com.vanniktech.maven.publish") version "0.35.0"
+    signing
+    id("com.vanniktech.maven.publish")
 }
 
-val version = "0.1.1-SNAPSHOT"
+val version = "0.1.41-SNAPSHOT"
 
 android {
     namespace = "io.github.proify.lyricon.lyric.model"
@@ -46,8 +46,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.core.ktx)
+    api(libs.kotlinx.serialization.json)
+    api(libs.androidx.core.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -90,9 +91,7 @@ mavenPublishing {
 }
 
 afterEvaluate {
-
     signing {
         useGpgCmd()
     }
-
 }

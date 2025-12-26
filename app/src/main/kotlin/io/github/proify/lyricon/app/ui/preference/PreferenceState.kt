@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.core.content.edit
+import io.github.proify.lyricon.app.util.Utils.commitEdit
 
 /**
  * 通用 PreferenceState,支持动态 SharedPreferences 实例
@@ -55,7 +55,7 @@ fun <T> rememberPreference(
             override var value: T
                 get() = state.value
                 set(newValue) {
-                    currentPrefs.edit {
+                    currentPrefs.commitEdit {
                         setter(key, newValue)
                     }
                     state.value = newValue

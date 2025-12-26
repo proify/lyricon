@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.SplashScreen.Light" parent="Theme.Light">
+        <item name="android:windowSplashScreenBackground">@android:color/white</item>
+        <item name="android:colorBackground">@android:color/white</item>
+    </style>
+
+    <style name="Theme.SplashScreen" parent="Theme.SplashScreen.DayNight">
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/avd_anim</item>
+        <item name="android:windowSplashScreenAnimationDuration">800</item>
+    </style>
+
+</resources>

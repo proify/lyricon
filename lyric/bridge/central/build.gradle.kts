@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "io.github.proify.lyricon.lyric.bridge.central"
+    namespace = "io.github.proify.lyricon.central"
     compileSdk {
         version = release(rootProject.extra.get("compileSdkVersion") as Int)
     }
@@ -39,8 +39,6 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":lyric:bridge:core"))
     implementation(project(":lyric:bridge:provider"))
     implementation(project(":lyric:bridge:subscriber"))
 

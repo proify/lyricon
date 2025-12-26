@@ -1,16 +1,15 @@
 package io.github.proify.lyricon.app.util
 
 import android.content.SharedPreferences
-import androidx.core.content.edit
+import io.github.proify.android.extensions.fromJson
+import io.github.proify.android.extensions.getSharedPreferences
+import io.github.proify.android.extensions.jsonx
+import io.github.proify.android.extensions.safeDecode
+import io.github.proify.android.extensions.toJson
 import io.github.proify.lyricon.app.Application
-import io.github.proify.lyricon.app.bridge.Bridge
 import io.github.proify.lyricon.app.bridge.Bridge.LyricStylePrefs
 import io.github.proify.lyricon.app.bridge.Bridge.LyricStylePrefs.KEY_ENABLED_PACKAGES
-import io.github.proify.lyricon.common.extensions.fromJson
-import io.github.proify.lyricon.common.extensions.jsonx
-import io.github.proify.lyricon.common.extensions.safeDecode
-import io.github.proify.lyricon.common.extensions.toJson
-import io.github.proify.lyricon.common.util.JsonSharedPreferences
+import io.github.proify.lyricon.app.util.Utils.commitEdit
 import io.github.proify.lyricon.lyric.style.VisibilityRule
 
 object LyricPrefs {
@@ -25,17 +24,14 @@ object LyricPrefs {
         get() = getSharedPreferences(LyricStylePrefs.PREF_NAME_BASE_STYLE)
 
     fun getSharedPreferences(name: String): SharedPreferences {
-        return JsonSharedPreferences(
-            Bridge.getPreferenceFile(Application.instance, name),
-            JsonSharedPreferences.MODE_WORLD_READABLE
-        )
+        return Application.instance.getSharedPreferences(name, worldReadable = true)
     }
 
     fun getPackagePrefName(packageName: String) =
         LyricStylePrefs.getPackageStylePreferenceName(packageName)
 
     fun setEnabledPackageNames(names: Set<String>) {
-        packageStyleManager.edit {
+        packageStyleManager.commitEdit {
             putStringSet(KEY_ENABLED_PACKAGES, names)
         }
     }
@@ -46,7 +42,7 @@ object LyricPrefs {
     }
 
     fun setConfiguredPackageNames(names: Set<String>) {
-        packageStyleManager.edit {
+        packageStyleManager.commitEdit {
             putString(KEY_CONFIGURED_PACKAGES, names.toJson())
         }
     }
@@ -57,7 +53,7 @@ object LyricPrefs {
     }
 
     fun setViewVisibilityRule(rules: List<VisibilityRule>) {
-        basicStylePrefs.edit {
+        basicStylePrefs.commitEdit {
             putString("lyric_style_base_visibility_rules", rules.toJson())
         }
     }

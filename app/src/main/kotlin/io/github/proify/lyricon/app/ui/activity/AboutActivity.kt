@@ -40,7 +40,7 @@ import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponent
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.IconActions
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperArrow
-import io.github.proify.lyricon.app.util.Utils
+import io.github.proify.lyricon.app.util.Utils.launchBrowser
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
@@ -88,6 +88,7 @@ class AboutActivity : BaseActivity() {
                                     .scale(2f)
                                     .rotate(40f),
                                 painter = rememberDrawablePainter(
+
                                     AppCompatResources.getDrawable(
                                         this@AboutActivity,
                                         R.mipmap.ic_launcher
@@ -166,8 +167,7 @@ class AboutActivity : BaseActivity() {
                         leftAction = { IconActions(painterResource(R.drawable.ic_github)) },
                         title = stringResource(id = R.string.item_view_on_github),
                         onClick = {
-                            Utils.launchBrowser(
-                                context,
+                            launchBrowser(
                                 url,
                                 toolbarColor
                             )

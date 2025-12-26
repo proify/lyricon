@@ -6,11 +6,11 @@ import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
+import io.github.proify.android.extensions.deflate
 import io.github.proify.lyricon.app.bridge.BridgeConstants
-import io.github.proify.lyricon.common.extensions.deflate
+import io.github.proify.lyricon.central.BridgeCentral
 import io.github.proify.lyricon.common.util.ViewHierarchyParser
-import io.github.proify.lyricon.lyric.bridge.central.BridgeCentral
-import io.github.proify.lyricon.lyric.subscriber.Subscriber
+import io.github.proify.lyricon.subscriber.LyricSubscriber
 import io.github.proify.lyricon.xposed.util.NotificationCoverHelper
 
 object SystemUIHooker : YukiBaseHooker() {
@@ -18,7 +18,7 @@ object SystemUIHooker : YukiBaseHooker() {
     private var layoutInflaterResult: YukiMemberHookCreator.MemberHookCreator.Result? = null
     private var statusBarViewManager: StatusBarViewManager? = null
 
-    private lateinit var subscriber: Subscriber
+    private lateinit var subscriber: LyricSubscriber
 
     override fun onHook() {
         onAppLifecycle {
@@ -54,16 +54,9 @@ object SystemUIHooker : YukiBaseHooker() {
         BridgeCentral.initialize(appContext)
         YLog.debug("SystemUIHooker.onInit")
 
-        subscriber = Subscriber(appContext)
+        subscriber = LyricSubscriber(appContext)
         subscriber.service.registerActivePlayerListener(LyricViewController)
         subscriber.notifyRegister()
-
-//        val handler = Handler(appContext.mainLooper)
-//        handler.postDelayed(
-//            {
-//
-//            }, 1000
-//        )
 
         Constants.initResourceIds(appContext)
         initDataChannel()

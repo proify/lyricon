@@ -7,7 +7,8 @@ import android.service.notification.StatusBarNotification
 import com.highcapable.yukihookapi.hook.log.YLog
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
-import io.github.proify.lyricon.common.util.CommonUtils
+import io.github.proify.android.extensions.saveBitmapToDisk
+import io.github.proify.android.extensions.toBitmap
 import io.github.proify.lyricon.xposed.Dirs
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
@@ -98,15 +99,13 @@ object NotificationCoverHelper {
                 return
             }
 
-            val bitmap: Bitmap = CommonUtils.drawableToBitmap(drawable)
+            val bitmap: Bitmap = drawable.toBitmap()
             val coverFile = getCoverFile(packageName)
 
-            CommonUtils.saveBitmapToDisk(bitmap, coverFile.absolutePath)
-            //YLog.debug("保存封面成功: $coverFile")
+            bitmap.saveBitmapToDisk(coverFile.absolutePath)
             for (listener in listeners) {
                 listener.onCoverUpdated(packageName, coverFile)
             }
-
         }
     }
 }

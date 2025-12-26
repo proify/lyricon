@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Dark" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.Dark" parent="@android:style/Theme.Material.NoActionBar">
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <style name="Theme.Light" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.Light" parent="@android:style/Theme.Material.Light.NoActionBar">
         <item name="android:colorBackground">@android:color/white</item>
-
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <style name="Theme.DayNight" parent="Theme.Light" />
+
+    <style name="Theme.SplashScreen.Light" parent="Theme.Light" />
+
+    <style name="Theme.SplashScreen.Dark" parent="Theme.Dark" />
+
+    <style name="Theme.SplashScreen.DayNight" parent="Theme.SplashScreen.Light" />
+
+    <style name="Theme.SplashScreen" parent="Theme.SplashScreen.DayNight" />
 
 </resources>

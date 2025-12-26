@@ -2,15 +2,15 @@ package io.github.proify.lyricon.lyric.style
 
 import android.content.SharedPreferences
 import android.os.Parcelable
-import io.github.proify.lyricon.common.extensions.jsonx
-import io.github.proify.lyricon.common.extensions.safeDecode
-import io.github.proify.lyricon.common.extensions.toJson
+import io.github.proify.android.extensions.jsonx
+import io.github.proify.android.extensions.safeDecode
+import io.github.proify.android.extensions.toJson
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-class LogoStyle(
+data class LogoStyle(
     var enable: Boolean = Defaults.ENABLE,
     var style: Int = Defaults.STYLE,
 
@@ -69,6 +69,8 @@ class LogoStyle(
         editor.putFloat("lyric_style_logo_width", width)
         editor.putFloat("lyric_style_logo_height", height)
     }
+
+    fun color(lightMode: Boolean) = if (lightMode) lightModeColor else darkModeColor
 
     object Defaults {
         const val ENABLE: Boolean = true

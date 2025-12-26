@@ -1,12 +1,27 @@
 package io.github.proify.lyricon.app.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
+import io.github.proify.android.extensions.getSharedPreferences
 import io.github.proify.lyricon.app.Application
+import java.util.Locale
 
 object Utils {
+
+    inline fun SharedPreferences.commitEdit(
+        action: SharedPreferences.Editor.() -> Unit,
+    ) {
+        val editor = edit()
+        action(editor)
+        editor.commit()
+    }
+
+    fun getDefaultSharedPreferences(context: Context) = context.getSharedPreferences(
+        context.getPackageName() + "_preferences", false
+    )
 
     fun forceStop(packageName: String?) {
         Application.instance.packageManager.getInstalledPackages(0)
@@ -21,8 +36,7 @@ object Utils {
         )
     }
 
-    fun launchBrowser(
-        context: Context,
+    fun Context.launchBrowser(
         url: String,
         toolbarColor: Int? = null,
     ) {
@@ -33,7 +47,8 @@ object Utils {
         val customTabs = CustomTabsIntent.Builder()
             .setColorScheme(CustomTabsIntent.COLOR_SCHEME_SYSTEM)
             .setDefaultColorSchemeParams(colorSchemeParamsBuilder.build())
+            .setTranslateLocale(Locale.getDefault())
             .build()
-        customTabs.launchUrl(context, url.toUri())
+        customTabs.launchUrl(this, url.toUri())
     }
 }

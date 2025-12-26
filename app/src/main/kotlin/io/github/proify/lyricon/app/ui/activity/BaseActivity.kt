@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
-import io.github.proify.lyricon.app.util.LocaleHelper
+import io.github.proify.lyricon.app.util.AppLangUtils
 
 open class BaseActivity : ComponentActivity() {
 
@@ -14,6 +14,6 @@ open class BaseActivity : ComponentActivity() {
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(base))
+        super.attachBaseContext(AppLangUtils.wrap(base))
     }
 }

@@ -6,7 +6,7 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.children
-import io.github.proify.lyricon.common.extensions.dp
+import io.github.proify.android.extensions.dp
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.lyric.style.LyricStyle
 import io.github.proify.lyricon.xposed.util.StatusBarColorMonitor
@@ -18,13 +18,21 @@ class LyricView(
     linkedTextView: TextView?
 ) : LinearLayout(context), StatusBarColorMonitor.OnColorChangeListener {
 
-    val logoView = LyricLogo(context)
-    val textView = LyricText(context)
+    companion object {
+        const val TAG = "LyricView"
+        const val VIEW_TAG = "lyricon:lyric_view"
+    }
+
+    val logoView = LyricLogoView(context)
+    val textView = LyricTextView(context)
 
     private var currentStyle: LyricStyle = initialStyle
     private var currentStatusColor: StatusColor = StatusColor(Color.BLACK, false)
 
+    private var isPlaying: Boolean = false
+
     init {
+        tag = VIEW_TAG
         gravity = Gravity.CENTER_VERTICAL
         logoView.linkedTextView = linkedTextView
         textView.linkedTextView = linkedTextView
@@ -37,12 +45,10 @@ class LyricView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        StatusBarColorMonitor.register(this)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        StatusBarColorMonitor.unregister(this)
     }
 
     fun updateStyle(style: LyricStyle) {
@@ -96,7 +102,16 @@ class LyricView(
     }
 
     fun setPlaying(isPlaying: Boolean) {
-        visibility = if (isPlaying) VISIBLE else GONE
+        this.isPlaying = isPlaying
+        updateVisibility()
+    }
+
+    private fun updateVisibility() {
+        if (isPlaying && textView.childCount > 0) {
+            visibility = VISIBLE
+        } else {
+            visibility = GONE
+        }
     }
 
     fun updatePosition(position: Int) {

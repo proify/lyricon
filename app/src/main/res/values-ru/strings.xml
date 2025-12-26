@@ -1,0 +1,145 @@
+<resources>
+    <string name="app_name">Lyricon</string>
+    <string name="xposed_description">Расширяет строку состояния функцией отображения текста песен🎵</string>
+
+    <string name="confirm">Подтвердить</string>
+    <string name="save">Сохранить</string>
+    <string name="add">Добавить</string>
+    <string name="delete">Удалить</string>
+    <string name="reset">Сбросить</string>
+    <string name="back">Назад</string>
+    <string name="other">Другое</string>
+    <string name="restart">Перезапустить</string>
+    <string name="search">Поиск</string>
+    <string name="hint_search">Поиск…</string>
+    <string name="def">По умолчанию</string>
+    <string name="basic">Основные</string>
+
+    <string name="status_enabled">Включено</string>
+    <string name="status_not_enabled">Не включено</string>
+    <string name="module_status_activated">Активировано😋</string>
+    <string name="module_status_not_activated">Не активировано</string>
+
+    <string name="restart_sui">Перезапустить системный интерфейс</string>
+    <string name="restart_app">Перезапустить приложение</string>
+    <string name="restart_fail">Не удалось перезапустить</string>
+    <string name="message_app_restart_fail">Проверьте, предоставлены ли Root-права</string>
+
+    <string name="millisecond">миллисекунда</string>
+
+    <string name="activity_settings">Настройки</string>
+    <string name="activity_about">О приложении</string>
+    <string name="activity_anchor">Якорь</string>
+    <string name="activity_view_rules">Контроллер представлений</string>
+    <string name="activity_base_lyric_style">Базовый стиль</string>
+    <string name="activity_package_style_manager">Управление стилями пакетов</string>
+    <string name="activity_lyric_provider">Поставщик текстов песен</string>
+    <string name="activity_open_source_license">Лицензии с открытым исходным кодом</string>
+
+    <string name="item_base_lyric_style">Базовый стиль</string>
+    <string name="item_summary_base_lyric_style">Настройка позиции отображения текста, размера, видимости содержимого строки состояния и т. д.</string>
+    <string name="item_package_style_manager">Стили пакетов</string>
+    <string name="item_summary_package_style_manager">Настройка стиля по умолчанию или отдельных стилей для разных пакетов</string>
+    <string name="item_provider_manager">Поставщик текстов песен</string>
+    <string name="item_summary_provider_manager">Управление поставщиками текстов песен</string>
+    <string name="item_config_view_rules">Настроить правила видимости представлений</string>
+    <string name="item_app_settings">Настройки</string>
+    <string name="item_summary_app_settings">Настройка языка, темы и т. д.</string>
+    <string name="item_about_app">О приложении</string>
+    <string name="item_summary_about_app">Информация о приложении</string>
+
+    <string name="app_style_manager">Управление стилями пакетов</string>
+    <string name="add_app_style">Добавить стиль пакета</string>
+    <string name="default_style">Стиль по умолчанию</string>
+
+    <string name="item_app_version">Версия</string>
+    <string name="item_build_time">Время сборки</string>
+    <string name="item_view_on_github">Просмотреть на GitHub</string>
+    <string name="item_open_source_license">Лицензии с открытым исходным кодом</string>
+
+    <string name="section_music_apps">Связанные</string>
+    <string name="section_other_apps">Другие</string>
+    <string name="option_language_follow_system">Следовать системе</string>
+    <string name="item_app_language">Язык</string>
+
+    <string name="tab_style_text">Текст</string>
+    <string name="tab_style_icon">Значок</string>
+    <string name="tab_style_anim">Анимация</string>
+
+    <!-- Text lyric style -->
+    <string name="item_text_size">Размер</string>
+    <string name="item_text_margins">Отступы</string>
+    <string name="item_text_paddings">Внутренние отступы</string>
+
+    <string name="item_text_color">Цвет</string>
+    <string name="item_text_enable_custom_color">Пользовательский цвет</string>
+    <string name="item_text_color_light_mode">Цвет в светлой теме</string>
+    <string name="item_text_color_dark_mode">Цвет в тёмной теме</string>
+
+    <string name="item_text_font">Шрифт</string>
+    <string name="item_text_typeface">Пользовательский шрифт</string>
+    <string name="item_text_weight">Насыщенность шрифта</string>
+    <string name="item_text_typeface_bold">Полужирный стиль</string>
+    <string name="item_text_typeface_italic">Курсив</string>
+
+    <string name="item_text_marquee">Бегущая строка</string>
+    <string name="item_text_marquee_speed">Скорость</string>
+    <string name="item_text_marquee_space">Расстояние между повторами</string>
+    <string name="item_text_marquee_initial_delay">Начальная задержка прокрутки</string>
+    <string name="item_text_marquee_delay">Задержка прокрутки</string>
+    <string name="item_text_marquee_repeat_unlimited">Включить бесконечную прокрутку</string>
+    <string name="item_text_marquee_repeat_count">Количество повторов</string>
+    <string name="item_text_marquee_stop_at_end">Остановка в конце</string>
+    <string name="item_text_gradient_progress_style">Стиль градиентного прогресса</string>
+
+    <!-- Logo -->
+    <string name="item_logo_section_basic">Основные</string>
+    <string name="item_logo_enable">Включить</string>
+    <string name="item_logo_margins">Отступы</string>
+
+    <string name="item_logo_section_coloros">ColorOS</string>
+    <string name="item_logo_hide_in_coloros_capsule_mode">Скрывать в режиме Fluid Cloud</string>
+
+    <string name="item_logo_section_style">Стиль</string>
+    <string name="item_logo_style_default">По умолчанию</string>
+    <string name="item_logo_style_cover_square">Обложка альбома (квадратная)</string>
+    <string name="item_logo_style_cover_circle">Обложка альбома (круглая)</string>
+
+    <string name="item_logo_section_color">Цвет</string>
+    <string name="item_logo_custom_color">Пользовательский цвет</string>
+    <string name="item_logo_color_light">Цвет в светлой теме</string>
+    <string name="item_logo_color_dark">Цвет в тёмной теме</string>
+
+    <!-- Base lyric style -->
+    <string name="item_base_anchor">Якорь</string>
+    <string name="item_base_insertion_order">Порядок вставки</string>
+    <string name="item_base_insertion_before">До</string>
+    <string name="item_base_insertion_after">После</string>
+    <string name="item_base_width">Ширина</string>
+    <string name="item_base_width_coloros_capsule">Ширина (в режиме Fluid Cloud)</string>
+    <string name="item_base_margins">Отступы</string>
+    <string name="item_base_paddings">Внутренние отступы</string>
+
+    <!-- Visibility rule -->
+    <string name="option_visibility_default">По умолчанию</string>
+    <string name="option_visibility_always_visible">Всегда видимо</string>
+    <string name="option_visibility_always_hidden">Всегда скрыто</string>
+    <string name="option_visibility_hide_when_playing">Скрывать при воспроизведении</string>
+
+    <string name="rectf_left">Левый отступ</string>
+    <string name="rectf_top">Верхний отступ</string>
+    <string name="rectf_right">Правый отступ</string>
+    <string name="rectf_bottom">Нижний отступ</string>
+
+    <string name="hint_custom_color">Пользовательский</string>
+    <string name="item_text_color_normal">Обычный цвет</string>
+    <string name="item_text_color_background">Цвет фона</string>
+    <string name="item_text_color_highlight">Цвет подсветки</string>
+
+    <string name="item_app_theme_mode">Режим темы</string>
+    <string name="option_app_theme_mode_light">Светлая</string>
+    <string name="option_app_theme_mode_dark">Тёмная</string>
+    <string name="option_app_theme_mode_follow_system">Следовать системе</string>
+    <string name="item_app_theme_monet_color">Цветовая схема Material You</string>
+
+</resources>

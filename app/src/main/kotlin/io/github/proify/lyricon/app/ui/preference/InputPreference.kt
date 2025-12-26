@@ -26,14 +26,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.edit
+import io.github.proify.android.extensions.formatToString
 import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.ui.compose.NumberTextField
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentColors
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentDefaults
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperArrow
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperDialog
-import io.github.proify.lyricon.common.extensions.formatToString
+import io.github.proify.lyricon.app.util.Utils.commitEdit
 import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Text
@@ -53,6 +53,7 @@ fun InputPreference(
     key: String,
     title: String,
     modifier: Modifier = Modifier,
+    syncKeys: Array<String> = emptyArray(),
     showKeyboard: Boolean = true,
     inputType: InputType = InputType.STRING,
     minValue: Double = 0.0,
@@ -101,12 +102,20 @@ fun InputPreference(
             onDismiss = { showDialog = false },
             onSave = { newValue ->
                 showDialog = false
-                sharedPreferences.edit {
+                sharedPreferences.commitEdit {
                     if (newValue.isEmpty()) {
                         remove(key)
                         prefValueState.value = null
+
+                        for (syncKey in syncKeys) {
+                            remove(syncKey)
+                        }
                     } else {
                         putString(key, newValue)
+
+                        for (syncKey in syncKeys) {
+                            putString(syncKey, newValue)
+                        }
                     }
                 }
             }

@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import io.github.proify.lyricon.lyric.model.DoubleLyricLine
 import io.github.proify.lyricon.lyric.model.LyricLine
-import io.github.proify.lyricon.lyric.model.deepCopy
 
 class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
     LinearLayout(context, attrs) {
@@ -47,9 +46,10 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
                 begin = lyricLine.begin,
                 end = lyricLine.end,
                 duration = lyricLine.duration,
+                isAlignedRight = lyricLine.isAlignedRight,
+                extraMetadata = lyricLine.extraMetadata,
                 text = lyricLine.text,
-                words = lyricLine.words.deepCopy(),
-                direction = lyricLine.direction
+                words = lyricLine.words,
             )
         }
 
@@ -70,9 +70,9 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
             if (source == null) return@apply
             begin = source.begin
             end = source.end
-            direction = source.direction
+            isAlignedRight = source.isAlignedRight
             text = source.secondaryText
-            words = source.secondaryWords.deepCopy()
+            words = source.secondaryWords
         }
         secondary.setLyric(line)
         secondary.visible = false

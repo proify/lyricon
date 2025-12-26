@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-class PackageStyle(
+data class PackageStyle(
     var logo: LogoStyle = LogoStyle(),
     var text: TextStyle = TextStyle(),
     var anim: AnimStyle = AnimStyle()

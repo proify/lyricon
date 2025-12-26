@@ -6,13 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-class LogoColor(
-    var mode: Int = MODE_ADAPTIVE,
+data class LogoColor(
+    var followTextColor: Boolean = true,
     var color: Int = 0
-) : Parcelable {
-    companion object {
-        const val MODE_ADAPTIVE: Int = 0
-        const val MODE_CUSTOM: Int = 10
-        const val MODE_FOLLOW_TEXT: Int = 20
-    }
-}
+) : Parcelable

@@ -2,9 +2,9 @@ package io.github.proify.lyricon.lyric.style
 
 import android.content.SharedPreferences
 import android.os.Parcelable
-import io.github.proify.lyricon.common.extensions.jsonx
-import io.github.proify.lyricon.common.extensions.safeDecode
-import io.github.proify.lyricon.common.extensions.toJson
+import io.github.proify.android.extensions.jsonx
+import io.github.proify.android.extensions.safeDecode
+import io.github.proify.android.extensions.toJson
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 

@@ -8,14 +8,17 @@ class GenerateLanguageCodeListTask extends DefaultTask {
     @OutputDirectory
     File outputDir = project.file("${project.layout.buildDirectory.get()}/generated/source/lyricon/langs")
 
+
     @TaskAction
     void generate() {
+        def SYSTEM = "system"
+
         // 收集 res/values* 目录
         def langs = resourceDir.listFiles()
                 .findAll { it.isDirectory() && it.name.startsWith("values") }
                 .collect { dir ->
                     def name = dir.name
-                    if (name == "values") return "default"
+                    if (name == "values") return SYSTEM
 
                     // 支持 values-xx 和 values-xx-rYY
                     def matcher = (name =~ /^values-([a-z]{2})(?:-r([A-Z]{2}))?$/)
@@ -37,7 +40,7 @@ class GenerateLanguageCodeListTask extends DefaultTask {
                 }
                 .findAll { it != null }
                 .unique()
-                .sort { a, b -> (a == "default" ? -1 : (b == "default" ? 1 : a <=> b)) }
+                .sort { a, b -> (a == SYSTEM ? -1 : (b == SYSTEM ? 1 : a <=> b)) }
 
         def targetFile = new File(outputDir, "${packageName.replace('.', '/')}/${className}.kt")
         targetFile.parentFile.mkdirs()

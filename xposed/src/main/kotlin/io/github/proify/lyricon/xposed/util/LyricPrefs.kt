@@ -1,22 +1,22 @@
 package io.github.proify.lyricon.xposed.util
 
+import de.robv.android.xposed.XSharedPreferences
 import io.github.proify.lyricon.app.bridge.Bridge
-import io.github.proify.lyricon.common.util.JsonSharedPreferences
+import io.github.proify.lyricon.common.PackageNames
 import io.github.proify.lyricon.lyric.style.BasicStyle
 import io.github.proify.lyricon.lyric.style.LyricStyle
 import io.github.proify.lyricon.lyric.style.PackageStyle
-import io.github.proify.lyricon.xposed.Dirs
 
 object LyricPrefs {
 
-    private val prefsCache = mutableMapOf<String, JsonSharedPreferences>()
+    private val prefsCache = mutableMapOf<String, XSharedPreferences>()
     private val packageStyleCache = mutableMapOf<String, PackageStyleCache>()
 
     var activePackageName: String? = null
 
     /* ---------------- base style ---------------- */
 
-    private val baseStylePrefs: JsonSharedPreferences =
+    private val baseStylePrefs: XSharedPreferences =
         createXPrefs(Bridge.LyricStylePrefs.PREF_NAME_BASE_STYLE)
 
     val baseStyle: BasicStyle = BasicStyle().apply {
@@ -24,6 +24,7 @@ object LyricPrefs {
     }
         get() {
             if (baseStylePrefs.hasFileChanged()) {
+                baseStylePrefs.reload()
                 field.load(baseStylePrefs)
             }
             return field
@@ -31,7 +32,7 @@ object LyricPrefs {
 
     /* ---------------- default package style ---------------- */
 
-    private val defaultPackageStylePrefs: JsonSharedPreferences by lazy {
+    private val defaultPackageStylePrefs: XSharedPreferences by lazy {
         getPackagePrefs(
             Bridge.LyricStylePrefs.DEFAULT_PACKAGE_NAME
         )
@@ -42,6 +43,7 @@ object LyricPrefs {
     }
         get() {
             if (defaultPackageStylePrefs.hasFileChanged()) {
+                defaultPackageStylePrefs.reload()
                 field.load(defaultPackageStylePrefs)
             }
             return field
@@ -49,7 +51,7 @@ object LyricPrefs {
 
     /* ---------------- package manager ---------------- */
 
-    private val packageStyleManagerPrefs: JsonSharedPreferences =
+    private val packageStyleManagerPrefs: XSharedPreferences =
         createXPrefs(Bridge.LyricStylePrefs.PREF_PACKAGE_STYLE_MANAGER)
 
     fun getActivePackageStyle(): PackageStyle {
@@ -68,7 +70,7 @@ object LyricPrefs {
                     Bridge.LyricStylePrefs.KEY_ENABLED_PACKAGES,
                     emptySet()
                 )
-                .contains(packageName)
+                ?.contains(packageName) ?: false
         }.getOrDefault(false)
     }
 
@@ -78,26 +80,26 @@ object LyricPrefs {
     private fun getPackagePrefName(packageName: String): String =
         Bridge.LyricStylePrefs.getPackageStylePreferenceName(packageName)
 
-    private fun getPackagePrefs(packageName: String): JsonSharedPreferences {
+    private fun getPackagePrefs(packageName: String): XSharedPreferences {
         val prefName = getPackagePrefName(packageName)
         return prefsCache.getOrPut(prefName) {
             createXPrefs(prefName)
         }
     }
 
-    private fun createXPrefs(name: String): JsonSharedPreferences {
-        val file = Dirs.getPreferenceFile(name)
-        return JsonSharedPreferences(file)
+    private fun createXPrefs(name: String): XSharedPreferences {
+        return XSharedPreferences(PackageNames.APPLICATION, name)
     }
 
     /* ---------------- package style cache ---------------- */
 
     private class PackageStyleCache(
-        private val prefs: JsonSharedPreferences,
+        private val prefs: XSharedPreferences,
         private val style: PackageStyle
     ) {
         fun getStyle(): PackageStyle {
             if (prefs.hasFileChanged()) {
+                prefs.reload()
                 style.load(prefs)
             }
             return style

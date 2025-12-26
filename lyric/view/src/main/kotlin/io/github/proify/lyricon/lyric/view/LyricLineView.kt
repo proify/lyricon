@@ -17,7 +17,6 @@ import androidx.core.graphics.withSave
 import androidx.core.graphics.withTranslation
 import io.github.proify.lyricon.lyric.model.LyricLine
 import java.lang.ref.WeakReference
-import java.util.Objects
 import kotlin.math.max
 
 
@@ -31,7 +30,7 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
 
     init {
         isHorizontalFadingEdgeEnabled = true
-        setFadingEdgeLength(16.dp)
+        setFadingEdgeLength(15.dp)
     }
 
     internal val textPaint = TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
@@ -441,7 +440,7 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
             canvas.withSave {
                 if (isOverflow()) {
                     translate(scrollXOffset, 0f)
-                } else if (lyricModel.direction == LyricLine.DIRECTION_END) {
+                } else if (lyricModel.isAlignedRight) {
                     translate(-lyricWidth + width, 0f)
                 }
 
@@ -607,14 +606,15 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
         )
 
         var previousWord: WordModel? = null
-        line.words.forEach { word ->
+        line.words?.forEach { word ->
             val wordModel = WordModel(
                 word.begin,
                 word.end,
                 word.duration,
                 word.text ?: "",
-                previousWord
             )
+            wordModel.previous = previousWord
+
             model.words.add(wordModel)
             previousWord?.next = wordModel
             previousWord = wordModel
@@ -626,14 +626,15 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
 
 }
 
-class WordModel(
+data class WordModel(
     var begin: Int = 0,
     var end: Int = 0,
     var duration: Int = 0,
     var text: String,
-    var previous: WordModel? = null,
-    var next: WordModel? = null
 ) {
+    var previous: WordModel? = null
+    var next: WordModel? = null
+
     var textWidth: Float = 0f
 
     var startPosition = 0f
@@ -687,27 +688,15 @@ class WordModel(
     fun isChinese(c: Char): Boolean {
         return c in '\u4e00'..'\u9fff'
     }
-
-    override fun hashCode(): Int = Objects.hash(begin, end, duration, text)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is WordModel) return false
-
-        return begin == other.begin &&
-                end == other.end &&
-                duration == other.duration &&
-                text == other.text
-    }
 }
 
-class LyricModel(
+data class LyricModel(
     var begin: Int = 0,
     var end: Int = 0,
     var duration: Int = 0,
     var text: String,
     var words: MutableList<WordModel> = mutableListOf(),
-    var direction: Int = LyricLine.DIRECTION_DEFAULT,
+    var isAlignedRight: Boolean = false,
 ) {
     var width: Float = 0f
     val isPlainText: Boolean get() = words.isEmpty()
@@ -727,20 +716,6 @@ class LyricModel(
         }
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(begin, end, duration, text, words, direction)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is LyricModel) return false
-
-        return begin == other.begin &&
-                end == other.end &&
-                duration == other.duration &&
-                text == other.text &&
-                words == other.words &&
-                direction == other.direction
-    }
 }
 
 internal fun MutableList<WordModel>.toText(): String {

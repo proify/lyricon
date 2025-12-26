@@ -6,13 +6,10 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import com.caverock.androidsvg.SVG
-import io.github.proify.lyricon.common.util.CommonUtils.drawableToBitmap
+import io.github.proify.android.extensions.toBitmap
 import java.io.File
 import java.io.FileInputStream
 
-/**
- * @author Lin
- */
 data class SVGHelper(val svg: SVG) {
     fun createPicture(picture: Picture, width: Int, height: Int): Picture {
         val newPicture = Picture()
@@ -49,7 +46,7 @@ data class SVGHelper(val svg: SVG) {
 
     fun createBitmap(): Bitmap {
         val drawable = createDrawable()
-        return drawableToBitmap(drawable)
+        return drawable.toBitmap()
     }
 
     fun createDrawable(): Drawable {
@@ -62,7 +59,7 @@ data class SVGHelper(val svg: SVG) {
     }
 
     fun createBitmap(width: Int, height: Int): Bitmap {
-        return drawableToBitmap(createDrawable(width, height))
+        return createDrawable(width, height).toBitmap()
     }
 
     companion object {

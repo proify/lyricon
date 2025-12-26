@@ -13,20 +13,22 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.DayNight">
 
         <activity
             android:name=".ui.activity.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        =
         <activity
             android:name=".ui.activity.AboutActivity"
             android:label="@string/activity_about" />
@@ -44,7 +46,7 @@
             android:label="@string/activity_base_lyric_style" />
 
         <activity
-            android:name=".ui.activity.lyric.pack.PackageStyleActivity"
+            android:name=".ui.activity.lyric.packagestyle.PackageStyleActivity"
             android:label="@string/activity_package_style_manager" />
 
         <activity
@@ -52,16 +54,32 @@
             android:label="@string/activity_lyric_provider" />
 
         <activity
-            android:name=".ui.activity.lyric.tree.AnchorViewTreeActivity"
+            android:name=".ui.activity.lyric.AnchorViewTreeActivity"
             android:label="@string/activity_anchor" />
 
         <activity
-            android:name=".ui.activity.lyric.tree.ViewRulesTreeActivity"
+            android:name=".ui.activity.lyric.ViewRulesTreeActivity"
             android:label="@string/activity_view_rules" />
 
         <meta-data
             android:name="xposeddescription"
             android:value="@string/xposed_description" />
+
+        <meta-data
+            android:name="xposedscope"
+            android:resource="@array/xposed_scope" />
+
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+
+        <meta-data
+            android:name="xposedminversion"
+            android:value="93" />
+
+        <meta-data
+            android:name="xposedsharedprefs"
+            android:value="true" />
 
     </application>
 

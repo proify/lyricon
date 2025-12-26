@@ -14,10 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import io.github.proify.lyricon.app.R
-import io.github.proify.lyricon.app.ui.activity.lyric.tree.AnchorViewTreeActivity
-import io.github.proify.lyricon.app.ui.activity.lyric.tree.ViewRulesTreeActivity
 import io.github.proify.lyricon.app.ui.compose.AppToolBarListContainer
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.IconActions
@@ -27,6 +24,7 @@ import io.github.proify.lyricon.app.ui.preference.InputType
 import io.github.proify.lyricon.app.ui.preference.RectInputPreference
 import io.github.proify.lyricon.app.ui.preference.rememberStringPreference
 import io.github.proify.lyricon.app.util.LyricPrefs
+import io.github.proify.lyricon.app.util.Utils.commitEdit
 import io.github.proify.lyricon.lyric.style.BasicStyle
 import top.yukonga.miuix.kmp.extra.SpinnerEntry
 import top.yukonga.miuix.kmp.extra.SuperSpinner
@@ -123,7 +121,7 @@ class BasicLyricStyleActivity : BaseLyricActivity() {
                 selectedIndex = selectedIndex.intValue,
                 onSelectedIndexChange = {
                     selectedIndex.intValue = it
-                    preferences.edit {
+                    preferences.commitEdit {
                         putInt(
                             "lyric_style_base_insertion_order",
                             optionKeys[it]

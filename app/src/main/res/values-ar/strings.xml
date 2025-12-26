@@ -1,134 +1,0 @@
-<resources>
-    <string name="xposed_description">إضافة وظيفة كلمات الأغاني لشريط الحالة 🎵</string>
-
-    <string name="confirm">تأكيد</string>
-    <string name="save">حفظ</string>
-    <string name="add">إضافة</string>
-    <string name="delete">حذف</string>
-    <string name="restore">استعادة</string>
-    <string name="back">عودة</string>
-    <string name="other">أخرى</string>
-    <string name="restart">إعادة التشغيل</string>
-    <string name="search">بحث</string>
-    <string name="hint_search">بحث...</string>
-    <string name="def">افتراضي</string>
-    <string name="base">أساسي</string>
-
-    <string name="status_enabled">مفعّل</string>
-    <string name="status_not_enabled">غير مفعّل</string>
-    <string name="module_status_activated">تم التفعيل 😋</string>
-    <string name="module_status_not_activated">لم يتم التفعيل</string>
-
-    <string name="restart_sui">إعادة تشغيل واجهة النظام (SystemUI)</string>
-    <string name="restart_app">إعادة تشغيل التطبيق</string>
-    <string name="restart_fail">فشلت إعادة التشغيل</string>
-    <string name="message_app_restart_fail">يرجى التحقق مما إذا كانت صلاحية Root ممنوحة</string>
-
-    <string name="millisecond">ميلي ثانية</string>
-
-    <string name="activity_settings">الإعدادات</string>
-    <string name="activity_about">حول</string>
-    <string name="activity_anchor">نقطة الارتساء</string>
-    <string name="activity_view_rules">متحكم العرض</string>
-    <string name="activity_base_lyric_style">النمط الأساسي</string>
-    <string name="activity_package_style_manager">إدارة نمط الحزم</string>
-    <string name="activity_lyric_provider">موفر كلمات الأغاني</string>
-    <string name="activity_open_source_license">تراخيص المصدر المفتوح</string>
-
-    <string name="item_base_lyric_style">النمط الأساسي</string>
-    <string name="item_summary_base_lyric_style">ضبط موقع الكلمات وحجمها والتحكم في رؤية محتوى شريط الحالة</string>
-    <string name="item_package_style_manager">نمط الحزمة</string>
-    <string name="item_summary_package_style_manager">تكوين النمط الافتراضي أو تخصيص أنماط لحزم مختلفة</string>
-    <string name="item_provider_manager">إدارة الموفرين</string>
-    <string name="item_summary_provider_manager">إدارة موفري كلمات الأغاني</string>
-    <string name="item_config_view_rules">تكوين قواعد الرؤية</string>
-    <string name="item_app_settings">الإعدادات</string>
-    <string name="item_summary_app_settings">إدارة إعدادات التطبيق</string>
-    <string name="item_about_app">حول</string>
-    <string name="item_summary_about_app">معلومات التطبيق</string>
-
-    <string name="package_style_manager">إدارة نمط الحزم</string>
-    <string name="add_package_style">إضافة نمط حزمة</string>
-    <string name="default_style">النمط الافتراضي</string>
-
-    <string name="item_app_version">الإصدار</string>
-    <string name="item_build_time">وقت البناء</string>
-    <string name="item_view_on_github">عرض على GitHub</string>
-    <string name="item_open_source_license">تراخيص المصدر المفتوح</string>
-
-    <string name="section_music_apps">ذات صلة</string>
-    <string name="section_other_apps">أخرى</string>
-    <string name="language_system_default">لغة النظام</string>
-    <string name="item_app_language">اللغة</string>
-
-    <string name="tab_style_text">نص</string>
-    <string name="tab_style_icon">أيقونة</string>
-    <string name="tab_style_anim">حركة</string>
-
-    <string name="item_text_size">الحجم</string>
-    <string name="item_text_margins">الهوامش</string>
-    <string name="item_text_paddings">الحواشي</string>
-
-    <string name="item_text_color">اللون</string>
-    <string name="item_text_enable_custom_color">لون مخصص</string>
-    <string name="item_text_color_light_mode">اللون في الوضع الفاتح</string>
-    <string name="item_text_color_dark_mode">اللون في الوضع الداكن</string>
-
-    <string name="item_text_font">الخط</string>
-    <string name="item_text_typeface">خط مخصص</string>
-    <string name="item_text_weight">وزن الخط</string>
-    <string name="item_text_typeface_bold">عريض</string>
-    <string name="item_text_typeface_italic">مائل</string>
-
-    <string name="item_text_marquee">نص متحرك</string>
-    <string name="item_text_marquee_speed">السرعة</string>
-    <string name="item_text_marquee_space">مسافة التكرار</string>
-    <string name="item_text_marquee_initial_delay">تأخير البدء</string>
-    <string name="item_text_marquee_delay">تأخير التمرير</string>
-    <string name="item_text_marquee_repeat_unlimited">تمكين التمرير غير المحدود</string>
-    <string name="item_text_marquee_repeat_count">عدد التكرارات</string>
-    <string name="item_text_marquee_stop_at_end">التوقف عند النهاية</string>
-    <string name="item_text_gradient_progress_style">نمط تدرج التقدم</string>
-
-    <string name="item_logo_enable">تمكين</string>
-    <string name="item_logo_margins">الهوامش</string>
-
-    <string name="item_logo_coloros">ColorOS</string>
-    <string name="item_logo_hide_in_coloros_capsule">إخفاء في وضع Fluid Cloud</string>
-
-    <string name="item_logo_style">النمط</string>
-    <string name="item_logo_style_default">افتراضي</string>
-    <string name="item_logo_style_cover_square">غلاف الموسيقى (مربع)</string>
-    <string name="item_logo_style_cover_circle">غلاف الموسيقى (دائري)</string>
-
-    <string name="item_logo_color">اللون</string>
-    <string name="item_logo_custom_color">لون مخصص</string>
-    <string name="item_logo_color_light">اللون في الوضع الفاتح</string>
-    <string name="item_logo_color_dark">اللون في الوضع الداكن</string>
-
-    <string name="item_base_anchor">نقطة الارتساء</string>
-    <string name="item_base_insertion_order">ترتيب الإدراج</string>
-    <string name="item_base_insertion_before">قبل</string>
-    <string name="item_base_insertion_after">بعد</string>
-    <string name="item_base_width">العرض</string>
-    <string name="item_base_width_coloros_capsule">العرض (في وضع Fluid Cloud)</string>
-    <string name="item_base_margins">الهوامش</string>
-    <string name="item_base_paddings">الحواشي</string>
-
-    <string name="item_visibility_default">افتراضي</string>
-    <string name="item_visibility_always_visible">ظاهر دائماً</string>
-    <string name="item_visibility_always_hidden">مخفي دائماً</string>
-    <string name="item_visibility_hide_when_playing">إخفاء عند التشغيل</string>
-
-    <string name="rectf_left">الهامش الأيسر</string>
-    <string name="rectf_top">الهامش العلوي</string>
-    <string name="rectf_right">الهامش الأيمن</string>
-    <string name="rectf_bottom">الهامش السفلي</string>
-
-    <string name="hint_custom_color">مخصص</string>
-    <string name="item_text_color_normal">اللون العادي</string>
-    <string name="item_text_color_background">لون الخلفية</string>
-    <string name="item_text_color_highlight">لون التمييز</string>
-    <string name="app_name">Lyricon</string>
-
-</resources>

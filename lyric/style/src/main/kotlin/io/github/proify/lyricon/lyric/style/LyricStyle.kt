@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-class LyricStyle(
+data class LyricStyle(
     var basicStyle: BasicStyle = BasicStyle(),
     var packageStyle: PackageStyle = PackageStyle()
 ) : Parcelable
