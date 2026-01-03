@@ -1,19 +1,17 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.app.ui.activity
@@ -71,57 +69,58 @@ import java.util.Locale
 class AboutActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            AboutContent()
-        }
+        setContent { AboutContent() }
     }
 
     @Composable
     private fun AboutContent() {
         AppToolBarListContainer(
             title = stringResource(id = R.string.activity_about),
-            canBack = true
+            canBack = true,
         ) { scope ->
             scope.item {
-                val context = LocalContext.current
                 Card(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 0.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 0.dp)
+                            .fillMaxWidth(),
                     pressFeedbackType = PressFeedbackType.Sink,
                 ) {
                     val drawable =
                         AppCompatResources.getDrawable(this@AboutActivity, R.mipmap.ic_launcher)
                     Box(modifier = Modifier.fillMaxSize()) {
                         Row(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .blur(200.dp),
+                            modifier =
+                                Modifier
+                                    .matchParentSize()
+                                    .blur(200.dp),
                         ) {
                             Image(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth()
-                                    .fillMaxHeight()
-                                    .scale(2f)
-                                    .rotate(40f),
-                                painter = rememberDrawablePainter(
-
-                                    AppCompatResources.getDrawable(
-                                        this@AboutActivity,
-                                        R.mipmap.ic_launcher
-                                    )
-                                ),
+                                modifier =
+                                    Modifier
+                                        .weight(1f)
+                                        .fillMaxWidth()
+                                        .fillMaxHeight()
+                                        .scale(2f)
+                                        .rotate(40.toFloat()),
+                                painter =
+                                    rememberDrawablePainter(
+                                        AppCompatResources.getDrawable(
+                                            this@AboutActivity,
+                                            R.mipmap.ic_launcher,
+                                        ),
+                                    ),
                                 contentDescription = null,
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
                             )
                         }
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 20.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                            verticalArrangement = Arrangement.Center,
                         ) {
                             Icon(
                                 modifier = Modifier.size(54.dp),
@@ -133,7 +132,7 @@ class AboutActivity : BaseActivity() {
                             Text(
                                 text = stringResource(id = R.string.app_name),
                                 style = MiuixTheme.textStyles.title3,
-                                fontSize = 18.sp
+                                fontSize = 18.sp,
                             )
                         }
                     }
@@ -144,28 +143,32 @@ class AboutActivity : BaseActivity() {
                 val context = LocalContext.current
 
                 Card(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 0.dp)
-                        .fillMaxWidth(),
-                    insideMargin = PaddingValues(0.dp)
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 0.dp)
+                            .fillMaxWidth(),
+                    insideMargin = PaddingValues(0.dp),
                 ) {
                     val buildTime = BuildConfig.BUILD_TIME
-                    val buildTimeFormat = Instant.ofEpochMilli(buildTime)
-                        .atZone(ZoneId.systemDefault())
-                        .format(
-                            DateTimeFormatter
-                                .ofLocalizedDateTime(FormatStyle.MEDIUM)
-                                .withLocale(Locale.getDefault())
-                        )
+                    val buildTimeFormat =
+                        Instant
+                            .ofEpochMilli(buildTime)
+                            .atZone(ZoneId.systemDefault())
+                            .format(
+                                DateTimeFormatter
+                                    .ofLocalizedDateTime(FormatStyle.MEDIUM)
+                                    .withLocale(Locale.getDefault()),
+                            )
                     BasicComponent(
                         leftAction = { IconActions(painterResource(R.drawable.ic_info)) },
                         title = stringResource(id = R.string.item_app_version),
-                        summary = stringResource(
-                            id = R.string.item_app_version_summary,
-                            BuildConfig.VERSION_NAME,
-                            BuildConfig.VERSION_CODE.toString(),
-                            BuildConfig.BUILD_TYPE
-                        )
+                        summary =
+                            stringResource(
+                                id = R.string.item_app_version_summary,
+                                BuildConfig.VERSION_NAME,
+                                BuildConfig.VERSION_CODE.toString(),
+                                BuildConfig.BUILD_TYPE,
+                            ),
                     )
                     BasicComponent(
                         leftAction = { IconActions(painterResource(R.drawable.ic_build)) },
@@ -174,10 +177,11 @@ class AboutActivity : BaseActivity() {
                     )
                 }
                 Card(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 0.dp)
-                        .fillMaxWidth(),
-                    insideMargin = PaddingValues(0.dp)
+                    modifier =
+                        Modifier
+                            .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 0.dp)
+                            .fillMaxWidth(),
+                    insideMargin = PaddingValues(0.dp),
                 ) {
                     val url = stringResource(id = R.string.github_home)
                     val toolbarColor = MiuixTheme.colorScheme.surface.toArgb()
@@ -187,9 +191,9 @@ class AboutActivity : BaseActivity() {
                         onClick = {
                             launchBrowser(
                                 url,
-                                toolbarColor
+                                toolbarColor,
                             )
-                        }
+                        },
                     )
                     SuperArrow(
                         leftAction = { IconActions(painterResource(R.drawable.ic_license)) },
@@ -197,18 +201,16 @@ class AboutActivity : BaseActivity() {
                         onClick = {
                             val intent = Intent(context, LicensesActivity::class.java)
                             context.startActivity(intent)
-                        }
+                        },
                     )
                 }
             }
         }
     }
 
-
     @Preview(showBackground = true)
     @Composable
     fun AboutContentPreview() {
         AboutContent()
     }
-
 }

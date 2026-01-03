@@ -1,19 +1,17 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.xposed.util
@@ -32,9 +30,7 @@ import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 
 object NotificationCoverHelper {
-
-    private val listeners = CopyOnWriteArrayList<CoverUpdateListener>()
-
+    private val listeners = CopyOnWriteArrayList<OnCoverUpdateListener>()
     private const val COVER_FILE_NAME = "cover.png"
 
     private val NOTIFICATION_LISTENER_CLASS_CANDIDATES = arrayOf(
@@ -42,11 +38,11 @@ object NotificationCoverHelper {
         "com.android.systemui.statusbar.NotificationListener",
     )
 
-    fun registerListener(listener: CoverUpdateListener) {
+    fun registerListener(listener: OnCoverUpdateListener) {
         listeners.add(listener)
     }
 
-    fun unregisterListener(listener: CoverUpdateListener) {
+    fun unregisterListener(listener: OnCoverUpdateListener) {
         listeners.remove(listener)
     }
 
@@ -55,6 +51,7 @@ object NotificationCoverHelper {
             try {
                 return classLoader.loadClass(className)
             } catch (_: ClassNotFoundException) {
+                // ignored
             }
         }
         return null
@@ -73,7 +70,7 @@ object NotificationCoverHelper {
                 "onNotificationPosted",
                 NotificationPostedHook()
             )
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             YLog.error("Hook 通知监听器失败", e)
         }
     }
@@ -82,18 +79,14 @@ object NotificationCoverHelper {
         return File(Dirs.getPackageDataDir(packageName), COVER_FILE_NAME)
     }
 
-    interface CoverUpdateListener {
+    fun interface OnCoverUpdateListener {
         fun onCoverUpdated(packageName: String, coverFile: File)
     }
 
     private class NotificationPostedHook : XC_MethodHook() {
 
         override fun afterHookedMethod(param: MethodHookParam) {
-            try {
-                extractAndSaveCover(param)
-            } catch (e: Exception) {
-                YLog.error("提取通知封面失败", e)
-            }
+            extractAndSaveCover(param)
         }
 
         private fun extractAndSaveCover(param: MethodHookParam) {

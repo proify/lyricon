@@ -1,23 +1,22 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.app.ui.activity.lyric.packagestyle
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
@@ -36,17 +35,21 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import dev.chrisbanes.haze.HazeState
+import androidx.lifecycle.ViewModelProvider
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import io.github.proify.lyricon.app.R
@@ -60,153 +63,254 @@ import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.MiuixScrollBeh
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.ScrollBehavior
 import io.github.proify.lyricon.app.util.LyricPrefs
 import io.github.proify.lyricon.app.util.Utils.commitEdit
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.TabRowWithContour
 
-class PackageStyleActivity : BaseLyricActivity() {
+const val DEFAULT_PACKAGE_NAME = LyricPrefs.DEFAULT_PACKAGE_NAME
+private const val TAB_COUNT = 3
 
-    private val viewModel: PackageStyleViewModel by viewModels()
+class PackageStyleViewModel(
+    private val context: Context,
+    private val onLyricStyleUpdate: () -> Unit,
+) : ViewModel() {
+    private val _showBottomSheet = MutableStateFlow(false)
+    val showBottomSheet: StateFlow<Boolean> = _showBottomSheet.asStateFlow()
 
-    companion object {
-        const val DEFAULT_PACKAGE_NAME = LyricPrefs.DEFAULT_PACKAGE_NAME
-        private const val TAB_COUNT = 3
+    private val _currentPackageName = MutableStateFlow(DEFAULT_PACKAGE_NAME)
+    val currentPackageName: StateFlow<String> = _currentPackageName.asStateFlow()
+
+    private val _refreshTrigger = MutableStateFlow(0)
+    val refreshTrigger: StateFlow<Int> = _refreshTrigger.asStateFlow()
+
+    private val _currentSharedPreferences = MutableStateFlow<SharedPreferences?>(null)
+    val currentSharedPreferences: StateFlow<SharedPreferences?> =
+        _currentSharedPreferences.asStateFlow()
+
+    private var prefsChangeListener: SharedPreferences.OnSharedPreferenceChangeListener? = null
+
+    init {
+        updateSharedPreferences(DEFAULT_PACKAGE_NAME)
     }
 
-    class PackageStyleViewModel : ViewModel() {
-        val showBottomSheet = mutableStateOf(false)
-        val currentPackageName = mutableStateOf(DEFAULT_PACKAGE_NAME)
-        val refreshTrigger = mutableIntStateOf(0)
+    fun showBottomSheet() {
+        _showBottomSheet.value = true
+    }
+
+    fun hideBottomSheet() {
+        _showBottomSheet.value = false
+    }
+
+    fun selectPackage(packageName: String) {
+        _currentPackageName.value = packageName
+        updateSharedPreferences(packageName)
+    }
+
+    fun resetPackage(packageName: String) {
+        LyricPrefs
+            .getSharedPreferences(LyricPrefs.getPackagePrefName(packageName))
+            .commitEdit { clear() }
+        _refreshTrigger.value++
+        updateSharedPreferences(packageName)
+    }
+
+    fun onPackageEnabled() {
+        onLyricStyleUpdate()
+    }
+
+    fun getPackageLabel(packageName: String): String =
+        if (packageName == DEFAULT_PACKAGE_NAME) {
+            context.getString(R.string.default_style)
+        } else {
+            runCatching {
+                val app = context.packageManager.getApplicationInfo(packageName, 0)
+                context.packageManager.getApplicationLabel(app).toString()
+            }.getOrElse { context.getString(R.string.default_style) }
+        }
+
+    private fun updateSharedPreferences(packageName: String) {
+        _currentSharedPreferences.value?.let { sp ->
+            prefsChangeListener?.let { listener ->
+                sp.unregisterOnSharedPreferenceChangeListener(listener)
+            }
+        }
+
+        val newSp = LyricPrefs.getSharedPreferences(LyricPrefs.getPackagePrefName(packageName))
+        val newListener =
+            SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+                onLyricStyleUpdate()
+            }
+
+        newSp.registerOnSharedPreferenceChangeListener(newListener)
+
+        _currentSharedPreferences.value = newSp
+        prefsChangeListener = newListener
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        _currentSharedPreferences.value?.let { sp ->
+            prefsChangeListener?.let { listener ->
+                sp.unregisterOnSharedPreferenceChangeListener(listener)
+            }
+        }
+    }
+}
+
+class PackageStyleViewModelFactory(
+    private val context: Context,
+    private val onLyricStyleUpdate: () -> Unit,
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(PackageStyleViewModel::class.java)) {
+            return PackageStyleViewModel(context, onLyricStyleUpdate) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class PackageStyleActivity : BaseLyricActivity() {
+    private val viewModel: PackageStyleViewModel by viewModels {
+        PackageStyleViewModelFactory(
+            context = applicationContext,
+            onLyricStyleUpdate = ::updateLyricStyle,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MainContent() }
+        setContent {
+            PackageStyleScreen(viewModel = viewModel)
+        }
+    }
+}
+
+@Composable
+private fun PackageStyleScreen(viewModel: PackageStyleViewModel) {
+    val showBottomSheet by viewModel.showBottomSheet.collectAsState()
+    val currentPackageName by viewModel.currentPackageName.collectAsState()
+    val refreshTrigger by viewModel.refreshTrigger.collectAsState()
+    val currentSp by viewModel.currentSharedPreferences.collectAsState()
+    val view = LocalView.current
+    val pagerState = rememberPagerState(pageCount = { TAB_COUNT })
+    val scrollBehavior = MiuixScrollBehavior()
+    val hazeState = rememberHazeState()
+
+    val title by remember(currentPackageName) {
+        derivedStateOf {
+            viewModel.getPackageLabel(
+                currentPackageName,
+            )
+        }
     }
 
-    @Composable
-    private fun MainContent() {
-        val pagerState = rememberPagerState(pageCount = { TAB_COUNT })
-        val scrollBehavior = MiuixScrollBehavior()
-        val hazeState: HazeState = rememberHazeState()
-        val defaultTitle = stringResource(R.string.default_style)
-        val title = remember { mutableStateOf(defaultTitle) }
+    AppToolBarContainer(
+        title = title,
+        canBack = true,
+        actions = {},
+        titleDropdown = true,
+        titleOnClick = { viewModel.showBottomSheet() },
+        scrollBehavior = scrollBehavior,
+        hazeState = hazeState,
+    ) { paddingValues ->
 
-        AppToolBarContainer(
-            title = title.value,
-            canBack = true,
-            actions = {},
-            titleDropdown = true,
-            titleOnClick = { viewModel.showBottomSheet.value = true },
-            scrollBehavior = scrollBehavior,
-            hazeState = hazeState,
-        ) { paddingValues ->
+        PackageSwitchBottomSheet(
+            show = showBottomSheet,
+            onDismiss = { viewModel.hideBottomSheet() },
+            onSelect = { packageName ->
+                view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
+                viewModel.selectPackage(packageName)
+            },
+            onReset = { packageName ->
+                viewModel.resetPackage(packageName)
+            },
+            onEnable = { _, _ ->
+                viewModel.onPackageEnabled()
+            },
+        )
 
-            PackageSwitchBottomSheet(
-                viewModel.showBottomSheet,
-                onSelect = {
-                    window.decorView.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-
-                    viewModel.currentPackageName.value = it
-                    title.value = if (it == DEFAULT_PACKAGE_NAME) defaultTitle else runCatching {
-                        val app = packageManager.getApplicationInfo(it, 0)
-                        packageManager.getApplicationLabel(app).toString()
-                    }.getOrElse { defaultTitle }
-                },
-                onReset = {
-                    LyricPrefs.getSharedPreferences(LyricPrefs.getPackagePrefName(it))
-                        .commitEdit {
-                            clear()
-                        }
-                    viewModel.refreshTrigger.intValue++
-                },
-                onEnable = { string: String, bool: Boolean ->
-                    updateLyricStyle()
-                }
-            )
-
-            Column(
-                modifier = Modifier
+        Column(
+            modifier =
+                Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .hazeSource(hazeState)
-                    .padding(top = paddingValues.calculateTopPadding() - 5.dp)
-            ) {
-                StyleTabRow(pagerState, scrollBehavior)
-                Spacer(modifier = Modifier.height(10.dp))
-                StyleContentPager(pagerState, scrollBehavior)
-            }
-        }
-    }
-
-    @Composable
-    private fun StyleTabRow(pagerState: PagerState, scrollBehavior: ScrollBehavior) {
-        val tabs = remember {
-            listOf(
-                getString(R.string.tab_style_text),
-                getString(R.string.tab_style_icon),
-                getString(R.string.tab_style_anim)
+                    .padding(top = paddingValues.calculateTopPadding() - 5.dp),
+        ) {
+            StyleTabRow(pagerState, scrollBehavior)
+            Spacer(modifier = Modifier.height(10.dp))
+            StyleContentPager(
+                pagerState = pagerState,
+                scrollBehavior = scrollBehavior,
+                sharedPreferences = currentSp,
+                refreshTrigger = refreshTrigger,
             )
         }
-        val selectedTabIndex = remember { mutableIntStateOf(0) }
-        val coroutineScope = rememberCoroutineScope()
+    }
+}
 
-        TabRowWithContour(
-            height = 50.dp,
-            modifier = Modifier
-                .padding(horizontal = 13.dp)
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            tabs = tabs,
-            selectedTabIndex = selectedTabIndex.intValue,
-            onTabSelected = {
-                selectedTabIndex.intValue = it
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(it)
-                }
-            }
+@Composable
+private fun StyleTabRow(
+    pagerState: PagerState,
+    scrollBehavior: ScrollBehavior,
+) {
+    val tabs =
+        listOf(
+            stringResource(R.string.tab_style_text),
+            stringResource(R.string.tab_style_icon),
+            stringResource(R.string.tab_style_anim),
         )
 
-        LaunchedEffect(pagerState) {
-            snapshotFlow { pagerState.currentPage }
-                .collect { selectedTabIndex.intValue = it }
-        }
-    }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val coroutineScope = rememberCoroutineScope()
 
-    private var currentSp: SharedPreferences? = null
-
-    override fun onDestroy() {
-        super.onDestroy()
-        currentSp?.unregisterOnSharedPreferenceChangeListener(this)
-    }
-
-    @Composable
-    private fun StyleContentPager(
-        pagerState: PagerState,
-        scrollBehavior: ScrollBehavior
-    ) {
-        val packageName = viewModel.currentPackageName.value
-        val refreshTrigger = viewModel.refreshTrigger.intValue
-
-        currentSp?.unregisterOnSharedPreferenceChangeListener(this)
-        currentSp = remember(packageName, refreshTrigger) {
-            LyricPrefs.getSharedPreferences(LyricPrefs.getPackagePrefName(packageName))
-        }
-        currentSp?.registerOnSharedPreferenceChangeListener(this)
-
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier
-                .fillMaxSize(),
-        ) { page ->
-            val currentSp = currentSp
-            if (currentSp == null) {
-                Box { }
-                return@HorizontalPager
+    TabRowWithContour(
+        height = 50.dp,
+        modifier =
+            Modifier
+                .padding(horizontal = 13.dp)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+        tabs = tabs,
+        selectedTabIndex = selectedTabIndex,
+        onTabSelected = { index ->
+            selectedTabIndex = index
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(index)
             }
-            when (page) {
-                0 -> TextPage(scrollBehavior, currentSp)
-                1 -> LogoPage(scrollBehavior, currentSp)
-                2 -> AnimPage(scrollBehavior)
-            }
+        },
+    )
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }
+            .collect { selectedTabIndex = it }
+    }
+}
+
+@Composable
+private fun StyleContentPager(
+    pagerState: PagerState,
+    scrollBehavior: ScrollBehavior,
+    sharedPreferences: SharedPreferences?,
+    refreshTrigger: Int,
+) {
+    HorizontalPager(
+        state = pagerState,
+        modifier = Modifier.fillMaxSize(),
+        key = { page -> "$page-$refreshTrigger" },
+    ) { page ->
+        val sp = sharedPreferences
+        if (sp == null) {
+            Box(modifier = Modifier.fillMaxSize())
+            return@HorizontalPager
+        }
+
+        when (page) {
+            0 -> TextPage(scrollBehavior, sp)
+            1 -> LogoPage(scrollBehavior, sp)
+            2 -> AnimPage(scrollBehavior)
         }
     }
 }

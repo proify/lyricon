@@ -1,92 +1,44 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.lyric.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.IntRange
-import androidx.core.os.ParcelCompat
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.TypeParceler
 import kotlinx.serialization.Serializable
 
 /**
- * @property begin 歌词开始时间
- * @property end 歌词结束时间
- * @property duration 歌词持续时间
- * @property text 歌词文本内容
- * @property words 歌词中每个单词的时间信息列表，用于逐词高亮显示
- * @property direction 歌词显示方向。
+ * 歌词行
+ *
+ * @property begin 开始时间
+ * @property end 结束时间
+ * @property duration 持续时间
+ * @property isAlignedRight 是否显示在右边
+ * @property metadata 元数据
+ * @property text 文本
+ * @property words 文本单词列表
  */
 @Serializable
 @Parcelize
-@TypeParceler<LyricLine, LyricLine.ParcelerImpl>()
 data class LyricLine(
-    @param:IntRange(0) override var begin: Int = 0,
-    @param:IntRange(0) override var end: Int = 0,
-    @param:IntRange(0) override var duration: Int = 0,
-    var isAlignedRight: Boolean = false,
-    var extraMetadata: Map<String, String?>? = null,
-    var text: String? = null,
-    var words: List<LyricWord>? = null,
-) : LyricTiming, Parcelable {
-
-    object ParcelerImpl : Parceler<LyricLine> {
-        private const val PARCEL_VERSION_V1 = 1
-
-        override fun LyricLine.write(parcel: Parcel, flags: Int) {
-            parcel.writeInt(PARCEL_VERSION_V1)
-            parcel.writeInt(begin)
-            parcel.writeInt(end)
-            parcel.writeInt(duration)
-            ParcelCompat.writeBoolean(parcel, isAlignedRight)
-            parcel.writeMetadata(extraMetadata)
-            parcel.writeString(text)
-            parcel.writeWordsList(words, flags)
-        }
-
-        override fun create(parcel: Parcel): LyricLine {
-            return when (parcel.readInt()) {
-                PARCEL_VERSION_V1 -> parcel.readFromV1()
-                else -> throw IllegalArgumentException("Unknown parcel version")
-            }
-        }
-
-        private fun Parcel.readFromV1(): LyricLine {
-            val begin = readInt()
-            val end = readInt()
-            val duration = readInt()
-            val isAlignedRight = ParcelCompat.readBoolean(this)
-            val extraMetadata = readMetadata()
-            val text = readString()
-            val words = readWordsList()
-
-            return LyricLine(
-                begin = begin,
-                end = end,
-                duration = duration,
-                isAlignedRight = isAlignedRight,
-                extraMetadata = extraMetadata,
-                text = text,
-                words = words,
-            )
-        }
-    }
-}
+    override var begin: Int = 0,
+    override var end: Int = 0,
+    override var duration: Int = 0,
+    override var isAlignedRight: Boolean = false,
+    override var metadata: LyricMetadata? = null,
+    override var text: String? = null,
+    override var words: List<LyricWord>? = null,
+) : ILyricLine, Parcelable

@@ -1,19 +1,17 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet
@@ -41,7 +39,7 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,7 +65,7 @@ import io.github.proify.lyricon.app.util.LyricPrefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.IconButton
@@ -79,97 +77,135 @@ import top.yukonga.miuix.kmp.icon.icons.useful.New
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
+// ============================================================================
+// Data Models
+// ============================================================================
+
 data class PackageSwitchUiState(
     val configureds: List<PackageItem> = emptyList(),
     val enableds: Set<String> = emptySet(),
     val selectedPackage: String = "",
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
 )
 
-class PackageSwitchViewModel(app: Application) : AndroidViewModel(app) {
-    val packageManager: PackageManager = app.packageManager
-    val defaultAppInfo: ApplicationInfo = app.applicationInfo
+// ============================================================================
+// ViewModel - 独立的业务逻辑层
+// ============================================================================
 
-    val _uiState = MutableStateFlow(PackageSwitchUiState())
-    val uiState: StateFlow<PackageSwitchUiState> = _uiState
+class PackageSwitchViewModel(
+    app: Application,
+) : AndroidViewModel(app) {
+    private val packageManager: PackageManager = app.packageManager
+    private val defaultAppInfo: ApplicationInfo = app.applicationInfo
+
+    private val _uiState = MutableStateFlow(PackageSwitchUiState())
+    val uiState: StateFlow<PackageSwitchUiState> = _uiState.asStateFlow()
 
     init {
         loadConfiguredPackages()
     }
 
-    suspend fun loadConfiguredPackages(
-        packageManager: PackageManager,
-        defaultAppInfo: ApplicationInfo
-    ): List<PackageItem> = withContext(Dispatchers.IO) {
-        val packages = mutableListOf<PackageItem>()
-        val configuredNames = LyricPrefs.getConfiguredPackageNames()
-
-        configuredNames.forEach { packageName ->
-            runCatching {
-                val info = packageManager.getApplicationInfo(packageName, 0)
-                packages.add(PackageItem(info))
-            }
-        }
-
-        if (!packages.any { it.applicationInfo.packageName == defaultAppInfo.packageName }) {
-            packages.add(PackageItem(applicationInfo = defaultAppInfo))
-        }
-        packages
-    }
-
     private fun loadConfiguredPackages() {
         viewModelScope.launch {
-            val packages = loadConfiguredPackages(packageManager, defaultAppInfo)
-            val selected = packages.firstOrNull()?.applicationInfo?.packageName ?: ""
-
+            val packages = loadConfiguredPackagesInternal()
+            val selected =
+                packages.firstOrNull()?.applicationInfo?.packageName
+                    ?: defaultAppInfo.packageName
             val enableds = LyricPrefs.getEnabledPackageNames()
-            _uiState.value = PackageSwitchUiState(
-                configureds = packages,
-                enableds = enableds,
-                selectedPackage = selected,
-                isLoading = false
-            )
+
+            _uiState.value =
+                PackageSwitchUiState(
+                    configureds = packages,
+                    enableds = enableds,
+                    selectedPackage = selected,
+                    isLoading = false,
+                )
         }
     }
+
+    private suspend fun loadConfiguredPackagesInternal(): List<PackageItem> =
+        withContext(Dispatchers.IO) {
+            val packages = mutableListOf<PackageItem>()
+            val configuredNames = LyricPrefs.getConfiguredPackageNames()
+
+            configuredNames.forEach { packageName ->
+                runCatching {
+                    val info = packageManager.getApplicationInfo(packageName, 0)
+                    packages.add(PackageItem(info))
+                }.onFailure {
+                    // 忽略无法加载的包
+                }
+            }
+
+            // 确保默认应用在列表中
+            if (packages.none { it.applicationInfo.packageName == defaultAppInfo.packageName }) {
+                packages.add(PackageItem(applicationInfo = defaultAppInfo))
+            }
+
+            packages
+        }
 
     fun selectPackage(packageName: String) {
-        _uiState.update { it.copy(selectedPackage = packageName) }
+        _uiState.value = _uiState.value.copy(selectedPackage = packageName)
     }
 
-    fun setPackageEnabled(packageName: Array<String>, enabled: Boolean) {
-        _uiState.update { state ->
-            val enabledPackages = LyricPrefs.getEnabledPackageNames().toMutableSet()
-            if (enabled) enabledPackages.addAll(packageName) else enabledPackages.removeAll(
-                packageName.toSet()
-            )
+    fun setPackageEnabled(
+        packageNames: Array<String>,
+        enabled: Boolean,
+    ) {
+        val enabledPackages = LyricPrefs.getEnabledPackageNames().toMutableSet()
 
-            LyricPrefs.setEnabledPackageNames(enabledPackages)
-            state.copy(enableds = enabledPackages)
+        if (enabled) {
+            enabledPackages.addAll(packageNames)
+        } else {
+            enabledPackages.removeAll(packageNames.toSet())
         }
+
+        LyricPrefs.setEnabledPackageNames(enabledPackages)
+        _uiState.value = _uiState.value.copy(enableds = enabledPackages)
     }
 
     fun setConfiguredPackages(newPackages: List<PackageItem>) {
-        _uiState.update { state ->
-            LyricPrefs.setConfiguredPackageNames(newPackages.map { it.applicationInfo.packageName }
-                .toSet())
-            state.copy(configureds = newPackages)
-        }
+        val packageNames = newPackages.map { it.applicationInfo.packageName }.toSet()
+        LyricPrefs.setConfiguredPackageNames(packageNames)
+        _uiState.value = _uiState.value.copy(configureds = newPackages)
     }
 
     fun removeConfiguredPackage(packageName: String) {
+        // 禁用该包
         setPackageEnabled(arrayOf(packageName), false)
-        _uiState.update { state ->
-            LyricPrefs.setConfiguredPackageNames(
-                LyricPrefs.getConfiguredPackageNames().filterNot { it == packageName }.toSet()
+
+        // 从配置列表中移除
+        val updatedPackageNames =
+            LyricPrefs
+                .getConfiguredPackageNames()
+                .filterNot { it == packageName }
+                .toSet()
+        LyricPrefs.setConfiguredPackageNames(updatedPackageNames)
+
+        // 更新 UI 状态
+        _uiState.value =
+            _uiState.value.copy(
+                configureds =
+                    _uiState.value.configureds.filterNot {
+                        it.applicationInfo.packageName == packageName
+                    },
             )
-            state.copy(configureds = state.configureds.filterNot { it.applicationInfo.packageName == packageName })
-        }
     }
+
+    fun getDefaultPackageName(): String = defaultAppInfo.packageName
+
+    fun isDefaultPackage(packageName: String): Boolean = packageName == defaultAppInfo.packageName
 }
+
+// ============================================================================
+// Composable - UI 层
+// ============================================================================
 
 @Composable
 fun PackageSwitchBottomSheet(
-    show: MutableState<Boolean>,
+    show: Boolean,
+    onDismiss: () -> Unit,
     onSelect: (String) -> Unit,
     onReset: (String) -> Unit,
     onEnable: (String, Boolean) -> Unit,
@@ -180,130 +216,238 @@ fun PackageSwitchBottomSheet(
     val showAddSheet = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    fun selectPackage(pkg: String) {
-        viewModel.selectPackage(pkg)
-        onSelect(pkg)
+    // 当选中的包被移除时,自动选择默认包
+    LaunchedEffect(state.configureds, state.selectedPackage) {
+        val selectedExists =
+            state.configureds.any {
+                it.applicationInfo.packageName == state.selectedPackage
+            }
+        if (!selectedExists && state.configureds.isNotEmpty()) {
+            val defaultPkg = viewModel.getDefaultPackageName()
+            viewModel.selectPackage(defaultPkg)
+            onSelect(defaultPkg)
+        }
     }
 
-    fun resetPackage(pkg: String) {
-        onReset(pkg)
+    if (showAddSheet.value) {
+        PackageSelectionBottomSheet(
+            show = showAddSheet,
+            initialSelectedPackages =
+                state.configureds
+                    .map { it.applicationInfo.packageName }
+                    .toSet(),
+            onSelectionChanged = { selectedPackages ->
+                scope.launch {
+                    handlePackageSelectionChanged(
+                        viewModel = viewModel,
+                        state = state,
+                        selectedPackages = selectedPackages,
+                        onSelect = onSelect,
+                    )
+                }
+            },
+        )
     }
 
-    PackageSelectionBottomSheet(
-        show = showAddSheet,
-        initialSelectedPackages = state.configureds.map { it.applicationInfo.packageName }.toSet(),
-        onSelectionChanged = { selectedPackages ->
-
-            scope.launch {
-                val currentList = state.configureds.toMutableList()
-
-                val removeList =
-                    currentList.filter { !selectedPackages.contains(it.applicationInfo.packageName) }
-
-                viewModel.setPackageEnabled(
-                    removeList.map { it.applicationInfo.packageName }.toTypedArray(),
-                    false
-                )
-                currentList.removeAll(removeList)
-
-                selectedPackages.forEach { selected ->
-                    if (currentList.none { it.applicationInfo.packageName == selected }) {
-                        val context = viewModel.getApplication<Application>()
-                        val appInfo = context.packageManager.getApplicationInfo(selected, 0)
-                        currentList.add(PackageItem(appInfo))
-                    }
-                }
-                viewModel.setConfiguredPackages(currentList)
-
-                if (removeList.any { it.applicationInfo.packageName == state.selectedPackage }) {
-                    selectPackage(viewModel.defaultAppInfo.packageName)
-                }
-            }
-        }
-    )
-    PackageSwitchSheetContent(
-        viewModel = viewModel,
-        show = show,
-        state = state,
-        onAddClick = { showAddSheet.value = true },
-        onSelect = { pkg ->
-            selectPackage(pkg)
-            show.value = false
-        },
-        onRestore = { pkg ->
-            resetPackage(pkg)
-        },
-        onEnable = { pkg, enabled ->
-            viewModel.setPackageEnabled(arrayOf(pkg), enabled)
-            onEnable(pkg, enabled)
-        },
-        onDelete = { pkg ->
-            if (pkg != viewModel.defaultAppInfo.packageName) {
-                viewModel.removeConfiguredPackage(pkg)
-                resetPackage(pkg)
-                if (state.selectedPackage == pkg) {
-                    selectPackage(viewModel.defaultAppInfo.packageName)
-                }
-            }
-        }
-    )
+    if (show) {
+        PackageSwitchSheetContent(
+            viewModel = viewModel,
+            state = state,
+            callbacks =
+                PackageSwitchCallbacks(
+                    onDismiss = onDismiss,
+                    onAddClick = { showAddSheet.value = true },
+                    onSelect = { pkg ->
+                        viewModel.selectPackage(pkg)
+                        onSelect(pkg)
+                        onDismiss()
+                    },
+                    onRestore = onReset,
+                    onEnable = { pkg, enabled ->
+                        viewModel.setPackageEnabled(arrayOf(pkg), enabled)
+                        onEnable(pkg, enabled)
+                    },
+                    onDelete = { pkg ->
+                        handlePackageDelete(
+                            viewModel = viewModel,
+                            state = state,
+                            packageToDelete = pkg,
+                            onSelect = onSelect,
+                            onReset = onReset,
+                        )
+                    },
+                ),
+        )
+    }
 }
+
+// ============================================================================
+// Helper Functions - 业务逻辑辅助函数
+// ============================================================================
+
+private suspend fun handlePackageSelectionChanged(
+    viewModel: PackageSwitchViewModel,
+    state: PackageSwitchUiState,
+    selectedPackages: Set<String>,
+    onSelect: (String) -> Unit,
+) {
+    val currentList = state.configureds.toMutableList()
+
+    // 找出被移除的包
+    val removeList =
+        currentList.filter {
+            !selectedPackages.contains(it.applicationInfo.packageName)
+        }
+
+    // 禁用被移除的包
+    if (removeList.isNotEmpty()) {
+        viewModel.setPackageEnabled(
+            removeList.map { it.applicationInfo.packageName }.toTypedArray(),
+            false,
+        )
+        currentList.removeAll(removeList.toSet())
+    }
+
+    // 添加新选中的包
+    selectedPackages.forEach { selected ->
+        if (currentList.none { it.applicationInfo.packageName == selected }) {
+            val context = viewModel.getApplication<Application>()
+            runCatching {
+                val appInfo = context.packageManager.getApplicationInfo(selected, 0)
+                currentList.add(PackageItem(appInfo))
+            }
+        }
+    }
+
+    viewModel.setConfiguredPackages(currentList)
+
+    // 如果当前选中的包被移除,切换到默认包
+    if (removeList.any { it.applicationInfo.packageName == state.selectedPackage }) {
+        val defaultPkg = viewModel.getDefaultPackageName()
+        viewModel.selectPackage(defaultPkg)
+        onSelect(defaultPkg)
+    }
+}
+
+private fun handlePackageDelete(
+    viewModel: PackageSwitchViewModel,
+    state: PackageSwitchUiState,
+    packageToDelete: String,
+    onSelect: (String) -> Unit,
+    onReset: (String) -> Unit,
+) {
+    // 不能删除默认包
+    if (viewModel.isDefaultPackage(packageToDelete)) {
+        return
+    }
+
+    viewModel.removeConfiguredPackage(packageToDelete)
+    onReset(packageToDelete)
+
+    // 如果删除的是当前选中的包,切换到默认包
+    if (state.selectedPackage == packageToDelete) {
+        val defaultPkg = viewModel.getDefaultPackageName()
+        viewModel.selectPackage(defaultPkg)
+        onSelect(defaultPkg)
+    }
+}
+
+// ============================================================================
+// UI Components
+// ============================================================================
+
+/**
+ * 封装回调接口,减少参数数量
+ */
+data class PackageSwitchCallbacks(
+    val onDismiss: () -> Unit,
+    val onAddClick: () -> Unit,
+    val onSelect: (String) -> Unit,
+    val onRestore: (String) -> Unit,
+    val onDelete: (String) -> Unit,
+    val onEnable: (String, Boolean) -> Unit,
+)
+
+/**
+ * PackageListItem 的状态和回调封装
+ */
+data class PackageItemState(
+    val item: PackageItem,
+    val isSelected: Boolean,
+    val isEnabled: Boolean,
+    val displayEnable: Boolean,
+)
+
+data class PackageItemCallbacks(
+    val onSelect: () -> Unit,
+    val onRestore: () -> Unit,
+    val onDelete: () -> Unit,
+    val onEnable: (Boolean) -> Unit,
+)
 
 @Composable
 private fun PackageSwitchSheetContent(
-    show: MutableState<Boolean>,
+    viewModel: PackageSwitchViewModel,
     state: PackageSwitchUiState,
-    onAddClick: () -> Unit,
-    onSelect: (String) -> Unit,
-    onRestore: (String) -> Unit,
-    onDelete: (String) -> Unit,
-    onEnable: (String, Boolean) -> Unit,
-    viewModel: PackageSwitchViewModel
+    callbacks: PackageSwitchCallbacks,
 ) {
     val packageItems = state.configureds
+    val showState = remember { mutableStateOf(true) }
+
     SuperBottomSheet(
         insideMargin = DpSize(0.dp, 0.dp),
-        show = show,
+        show = showState,
         title = stringResource(R.string.app_style_manager),
         backgroundColor = MiuixTheme.colorScheme.surface,
-        onDismissRequest = { show.value = false },
+        onDismissRequest = {
+            showState.value = false
+            callbacks.onDismiss()
+        },
         rightAction = {
             Row {
-                IconButton(onClick = onAddClick) {
+                IconButton(onClick = callbacks.onAddClick) {
                     Icon(
                         modifier = Modifier.size(26.dp),
                         imageVector = MiuixIcons.Useful.New,
                         contentDescription = stringResource(R.string.add),
-                        tint = MiuixTheme.colorScheme.onSurface
+                        tint = MiuixTheme.colorScheme.onSurface,
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
             }
-        }
+        },
     ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .overScrollVertical()
-                .animateContentSize()
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .overScrollVertical()
+                    .animateContentSize(),
         ) {
             items(
                 items = packageItems,
-                key = { it.applicationInfo.packageName }
+                key = { it.applicationInfo.packageName },
             ) { item ->
                 val packageName = item.applicationInfo.packageName
+                val isDefault = viewModel.isDefaultPackage(packageName)
+                val isEnabled = isDefault || state.enableds.contains(packageName)
+
                 PackageListItem(
-                    isEnabled = packageName == viewModel.defaultAppInfo.packageName || state.enableds.contains(
-                        packageName
-                    ),
-                    item = item,
-                    isSelected = state.selectedPackage == packageName,
-                    onSelect = { onSelect(packageName) },
-                    onRestore = { onRestore(packageName) },
-                    onDelete = { onDelete(packageName) },
-                    onEnable = { enabled -> onEnable(packageName, enabled) },
-                    displayEnable = packageName != viewModel.defaultAppInfo.packageName,
-                    modifier = Modifier.padding(bottom = 13.dp)
+                    state =
+                        PackageItemState(
+                            item = item,
+                            isSelected = state.selectedPackage == packageName,
+                            isEnabled = isEnabled,
+                            displayEnable = !isDefault,
+                        ),
+                    callbacks =
+                        PackageItemCallbacks(
+                            onSelect = { callbacks.onSelect(packageName) },
+                            onRestore = { callbacks.onRestore(packageName) },
+                            onDelete = { callbacks.onDelete(packageName) },
+                            onEnable = { enabled -> callbacks.onEnable(packageName, enabled) },
+                        ),
+                    modifier = Modifier.padding(bottom = 13.dp),
                 )
             }
             item(key = "bottom_spacer") {
@@ -316,15 +460,9 @@ private fun PackageSwitchSheetContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PackageListItem(
-    item: PackageItem,
-    isSelected: Boolean,
-    isEnabled: Boolean,
-    onSelect: () -> Unit,
-    onRestore: () -> Unit,
-    onDelete: () -> Unit,
-    onEnable: (Boolean) -> Unit,
-    displayEnable: Boolean,
-    modifier: Modifier = Modifier
+    state: PackageItemState,
+    callbacks: PackageItemCallbacks,
+    modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
 
@@ -333,13 +471,15 @@ private fun PackageListItem(
         rightActions = { close ->
             TooltipBox(
                 positionProvider =
-                    TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                    TooltipDefaults.rememberTooltipPositionProvider(
+                        TooltipAnchorPosition.Above,
+                    ),
                 tooltip = {
                     PlainTooltip {
                         Text(
                             stringResource(R.string.reset),
                             color = Color.White,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
                         )
                     }
                 },
@@ -347,53 +487,62 @@ private fun PackageListItem(
             ) {
                 Row {
                     IconButton(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(Color(0xFFFF9800), CircleShape),
+                        modifier =
+                            Modifier
+                                .size(40.dp)
+                                .background(Color(color = 0xFFFF9800), CircleShape),
                         onClick = {
-                            onRestore()
+                            callbacks.onRestore()
                             close()
-                            hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
-                        }
+                            hapticFeedback.performHapticFeedback(
+                                HapticFeedbackType.ContextClick,
+                            )
+                        },
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_reset_settings),
                             contentDescription = stringResource(R.string.reset),
-                            tint = MiuixTheme.colorScheme.onError
+                            tint = MiuixTheme.colorScheme.onError,
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                 }
             }
-            if (!item.isDefault) {
+
+            if (!state.item.isDefault) {
                 TooltipBox(
                     positionProvider =
-                        TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+                        TooltipDefaults.rememberTooltipPositionProvider(
+                            TooltipAnchorPosition.Above,
+                        ),
                     tooltip = {
                         PlainTooltip {
                             Text(
                                 stringResource(R.string.delete),
                                 color = Color.White,
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
                             )
                         }
                     },
                     state = rememberTooltipState(),
                 ) {
                     IconButton(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(MiuixTheme.colorScheme.error, CircleShape),
+                        modifier =
+                            Modifier
+                                .size(40.dp)
+                                .background(MiuixTheme.colorScheme.error, CircleShape),
                         onClick = {
-                            onDelete()
+                            callbacks.onDelete()
                             close()
-                            hapticFeedback.performHapticFeedback(HapticFeedbackType.ContextClick)
-                        }
+                            hapticFeedback.performHapticFeedback(
+                                HapticFeedbackType.ContextClick,
+                            )
+                        },
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_delete),
                             contentDescription = stringResource(R.string.delete),
-                            tint = MiuixTheme.colorScheme.onError
+                            tint = MiuixTheme.colorScheme.onError,
                         )
                     }
                 }
@@ -403,37 +552,39 @@ private fun PackageListItem(
         },
     ) { closeAction ->
         Card(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
         ) {
             SuperCheckbox(
                 leftAction = {
                     AsyncAppIcon(
-                        application = item.applicationInfo,
-                        modifier = Modifier.size(40.dp)
+                        application = state.item.applicationInfo,
+                        modifier = Modifier.size(40.dp),
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                 },
                 rightActions = {
-                    if (displayEnable) {
+                    if (state.displayEnable) {
                         Switch(
-                            checked = isEnabled,
-                            onCheckedChange = {
-                                onEnable(it)
-                            }
+                            checked = state.isEnabled,
+                            onCheckedChange = callbacks.onEnable,
                         )
                     }
                 },
-                title = item.getLabel(),
-                summary = if (isEnabled) stringResource(R.string.status_enabled) else stringResource(
-                    R.string.status_not_enabled
-                ),
-                checked = isSelected,
+                title = state.item.getLabel(),
+                summary =
+                    if (state.isEnabled) {
+                        stringResource(R.string.status_enabled)
+                    } else {
+                        stringResource(R.string.status_not_enabled)
+                    },
+                checked = state.isSelected,
                 onCheckedChange = {
-                    onSelect()
+                    callbacks.onSelect()
                     closeAction()
-                }
+                },
             )
         }
     }

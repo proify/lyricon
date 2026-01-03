@@ -1,19 +1,17 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet
@@ -76,17 +74,19 @@ import top.yukonga.miuix.kmp.icon.icons.useful.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
-private val MUSIC_APP_KEYWORDS = listOf("music", "audio", "player", "spotify", "youtube")
+private val MUSIC_APP_KEYWORDS =
+    listOf("music", "audio", "player", "spotify", "youtube")
 
 data class PackageSelectionUiState(
     val allApps: List<PackageItem> = emptyList(),
     val searchQuery: String = "",
     val isLoading: Boolean = false,
-    val selectedPackages: Set<String> = emptySet()
+    val selectedPackages: Set<String> = emptySet(),
 )
 
-class PackageSelectionViewModel(app: Application) : AndroidViewModel(app) {
-
+class PackageSelectionViewModel(
+    app: Application,
+) : AndroidViewModel(app) {
     private val packageManager: PackageManager = app.packageManager
 
     private val _uiState = MutableStateFlow(PackageSelectionUiState())
@@ -99,13 +99,15 @@ class PackageSelectionViewModel(app: Application) : AndroidViewModel(app) {
     private fun loadInstalledApps() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val apps = withContext(Dispatchers.IO) {
-                loadInstalledApplicationsOptimized(packageManager)
-            }
-            _uiState.value = _uiState.value.copy(
-                allApps = apps,
-                isLoading = false
-            )
+            val apps =
+                withContext(Dispatchers.IO) {
+                    loadInstalledApplicationsOptimized(packageManager)
+                }
+            _uiState.value =
+                _uiState.value.copy(
+                    allApps = apps,
+                    isLoading = false,
+                )
         }
     }
 
@@ -114,15 +116,18 @@ class PackageSelectionViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setSelectedPackages(selectedPackages: Set<String>) {
-        _uiState.value = _uiState.value.copy(selectedPackages = selectedPackages)
+        _uiState.value =
+            _uiState.value.copy(selectedPackages = selectedPackages)
     }
 
-    fun toggleSelection(packageName: String, selected: Boolean) {
+    fun toggleSelection(
+        packageName: String,
+        selected: Boolean,
+    ) {
         val current = _uiState.value.selectedPackages.toMutableSet()
         if (selected) current.add(packageName) else current.remove(packageName)
         _uiState.value = _uiState.value.copy(selectedPackages = current)
     }
-
 }
 
 @Composable
@@ -130,7 +135,7 @@ fun PackageSelectionBottomSheet(
     show: MutableState<Boolean>,
     initialSelectedPackages: Set<String> = emptySet(),
     onSelectionChanged: (Set<String>) -> Unit,
-    viewModel: PackageSelectionViewModel = viewModel()
+    viewModel: PackageSelectionViewModel = viewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -139,14 +144,20 @@ fun PackageSelectionBottomSheet(
         onSelectionChanged(viewModel.uiState.value.selectedPackages)
     }
 
-    val categorized by remember(state.allApps) { derivedStateOf { categorizeApps(state.allApps) } }
+    val categorized by remember(state.allApps) {
+        derivedStateOf {
+            categorizeApps(
+                state.allApps,
+            )
+        }
+    }
     val context = LocalContext.current
     val categories by remember(state.searchQuery, categorized) {
         derivedStateOf {
             buildCategories(
                 context = context,
                 categorized = categorized,
-                query = state.searchQuery
+                query = state.searchQuery,
             )
         }
     }
@@ -156,19 +167,20 @@ fun PackageSelectionBottomSheet(
         backgroundColor = MiuixTheme.colorScheme.surface,
         show = show,
         title = stringResource(R.string.add_app_style),
-        onDismissRequest = { show.value = false }
+        onDismissRequest = { show.value = false },
     ) {
         Column {
             PackageSearchBar(
                 query = state.searchQuery,
-                onQueryChange = viewModel::updateSearchQuery
+                onQueryChange = viewModel::updateSearchQuery,
             )
             if (state.isLoading) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(100.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
                     InfiniteProgressIndicator()
                 }
@@ -181,10 +193,12 @@ fun PackageSelectionBottomSheet(
                         viewModel.toggleSelection(packageName, selected)
                         onSelectionChanged(viewModel.uiState.value.selectedPackages)
 
-                        if (context is Activity) context.window.decorView.performHapticFeedback(
-                            HapticFeedbackConstants.CONTEXT_CLICK
-                        )
-                    }
+                        if (context is Activity) {
+                            context.window.decorView.performHapticFeedback(
+                                HapticFeedbackConstants.CONTEXT_CLICK,
+                            )
+                        }
+                    },
                 )
             }
         }
@@ -195,25 +209,25 @@ fun PackageSelectionBottomSheet(
 private fun AppList(
     categories: List<AppCategory>,
     selectedPackages: Set<String>,
-    onSelection: (String, Boolean) -> Unit
+    onSelection: (String, Boolean) -> Unit,
 ) {
     val listState = rememberLazyListState()
 
     LazyColumn(
         state = listState,
-        modifier = Modifier.overScrollVertical()
+        modifier = Modifier.overScrollVertical(),
     ) {
         categories.forEach { category ->
             item(key = "header-${category.name}") {
                 SmallTitle(
                     text = category.name,
-                    insideMargin = PaddingValues(28.dp, 0.dp)
+                    insideMargin = PaddingValues(28.dp, 0.dp),
                 )
                 Spacer(modifier = Modifier.height(10.dp))
             }
             itemsIndexed(
                 items = category.items,
-                key = { _, item -> item.applicationInfo.packageName }
+                key = { _, item -> item.applicationInfo.packageName },
             ) { _, item ->
                 val checked by remember(selectedPackages) {
                     derivedStateOf { item.applicationInfo.packageName in selectedPackages }
@@ -224,7 +238,7 @@ private fun AppList(
                     isChecked = checked,
                     onCheckedChange = {
                         onSelection(item.applicationInfo.packageName, it)
-                    }
+                    },
                 )
                 Spacer(modifier = Modifier.height(13.dp))
             }
@@ -240,22 +254,26 @@ private fun AppList(
 private fun PackageSelectionItem(
     item: PackageItem,
     isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 0.dp)
-            .fillMaxWidth()
+        modifier =
+            Modifier
+                .padding(horizontal = 16.dp, vertical = 0.dp)
+                .fillMaxWidth(),
     ) {
         SuperCheckbox(
             leftAction = {
-                AsyncAppIcon(application = item.applicationInfo, modifier = Modifier.size(40.dp))
+                AsyncAppIcon(
+                    application = item.applicationInfo,
+                    modifier = Modifier.size(40.dp),
+                )
                 Spacer(modifier = Modifier.width(10.dp))
             },
             title = item.getLabel(),
-            //summary = item.applicationInfo.packageName,
+            // summary = item.applicationInfo.packageName,
             checked = isChecked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
         )
     }
 }
@@ -263,7 +281,7 @@ private fun PackageSelectionItem(
 @Composable
 private fun PackageSearchBar(
     query: String,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
 ) {
     var localQuery by remember { mutableStateOf(query) }
     val isExpanded = remember { mutableStateOf(false) }
@@ -291,19 +309,19 @@ private fun PackageSearchBar(
                         modifier = Modifier.padding(start = 12.dp, end = 8.dp),
                         imageVector = MiuixIcons.Useful.Search,
                         contentDescription = stringResource(R.string.search),
-                        tint = MiuixTheme.colorScheme.onSurfaceVariantSummary
+                        tint = MiuixTheme.colorScheme.onSurfaceVariantSummary,
                     )
-                }
+                },
             )
         },
         expanded = isExpanded.value,
-        onExpandedChange = { isExpanded.value = it }
+        onExpandedChange = { isExpanded.value = it },
     ) {}
 }
 
 private data class AppCategory(
     val name: String,
-    val items: List<PackageItem>
+    val items: List<PackageItem>,
 )
 
 private fun categorizeApps(apps: List<PackageItem>): Pair<List<PackageItem>, List<PackageItem>> {
@@ -314,46 +332,60 @@ private fun categorizeApps(apps: List<PackageItem>): Pair<List<PackageItem>, Lis
 private fun buildCategories(
     context: Context,
     categorized: Pair<List<PackageItem>, List<PackageItem>>,
-    query: String
+    query: String,
 ): List<AppCategory> {
     val (music, other) = categorized
-    val base = listOf(
-        AppCategory(context.getString(R.string.section_music_apps), music),
-        AppCategory(context.getString(R.string.section_other_apps), other)
-    )
+    val base =
+        listOf(
+            AppCategory(context.getString(R.string.section_music_apps), music),
+            AppCategory(context.getString(R.string.section_other_apps), other),
+        )
     if (query.isBlank()) return base
     val queryLower = query.trim().lowercase()
     return base.mapNotNull { category ->
-        val filteredItems = category.items.filter {
-            it.applicationInfo.packageName.contains(queryLower, ignoreCase = true) ||
-                    it.getLabel().contains(queryLower, ignoreCase = true)
+        val filteredItems =
+            category.items.filter {
+                it.applicationInfo.packageName.contains(
+                    queryLower,
+                    ignoreCase = true,
+                ) ||
+                        it.getLabel().contains(queryLower, ignoreCase = true)
+            }
+        if (filteredItems.isNotEmpty()) {
+            AppCategory(
+                category.name,
+                filteredItems,
+            )
+        } else {
+            null
         }
-        if (filteredItems.isNotEmpty()) AppCategory(category.name, filteredItems) else null
     }
 }
 
 private fun isMusicApp(appInfo: ApplicationInfo): Boolean {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        if (appInfo.category == ApplicationInfo.CATEGORY_AUDIO) return true
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && appInfo.category == ApplicationInfo.CATEGORY_AUDIO) {
+        return true
     }
+
     val packageNameLower = appInfo.packageName.lowercase()
     return MUSIC_APP_KEYWORDS.any { keyword ->
         packageNameLower.contains(keyword, ignoreCase = true)
     } || allMusicAppPackages.contains(packageNameLower)
 }
 
-private fun loadInstalledApplicationsOptimized(
-    packageManager: PackageManager
-): List<PackageItem> {
-    val launcherIntent = Intent(Intent.ACTION_MAIN).apply {
-        addCategory(Intent.CATEGORY_LAUNCHER)
-    }
+private fun loadInstalledApplicationsOptimized(packageManager: PackageManager): List<PackageItem> {
+    val launcherIntent =
+        Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
+        }
 
-    val launcherPackages = packageManager
-        .queryIntentActivities(launcherIntent, 0)
-        .mapTo(HashSet()) { it.activityInfo.packageName }
+    val launcherPackages =
+        packageManager
+            .queryIntentActivities(launcherIntent, 0)
+            .mapTo(HashSet()) { it.activityInfo.packageName }
 
-    return packageManager.getInstalledPackages(0)
+    return packageManager
+        .getInstalledPackages(0)
         .asSequence()
         .filter { it.packageName != LyricPrefs.DEFAULT_PACKAGE_NAME }
         .filter { it.packageName in launcherPackages }
@@ -361,6 +393,5 @@ private fun loadInstalledApplicationsOptimized(
             pkg.applicationInfo?.let { appInfo ->
                 PackageItem(applicationInfo = appInfo)
             }
-        }
-        .toList()
+        }.toList()
 }

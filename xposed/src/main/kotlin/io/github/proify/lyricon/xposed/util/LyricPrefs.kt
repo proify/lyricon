@@ -1,32 +1,29 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.xposed.util
 
 import de.robv.android.xposed.XSharedPreferences
-import io.github.proify.lyricon.app.bridge.Bridge
+import io.github.proify.lyricon.app.bridge.AppBridge
 import io.github.proify.lyricon.common.PackageNames
 import io.github.proify.lyricon.lyric.style.BasicStyle
 import io.github.proify.lyricon.lyric.style.LyricStyle
 import io.github.proify.lyricon.lyric.style.PackageStyle
 
 object LyricPrefs {
-
     private val prefsCache = mutableMapOf<String, XSharedPreferences>()
     private val packageStyleCache = mutableMapOf<String, PackageStyleCache>()
 
@@ -35,7 +32,7 @@ object LyricPrefs {
     /* ---------------- base style ---------------- */
 
     private val baseStylePrefs: XSharedPreferences =
-        createXPrefs(Bridge.LyricStylePrefs.PREF_NAME_BASE_STYLE)
+        createXPrefs(AppBridge.LyricStylePrefs.PREF_NAME_BASE_STYLE)
 
     val baseStyle: BasicStyle = BasicStyle().apply {
         load(baseStylePrefs)
@@ -52,7 +49,7 @@ object LyricPrefs {
 
     private val defaultPackageStylePrefs: XSharedPreferences by lazy {
         getPackagePrefs(
-            Bridge.LyricStylePrefs.DEFAULT_PACKAGE_NAME
+            AppBridge.LyricStylePrefs.DEFAULT_PACKAGE_NAME
         )
     }
 
@@ -70,7 +67,7 @@ object LyricPrefs {
     /* ---------------- package manager ---------------- */
 
     private val packageStyleManagerPrefs: XSharedPreferences =
-        createXPrefs(Bridge.LyricStylePrefs.PREF_PACKAGE_STYLE_MANAGER)
+        createXPrefs(AppBridge.LyricStylePrefs.PREF_PACKAGE_STYLE_MANAGER)
 
     fun getActivePackageStyle(): PackageStyle {
         val pkg = activePackageName
@@ -85,7 +82,7 @@ object LyricPrefs {
         return runCatching {
             packageStyleManagerPrefs
                 .getStringSet(
-                    Bridge.LyricStylePrefs.KEY_ENABLED_PACKAGES,
+                    AppBridge.LyricStylePrefs.KEY_ENABLED_PACKAGES,
                     emptySet()
                 )
                 ?.contains(packageName) ?: false
@@ -96,7 +93,7 @@ object LyricPrefs {
 
 
     private fun getPackagePrefName(packageName: String): String =
-        Bridge.LyricStylePrefs.getPackageStylePreferenceName(packageName)
+        AppBridge.LyricStylePrefs.getPackageStylePreferenceName(packageName)
 
     private fun getPackagePrefs(packageName: String): XSharedPreferences {
         val prefName = getPackagePrefName(packageName)
@@ -145,5 +142,4 @@ object LyricPrefs {
             getPackageStyle(packageName)
         )
     }
-
 }

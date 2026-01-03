@@ -1,19 +1,17 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.app.ui.activity.lyric
@@ -53,23 +51,26 @@ private data class VisibilityOption(
     val titleRes: Int
 )
 
-class ViewRulesTreeActivity : BaseViewTreeActivity() {
+class ViewRulesTreeActivity : ViewTreeActivity() {
 
     private val viewModel: RuleViewModel by viewModels()
 
-    private val ACTIVE_RULE_COLOR = Color(0xFF66BB6A)
+    private val activeRuleColor = Color(color = 0xFF66BB6A)
 
     override fun getToolBarTitle(): String = getString(R.string.activity_view_rules)
 
-    override fun getViewTreeNodeColor(node: ViewTreeNode): Color? {
-        val rules = LyricPrefs.getViewVisibilityRule()
-        val hasActiveRule = rules.any { it.id == node.id && it.mode != VisibilityRule.MODE_NORMAL }
-        return if (hasActiveRule) ACTIVE_RULE_COLOR else null
-    }
+    override fun createViewModel() = object : ViewTreeViewModel() {
+        override fun handleNodeClick(node: Node<ViewTreeNode>) {
+            val nodeId = node.content.id ?: return
+            viewModel.openSelection(nodeId)
+        }
 
-    override fun onTreeNodeClick(node: Node<ViewTreeNode>) {
-        val nodeId = node.content.id ?: return
-        viewModel.openSelection(nodeId)
+        override fun getNodeColor(node: ViewTreeNode): Color {
+            val rules = LyricPrefs.getViewVisibilityRule()
+            val hasActiveRule =
+                rules.any { it.id == node.id && it.mode != VisibilityRule.MODE_NORMAL }
+            return if (hasActiveRule) activeRuleColor else Color.Transparent
+        }
     }
 
     @Composable
@@ -77,7 +78,6 @@ class ViewRulesTreeActivity : BaseViewTreeActivity() {
         super.OnScaffoldCreated()
 
         val currentMode by viewModel.currentMode
-        val showOptions by viewModel.showOptions
 
         VisibilityRuleBottomSheet(
             show = viewModel.showOptions,
@@ -89,7 +89,6 @@ class ViewRulesTreeActivity : BaseViewTreeActivity() {
             }
         )
     }
-
 
     class RuleViewModel : ViewModel() {
         val showOptions = mutableStateOf(false)

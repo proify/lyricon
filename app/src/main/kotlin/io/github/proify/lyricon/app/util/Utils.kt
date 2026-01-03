@@ -1,58 +1,71 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.app.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
-import io.github.proify.android.extensions.getSharedPreferences
+import io.github.proify.android.extensions.getWorldReadableSharedPreferences
 import io.github.proify.lyricon.app.Application
+import io.github.proify.lyricon.app.ui.activity.MainActivity
 import java.util.Locale
 
 object Utils {
-
-    inline fun SharedPreferences.commitEdit(
-        action: SharedPreferences.Editor.() -> Unit,
-    ) {
+    inline fun SharedPreferences.commitEdit(action: SharedPreferences.Editor.() -> Unit) {
         val editor = edit()
         action(editor)
         editor.commit()
     }
 
-    fun getDefaultSharedPreferences(context: Context) = context.getSharedPreferences(
-        context.getPackageName() + "_preferences", false
-    )
+    fun getDefaultSharedPreferences(context: Context) =
+        context.getWorldReadableSharedPreferences(context.getPackageName() + "_preferences")
+
+    fun Activity.restartApp() {
+        val intent =
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        startActivity(intent)
+        finish()
+
+        @Suppress("DEPRECATION")
+        overridePendingTransition(0, 0)
+        android.os.Process.killProcess(android.os.Process.myPid())
+    }
 
     fun forceStop(packageName: String?) {
         Application.instance.packageManager.getInstalledPackages(0)
         ShellUtils.execCmd(
-            "am force-stop $packageName", isRooted = true, isNeedResultMsg = true
+            "am force-stop $packageName",
+            isRooted = true,
+            isNeedResultMsg = true,
         )
     }
 
-    fun killSystemUi(): ShellUtils.CommandResult {
-        return ShellUtils.execCmd(
-            "kill -9 $(pgrep systemui)", isRooted = true, isNeedResultMsg = true
+    fun killSystemUi(): ShellUtils.CommandResult =
+        ShellUtils.execCmd(
+            "kill -9 $(pgrep systemui)",
+            isRooted = true,
+            isNeedResultMsg = true,
         )
-    }
 
     fun Context.launchBrowser(
         url: String,
@@ -62,11 +75,13 @@ object Utils {
         if (toolbarColor != null) {
             colorSchemeParamsBuilder.setToolbarColor(toolbarColor)
         }
-        val customTabs = CustomTabsIntent.Builder()
-            .setColorScheme(CustomTabsIntent.COLOR_SCHEME_SYSTEM)
-            .setDefaultColorSchemeParams(colorSchemeParamsBuilder.build())
-            .setTranslateLocale(Locale.getDefault())
-            .build()
+        val customTabs =
+            CustomTabsIntent
+                .Builder()
+                .setColorScheme(CustomTabsIntent.COLOR_SCHEME_SYSTEM)
+                .setDefaultColorSchemeParams(colorSchemeParamsBuilder.build())
+                .setTranslateLocale(Locale.getDefault())
+                .build()
         customTabs.launchUrl(this, url.toUri())
     }
 }

@@ -1,92 +1,42 @@
 /*
- * Lyricon – An Xposed module that extends system functionality
- * Copyright (C) 2026 Proify
+ * Copyright 2026 Proify
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.github.proify.lyricon.lyric.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import io.github.proify.lyricon.lyric.model.DoubleLyricLine.ParcelerImpl.write
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.TypeParceler
 import kotlinx.serialization.Serializable
 
+/**
+ * 歌曲信息
+ *
+ * @property id 歌曲ID
+ * @property name 歌曲名
+ * @property artist 艺术家
+ * @property duration 歌曲时长
+ * @property metadata 元数据
+ * @property lyrics 歌词列表
+ */
 @Serializable
 @Parcelize
-@TypeParceler<Song, Song.ParcelerImpl>()
 data class Song(
     var id: String? = null,
     var name: String? = null,
     var artist: String? = null,
     var duration: Int = 0,
-    var extraMetadata: Map<String, String?>? = null,
+    var metadata: LyricMetadata? = null,
     var lyrics: List<DoubleLyricLine>? = null,
-) : Parcelable {
-
-    val hasLyrics: Boolean get() = lyrics.isNullOrEmpty().not()
-
-    object ParcelerImpl : Parceler<Song> {
-        private const val PARCEL_VERSION_V1 = 1
-
-        override fun Song.write(parcel: Parcel, flags: Int) {
-            parcel.writeInt(PARCEL_VERSION_V1)
-            parcel.writeString(id)
-            parcel.writeString(name)
-            parcel.writeString(artist)
-            parcel.writeInt(duration)
-            parcel.writeMetadata(extraMetadata)
-
-            parcel.writeInt(lyrics?.size ?: -1)
-            lyrics?.forEach { it.write(parcel, flags) }
-        }
-
-        override fun create(parcel: Parcel): Song {
-            val version = parcel.readInt()
-            return when (version) {
-                PARCEL_VERSION_V1 -> parcel.readFromV1()
-                else -> throw IllegalArgumentException("Unsupported version: $version")
-            }
-        }
-
-        private fun Parcel.readFromV1(): Song {
-            val id = readString()
-            val name = readString()
-            val artist = readString()
-            val duration = readInt()
-            val extraMetadata = readMetadata()
-
-            val lyricSize = readInt()
-            val lyrics = when {
-                lyricSize < 0 -> null
-                lyricSize == 0 -> emptyList()
-                else -> List(lyricSize) {
-                    DoubleLyricLine.ParcelerImpl.create(this)
-                }
-            }
-
-            return Song(
-                id = id,
-                name = name,
-                artist = artist,
-                duration = duration,
-                extraMetadata = extraMetadata,
-                lyrics = lyrics,
-            )
-        }
-    }
-}
+) : Parcelable

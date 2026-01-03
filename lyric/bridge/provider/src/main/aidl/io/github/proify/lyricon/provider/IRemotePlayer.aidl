@@ -4,7 +4,7 @@ import android.os.SharedMemory;
 import io.github.proify.lyricon.lyric.model.Song;
 
 interface IRemotePlayer {
-    void setSong(in Song song);
+    void setSong(in byte[] song);
     void setPlaybackState(boolean isPlaying);
     void seekTo(int positionMs);
     void sendText(String text);
