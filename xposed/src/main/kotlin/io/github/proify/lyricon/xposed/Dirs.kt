@@ -39,7 +39,7 @@ object Dirs {
         moduleDataDir = File(dataDir, "lyricon")
         tempDir = File(moduleDataDir, ".temp")
         packageDir = File(moduleDataDir, "packages")
-        YLog.debug("Lyricon data directory: $moduleDataDir")
+        YLog.debug("Lyricon map directory: $moduleDataDir")
     }
 
     fun getDataFile(name: String): File = File(moduleDataDir, name)

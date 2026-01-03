@@ -124,5 +124,4 @@ internal class RemotePlayerProxy : RemotePlayer, RemoteServiceBinder<IRemotePlay
             false
         }
     }
-
 }

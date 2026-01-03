@@ -26,12 +26,21 @@ import java.util.concurrent.CopyOnWriteArraySet
 internal class RemoteServiceProxy(private val provider: LyriconProvider) : RemoteService,
     RemoteServiceBinder<IRemoteService?> {
 
-    val connectionListeners = CopyOnWriteArraySet<ConnectionListener>()
-    private val deathRecipient = DeathRecipient()
+    companion object {
+        private const val TAG = "ProviderServiceImpl"
+    }
+
+    private var remoteService: IRemoteService? = null
 
     override val player: RemotePlayerProxy = RemotePlayerProxy()
     override var connectionStatus: ConnectionStatus = ConnectionStatus.STATUS_DISCONNECTED
-    private var remoteService: IRemoteService? = null
+
+    internal val connectionListeners = CopyOnWriteArraySet<ConnectionListener>()
+
+    private val deathRecipient = IBinder.DeathRecipient {
+        Log.d(TAG, "Service died")
+        disconnect(false)
+    }
 
     override fun bindRemoteService(service: IRemoteService?) {
         Log.d(TAG, "Bind service")
@@ -86,22 +95,9 @@ internal class RemoteServiceProxy(private val provider: LyriconProvider) : Remot
         }
     }
 
-    override fun addConnectionListener(listener: ConnectionListener) {
-        connectionListeners += listener
-    }
+    override fun addConnectionListener(listener: ConnectionListener) =
+        connectionListeners.add(listener)
 
-    override fun removeConnectionListener(listener: ConnectionListener) {
-        connectionListeners -= listener
-    }
-
-    private inner class DeathRecipient : IBinder.DeathRecipient {
-        override fun binderDied() {
-            Log.d(TAG, "Service died")
-            disconnect(false)
-        }
-    }
-
-    companion object {
-        private const val TAG = "ProviderServiceImpl"
-    }
+    override fun removeConnectionListener(listener: ConnectionListener) =
+        connectionListeners.remove(listener)
 }

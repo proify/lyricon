@@ -25,10 +25,16 @@ import io.github.proify.lyricon.central.provider.RemoteProvider
 import io.github.proify.lyricon.central.subscriber.RemoteSubscriber
 import io.github.proify.lyricon.central.subscriber.SubscriberManager
 import io.github.proify.lyricon.provider.IProviderBinder
+import io.github.proify.lyricon.provider.ProviderInfo
 import io.github.proify.lyricon.subscriber.IRemoteSubscriberBinder
+import kotlinx.serialization.json.Json
 
 internal object CentralReceiver : BroadcastReceiver() {
     private const val TAG = "CentralReceiver"
+
+    private val json = Json {
+        ignoreUnknownKeys = true
+    }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
@@ -56,21 +62,28 @@ internal object CentralReceiver : BroadcastReceiver() {
     private fun registerProvider(intent: Intent) {
         Log.d(TAG, "registerProvider")
 
-        val providerBinder = getBinder<IProviderBinder>(intent) ?: return
+        val binder = getBinder<IProviderBinder>(intent) ?: return
         var provider: RemoteProvider? = null
 
         try {
-            val providerInfo = providerBinder.providerInfo
-            if (providerInfo.providerPackageName.isNullOrBlank() ||
-                providerInfo.playerPackageName.isNullOrBlank()
+            val providerInfoByteArray: ByteArray? = binder.providerInfo
+            val providerInfo = providerInfoByteArray?.let {
+                json.decodeFromString(
+                    ProviderInfo.serializer(),
+                    it.toString(Charsets.UTF_8)
+                )
+            }
+            if (providerInfo == null
+                || providerInfo.providerPackageName.isNullOrBlank()
+                || providerInfo.playerPackageName.isNullOrBlank()
             ) {
-                Log.e(TAG, "Provider module package name is null or blank: ${providerInfo}")
+                Log.e(TAG, "Provider info is invalid")
                 return
             }
-            provider = RemoteProvider(providerBinder)
-
+            provider = RemoteProvider(binder, providerInfo)
             ProviderManager.register(provider)
-            providerBinder.onRegistrationCallback(provider.service)
+
+            binder.onRegistrationCallback(provider.service)
             Log.d(
                 TAG,
                 "Provider registered: ${provider.providerInfo.providerPackageName}/  ${provider.providerInfo.playerPackageName}"
@@ -84,20 +97,20 @@ internal object CentralReceiver : BroadcastReceiver() {
     private fun registerSubscriber(intent: Intent) {
         Log.d(TAG, "registerSubscriber")
 
-        val subscriberBinder = getBinder<IRemoteSubscriberBinder>(intent) ?: return
+        val binder = getBinder<IRemoteSubscriberBinder>(intent) ?: return
         var subscriber: RemoteSubscriber? = null
 
         try {
-            subscriber = RemoteSubscriber(subscriberBinder).also {
-                val info = it.subscriberInfo
-                if (info.packageName.isNullOrBlank()) {
-                    Log.e(TAG, "Subscriber package name is null or blank: ${info}")
-                    return
-                }
+            val subscriberInfo = binder.subscriberInfo
+            if (subscriberInfo.packageName.isNullOrBlank()) {
+                Log.e(TAG, "Subscriber info is invalid")
+                return
             }
 
+            subscriber = RemoteSubscriber(binder)
             SubscriberManager.register(subscriber)
-            subscriberBinder.onRegistrationCallback(subscriber.service)
+
+            binder.onRegistrationCallback(subscriber.service)
             Log.d(TAG, "Subscriber registered: ${subscriber.subscriberInfo.packageName}")
         } catch (e: Exception) {
             Log.e(TAG, "Subscriber registration failed", e)

@@ -1,67 +1,46 @@
-/*
- * Copyright 2026 Proify
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package io.github.proify.lyricon.provider
 
-import android.os.Parcel
 import android.os.Parcelable
-import androidx.core.os.ParcelCompat
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.TypeParceler
+import kotlinx.serialization.Serializable
 
+/**
+ * 提供者信息
+ *
+ * @property providerPackageName 提供者包名
+ * @property playerPackageName 播放器包名
+ * @property logo 播放器Logo
+ * @property metadata 元数据
+ */
+@Serializable
 @Parcelize
-@TypeParceler<ProviderInfo, ProviderInfo.MusicProviderParceler>()
-data class ProviderInfo(
+class ProviderInfo(
     val providerPackageName: String,
     val playerPackageName: String,
     val logo: ProviderLogo? = null,
-    val extraMetadata: Map<String, String?>? = null
+    val metadata: ProviderMetadata? = null
 ) : Parcelable {
 
-    object MusicProviderParceler : Parceler<ProviderInfo> {
-        private const val PARCEL_VERSION_V1 = 1
-
-        override fun ProviderInfo.write(parcel: Parcel, flags: Int) {
-            parcel.writeInt(PARCEL_VERSION_V1)
-            parcel.writeString(providerPackageName)
-            parcel.writeString(playerPackageName)
-            parcel.writeParcelable(logo, flags)
-            parcel.writeMetadata(extraMetadata)
-        }
-
-        override fun create(parcel: Parcel): ProviderInfo {
-            val version = parcel.readInt()
-            return when (version) {
-                PARCEL_VERSION_V1 -> parcel.readFromV1()
-                else -> throw IllegalArgumentException("Unknown parcel version: $version")
-            }
-        }
-
-        private fun Parcel.readFromV1(): ProviderInfo {
-            val providerPackageName = readString().orEmpty()
-            val playerPackageName = readString().orEmpty()
-            val logo = ParcelCompat.readParcelable(
-                this,
-                ProviderLogo::class.java.classLoader,
-                ProviderLogo::class.java
-            )
-            val extraMetadata = readMetadata()
-
-            return ProviderInfo(providerPackageName, playerPackageName, logo, extraMetadata)
-        }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ProviderInfo) return false
+        return providerPackageName == other.providerPackageName
+                && playerPackageName == other.playerPackageName
     }
+
+    override fun hashCode(): Int {
+        var result = providerPackageName.hashCode()
+        result = 31 * result + playerPackageName.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "ProviderInfo(" +
+                "providerPackageName='$providerPackageName', " +
+                "playerPackageName='$playerPackageName', " +
+                "logo=$logo, " +
+                "metadata=$metadata" +
+                ")"
+    }
+
 }

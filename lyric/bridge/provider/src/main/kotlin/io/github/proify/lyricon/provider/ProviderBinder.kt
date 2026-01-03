@@ -16,8 +16,8 @@
 
 package io.github.proify.lyricon.provider
 
-import android.util.Log
 import io.github.proify.lyricon.provider.remote.RemoteServiceBinder
+import kotlinx.serialization.json.Json
 import java.util.concurrent.CopyOnWriteArraySet
 
 internal class ProviderBinder(
@@ -26,40 +26,33 @@ internal class ProviderBinder(
     private val remoteServiceBinder: RemoteServiceBinder<IRemoteService?>
 ) : IProviderBinder.Stub() {
 
-    private val registrationCallbacks = CopyOnWriteArraySet<RegistrationCallback>()
-
-    fun addRegistrationCallback(callback: RegistrationCallback) {
-        registrationCallbacks.add(callback)
-    }
-
-    fun removeRegistrationCallback(callback: RegistrationCallback) {
-        registrationCallbacks.remove(callback)
-    }
-
-    fun interface RegistrationCallback {
-        fun onRegistered()
-    }
-
-    override fun onRegistrationCallback(remoteProviderService: IRemoteService?) {
-        remoteServiceBinder.bindRemoteService(remoteProviderService)
-        notifyRegistrationCallbacks()
-    }
-
-    override fun getProviderService(): IProviderService = providerService
-
-    override fun getProviderInfo(): ProviderInfo = provider.providerInfo
-
-    private fun notifyRegistrationCallbacks() {
-        registrationCallbacks.forEach {
-            try {
-                it.onRegistered()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error in callback", e)
-            }
-        }
+    val providerInfoByteArray by lazy {
+        json.encodeToString(ProviderInfo.serializer(), provider.providerInfo).toByteArray()
     }
 
     companion object {
-        private const val TAG = "RemoteProviderBinder"
+        val json = Json {
+            ignoreUnknownKeys = true
+        }
+    }
+
+    private val registrationCallbacks = CopyOnWriteArraySet<OnRegistrationCallback>()
+
+    fun addRegistrationCallback(callback: OnRegistrationCallback) =
+        registrationCallbacks.add(callback)
+
+    fun removeRegistrationCallback(callback: OnRegistrationCallback) =
+        registrationCallbacks.remove(callback)
+
+    override fun onRegistrationCallback(remoteProviderService: IRemoteService?) {
+        remoteServiceBinder.bindRemoteService(remoteProviderService)
+        registrationCallbacks.forEach { it.onRegistered() }
+    }
+
+    override fun getProviderService(): IProviderService = providerService
+    override fun getProviderInfo(): ByteArray? = providerInfoByteArray
+
+    interface OnRegistrationCallback {
+        fun onRegistered()
     }
 }

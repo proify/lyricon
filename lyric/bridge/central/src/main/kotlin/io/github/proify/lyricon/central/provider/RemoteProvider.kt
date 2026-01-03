@@ -22,18 +22,29 @@ import android.util.Log
 import io.github.proify.lyricon.provider.IProviderBinder
 import io.github.proify.lyricon.provider.ProviderInfo
 
-class RemoteProvider(private val binder: IProviderBinder) {
-    val providerInfo: ProviderInfo = binder.getProviderInfo()
-    val service: RemoteProviderService = RemoteProviderService(this)
+class RemoteProvider(
+    var binder: IProviderBinder? = null,
+    val providerInfo: ProviderInfo
+) {
+    var service: RemoteProviderService? = RemoteProviderService(this)
+        private set
 
     private var deathRecipient: IBinder.DeathRecipient? = null
 
+    private var isDestroyed = false
+
     fun setDeathRecipient(newDeathRecipient: IBinder.DeathRecipient?) {
-        deathRecipient?.let { binder.asBinder().unlinkToDeath(it, 0) }
+        deathRecipient?.let {
+            try {
+                binder?.asBinder()?.unlinkToDeath(it, 0)
+            } catch (e: Exception) {
+                Log.e(TAG, "unlink to Death failed", e)
+            }
+        }
 
         if (newDeathRecipient != null) {
             try {
-                binder.asBinder().linkToDeath(newDeathRecipient, 0)
+                binder?.asBinder()?.linkToDeath(newDeathRecipient, 0)
             } catch (e: RemoteException) {
                 Log.e(TAG, "link to Death failed", e)
             }
@@ -47,13 +58,17 @@ class RemoteProvider(private val binder: IProviderBinder) {
     }
 
     fun onDestroy() {
-        service.release()
+        service?.release()
+        service = null
         setDeathRecipient(null)
+        binder = null
+        isDestroyed = true
     }
 
     override fun equals(other: Any?): Boolean {
+        if (this === other) return true
         if (other !is RemoteProvider) return false
-        return this.providerInfo == other.providerInfo
+        return providerInfo == other.providerInfo
     }
 
     override fun hashCode(): Int {

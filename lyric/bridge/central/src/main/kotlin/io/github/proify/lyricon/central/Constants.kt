@@ -18,6 +18,8 @@ package io.github.proify.lyricon.central
 
 object Constants {
 
+    const val DEBUG: Boolean = false
+
     internal const val ACTION_REGISTER_PROVIDER: String =
         "io.github.proify.lyricon.lyric.bridge.REGISTER_PROVIDER"
 

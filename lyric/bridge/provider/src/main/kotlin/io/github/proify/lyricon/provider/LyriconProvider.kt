@@ -1,187 +1,143 @@
-/*
- * Copyright 2026 Proify
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package io.github.proify.lyricon.provider
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import io.github.proify.lyricon.provider.ProviderBinder.RegistrationCallback
+import io.github.proify.lyricon.provider.ProviderBinder.OnRegistrationCallback
 import io.github.proify.lyricon.provider.remote.ConnectionStatus
 import io.github.proify.lyricon.provider.remote.RemoteService
 import io.github.proify.lyricon.provider.remote.RemoteServiceProxy
-import java.util.Timer
-import java.util.TimerTask
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * 歌词提供者核心类1
+ * 核心歌词提供者类。
  *
- * 负责将歌词源注册到中心服务，并管理与中心服务的连接状态。
- * 提供者可以为特定的音乐应用提供歌词数据。
+ * 用于向中心服务注册提供者，并维护与中心服务的连接状态。
  *
- * 使用示例：
- * ```kotlin
- * val provider = LyriconProvider(
- *     context = context,
- *     modulePackageName = "com.example.lyricon.provider.spotify",
- *     musicPackageName = "com.spotify.music",
- *     logo = ProviderLogo.fromDrawable(drawable)
- * )
- * provider.register()
- * ```
- *
- * @param context 上下文
- * @param providerPackageName 提供者模块的包名
- * @param playerPackageName 目标音乐应用的包名
- * @param logo 音乐应用的 Logo
- * @param extraMetadata 扩展元数据
+ * @property providerInfo 提供者信息
+ * @property service 对外暴露的远程服务接口
+ * @property isActivated 是否处于激活状态
  */
 class LyriconProvider(
     context: Context,
     providerPackageName: String,
     playerPackageName: String,
     logo: ProviderLogo? = null,
-    extraMetadata: Map<String, String?> = emptyMap()
+    metadata: ProviderMetadata? = null
 ) {
 
-    internal companion object {
+    companion object {
         private const val TAG = "LyriconProvider"
-        private const val CONNECTION_TIMEOUT_MS = 2233L
+
+        /** 注册等待超时时间 */
+        private const val CONNECTION_TIMEOUT_MS = 2_233L
     }
 
     private val appContext: Context = context.applicationContext
-
-    val providerInfo: ProviderInfo = ProviderInfo(
-        providerPackageName = providerPackageName,
-        playerPackageName = playerPackageName,
-        logo = logo,
-        extraMetadata = extraMetadata
-    )
-
     private val providerService = ProviderService()
-    private val remoteService = RemoteServiceProxy(this)
-    private val binder = ProviderBinder(this, providerService, remoteService)
+    private val remoteServiceProxy = RemoteServiceProxy(this)
+    private val binder = ProviderBinder(this, providerService, remoteServiceProxy)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    /**
-     * 远程服务
-     */
-    val service: RemoteService = remoteService
+    @Volatile
+    private var connectionTimeoutJob: Job? = null
+    private val destroyed = AtomicBoolean(false)
 
-    /**
-     * 服务激活状态
-     */
-    val isActivated: Boolean
-        get() = service.isActivated
-
-    private var connectionTimeoutTimer: Timer? = null
-
+    /** 监听中心服务生命周期变化 */
     private val centralServiceListener = object : CentralServiceReceiver.ServiceListener {
         override fun onServiceBootCompleted() {
-            if (remoteService.connectionStatus == ConnectionStatus.STATUS_DISCONNECTED) {
-                Log.d(TAG, "Central service rebooted, re-registering provider")
+            if (remoteServiceProxy.connectionStatus == ConnectionStatus.STATUS_DISCONNECTED) {
+                Log.d(TAG, "Central service restarted, attempting re-registration")
                 register()
             }
         }
     }
 
-    private var destoryed = false
+    /** 提供者信息 */
+    val providerInfo: ProviderInfo = ProviderInfo(
+        providerPackageName = providerPackageName,
+        playerPackageName = playerPackageName,
+        logo = logo,
+        metadata = metadata
+    )
+
+    /** 远程服务接口 */
+    val service: RemoteService = remoteServiceProxy
+
+    /** 远程服务是否已激活 */
+    val isActivated: Boolean
+        get() = service.isActivated
 
     init {
-        initializeCentralServiceReceiver()
-    }
-
-    private fun initializeCentralServiceReceiver() {
         CentralServiceReceiver.initialize(appContext)
         CentralServiceReceiver.addServiceListener(centralServiceListener)
     }
 
     /**
-     * 注册提供者到中心服务
+     * 向中心服务发起注册请求。
      *
-     * 发送注册广播到中心服务，建立跨进程连接。
-     * 如果已经处于连接或连接中状态，则不会重复注册。
-     *
-     * @return true 表示注册请求已发送；false 表示已连接或正在连接中
-     *
-     * @throws IllegalStateException 如果提供者已被销毁
+     * @return true 表示已成功发起注册流程，false 表示已连接或连接中
+     * @throws IllegalStateException 当实例已被销毁时
      */
+    @Synchronized
     fun register(): Boolean {
-        if (destoryed) {
+        if (destroyed.get()) {
             throw IllegalStateException("Provider has been destroyed")
-            return false
         }
-        return when (remoteService.connectionStatus) {
-            ConnectionStatus.STATUS_CONNECTED -> {
-                Log.d(TAG, "Provider already registered")
-                false
-            }
 
-            ConnectionStatus.STATUS_CONNECTING -> {
-                Log.d(TAG, "Provider registration already in progress")
-                false
-            }
+        return when (remoteServiceProxy.connectionStatus) {
+            ConnectionStatus.STATUS_CONNECTED,
+            ConnectionStatus.STATUS_CONNECTING -> false
 
             else -> {
-                Log.d(TAG, "Registering provider: ${providerInfo.providerPackageName}")
                 performRegistration()
-                return true
+                true
             }
         }
     }
 
     /**
-     * 执行实际的注册流程
+     * 执行注册流程：
+     * - 设置连接状态为连接中
+     * - 启动连接超时任务
+     * - 向中心服务发送注册广播
      */
     private fun performRegistration() {
 
-        val registrationCallback = object : RegistrationCallback {
+        connectionTimeoutJob?.cancel()
+        connectionTimeoutJob = null
+
+        val registrationCallback = object : OnRegistrationCallback {
             override fun onRegistered() {
-                connectionTimeoutTimer?.cancel()
-                connectionTimeoutTimer = null
-
-                remoteService.connectionStatus = ConnectionStatus.STATUS_CONNECTED
+                connectionTimeoutJob?.cancel()
+                connectionTimeoutJob = null
+                remoteServiceProxy.connectionStatus = ConnectionStatus.STATUS_CONNECTED
                 binder.removeRegistrationCallback(this)
-
-                Log.d(TAG, "Provider registered successfully")
             }
         }
 
-        remoteService.connectionStatus = ConnectionStatus.STATUS_CONNECTING
+        remoteServiceProxy.connectionStatus = ConnectionStatus.STATUS_CONNECTING
 
-        connectionTimeoutTimer?.cancel()
-        connectionTimeoutTimer = Timer().apply {
-            schedule(object : TimerTask() {
-                override fun run() {
-                    if (remoteService.connectionStatus == ConnectionStatus.STATUS_CONNECTING) {
-                        remoteService.connectionStatus = ConnectionStatus.STATUS_DISCONNECTED
+        connectionTimeoutJob = scope.launch {
+            delay(CONNECTION_TIMEOUT_MS)
+            if (remoteServiceProxy.connectionStatus == ConnectionStatus.STATUS_CONNECTING) {
+                remoteServiceProxy.connectionStatus = ConnectionStatus.STATUS_DISCONNECTED
+                binder.removeRegistrationCallback(registrationCallback)
 
-                        binder.removeRegistrationCallback(registrationCallback)
-
-                        Log.w(TAG, "Provider connection timeout")
-                        remoteService.connectionListeners.forEach { listener ->
-                            try {
-                                listener.onConnectTimeout(this@LyriconProvider)
-                            } catch (e: Exception) {
-                                Log.e(TAG, "Error in connection timeout listener", e)
-                            }
-                        }
+                remoteServiceProxy.connectionListeners.forEach {
+                    runCatching {
+                        it.onConnectTimeout(this@LyriconProvider)
                     }
                 }
-            }, CONNECTION_TIMEOUT_MS)
+            }
         }
 
         binder.addRegistrationCallback(registrationCallback)
@@ -196,45 +152,41 @@ class LyriconProvider(
         }
 
         appContext.sendBroadcast(intent)
-
-        Log.d(TAG, "Provider registration broadcast sent")
     }
 
     /**
-     * 取消注册提供者
+     * 注销提供者。
      *
-     * 断开与中心服务的连接
-     *
-     * @throws IllegalStateException 如果提供者已被销毁
+     * @throws IllegalStateException 当实例已被销毁时
      */
+    @Synchronized
     fun unregister() {
-        if (destoryed) {
+        if (destroyed.get()) {
             throw IllegalStateException("Provider has been destroyed")
-            return
         }
         unregisterInternal(fromUser = true)
     }
 
+    /**
+     * 注销实现逻辑，可区分用户主动调用或系统自动调用
+     *
+     * @param fromUser 是否由用户触发
+     */
     private fun unregisterInternal(fromUser: Boolean) {
-        try {
-            connectionTimeoutTimer?.cancel()
-            connectionTimeoutTimer = null
-
-            remoteService.disconnect(fromUser)
-            Log.d(TAG, "Provider unregistered ${if (fromUser) "by user" else "automatically"}")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during unregister", e)
-        }
+        connectionTimeoutJob?.cancel()
+        connectionTimeoutJob = null
+        remoteServiceProxy.disconnect(fromUser)
     }
 
     /**
-     * 清理资源
+     * 释放资源并结束实例生命周期。
      *
-     * 在提供者不再使用时调用，释放相关资源
+     * 调用后该对象不可再次使用。
      */
-    fun destory() {
-        if (destoryed) return
-        destoryed = true
+    fun destroy() {
+        if (!destroyed.compareAndSet(false, true)) return
+
+        scope.cancel()
         unregisterInternal(fromUser = false)
         CentralServiceReceiver.removeServiceListener(centralServiceListener)
     }

@@ -22,22 +22,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import java.util.concurrent.CopyOnWriteArraySet
-import java.util.concurrent.atomic.AtomicBoolean
 
 internal object CentralServiceReceiver {
-    private val isInitialized = AtomicBoolean(false)
+    private var isInitialized = false
     private val listeners = CopyOnWriteArraySet<ServiceListener>()
 
-    fun addServiceListener(listener: ServiceListener) {
-        listeners += listener
-    }
-
-    fun removeServiceListener(listener: ServiceListener) {
-        listeners -= listener
-    }
+    fun addServiceListener(listener: ServiceListener) = listeners.add(listener)
+    fun removeServiceListener(listener: ServiceListener) = listeners.remove(listener)
 
     fun initialize(context: Context) {
-        if (!isInitialized.compareAndSet(false, true)) return
+        if (isInitialized) return
+        isInitialized = true
 
         ContextCompat.registerReceiver(
             context.applicationContext,
@@ -47,15 +42,22 @@ internal object CentralServiceReceiver {
         )
     }
 
+    private fun notifyServiceBootCompleted() = listeners.forEach {
+        it.onServiceBootCompleted()
+    }
+
     private object ServiceReceiver : BroadcastReceiver() {
+
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == Constants.ACTION_CENTRAL_BOOT_COMPLETED) {
-                listeners.forEach { it.onServiceBootCompleted() }
+            when (intent?.action) {
+                Constants.ACTION_CENTRAL_BOOT_COMPLETED -> {
+                    notifyServiceBootCompleted()
+                }
             }
         }
     }
 
-    fun interface ServiceListener {
+     interface ServiceListener {
         fun onServiceBootCompleted()
     }
 }

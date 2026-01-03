@@ -322,8 +322,8 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
         scrollBehavior: ScrollBehavior,
         paddingValues: PaddingValues
     ) {
-        val tree = remember(viewTree) {
-            createTreeFromNode(viewTree)
+        val tree = Tree<ViewTreeNode> {
+            TreeNode(node = viewTree)
         }
 
         LaunchedEffect(viewTree) {
@@ -370,13 +370,6 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
                 color = MiuixTheme.colorScheme.onSurfaceVariantSummary
             )
         )
-    }
-
-    @Composable
-    private fun createTreeFromNode(rootNode: ViewTreeNode): Tree<ViewTreeNode> {
-        return Tree {
-            TreeNode(node = rootNode)
-        }
     }
 
     @Composable

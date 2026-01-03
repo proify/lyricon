@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import io.github.proify.lyricon.subscriber.service.SubscriberService
 import io.github.proify.lyricon.subscriber.service.SubscriberServiceImpl
 
+//不完善，目前只内部使用
 class LyricSubscriber(var context: Context) {
     val subscriberInfo: SubscriberInfo =
         SubscriberInfo(context.packageName, context.applicationInfo.processName)

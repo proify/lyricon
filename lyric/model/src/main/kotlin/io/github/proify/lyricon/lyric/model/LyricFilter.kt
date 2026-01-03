@@ -1,13 +1,24 @@
 package io.github.proify.lyricon.lyric.model
 
-private const val THRESHOLD_SMALL_LIST = 50     // 小列表阈值，小于此值直接遍历
-private const val THRESHOLD_HEAD_RATIO = 0.25   // 头部线性查找比例
-private const val THRESHOLD_TAIL_RATIO = 0.85  // 尾部线性查找比例
+/**
+ *  小列表阈值，小于此值直接遍历
+ */
+private const val THRESHOLD_SMALL_LIST = 50
+
+/**
+ * 头部线性查找比例
+ */
+private const val THRESHOLD_HEAD_RATIO = 0.25
+
+/**
+ * 尾部线性查找比例
+ */
+private const val THRESHOLD_TAIL_RATIO = 0.85
 
 /**
  * 查找当前播放位置对应的歌词
  *
- * @param position 当前播放位置(毫秒)
+ * @param position 查找位置
  * @return 匹配的歌词列表
  */
 fun <T : ILyricTiming> List<T>.filterByPosition(position: Int): List<T> {
@@ -47,7 +58,7 @@ fun <T : ILyricTiming> List<T>.filterByPosition(position: Int): List<T> {
 /**
  * 查找当前或上一句歌词（用于空窗期显示上一句）
  *
- * @param position 当前播放位置
+ * @param position 查找位置
  * @return 匹配的歌词列表
  */
 fun <T : ILyricTiming> List<T>.filterByPositionOrPrevious(position: Int): List<T> {

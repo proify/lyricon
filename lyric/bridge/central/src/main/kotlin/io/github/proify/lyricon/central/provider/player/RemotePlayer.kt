@@ -1,35 +1,25 @@
-/*
- * Copyright 2026 Proify
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package io.github.proify.lyricon.central.provider.player
 
-import android.os.Handler
-import android.os.Looper
 import android.os.SharedMemory
 import android.system.OsConstants
 import android.util.Log
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.provider.IRemotePlayer
 import io.github.proify.lyricon.provider.ProviderInfo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import java.nio.ByteBuffer
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.ThreadFactory
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.max
 
 class RemotePlayer(
     info: ProviderInfo,
@@ -38,155 +28,186 @@ class RemotePlayer(
 
     companion object {
         private const val TAG = "RemotePlayer"
-        private val jsonx = Json {
+
+        private val json = Json {
             ignoreUnknownKeys = true
             encodeDefaults = false
         }
     }
 
-    private val mainHandler = Handler(Looper.getMainLooper())
     private val recorder = PlayerRecorder(info)
 
+    // ---------- SharedMemory ----------
     private var positionSharedMemory: SharedMemory? = null
+
+    @Volatile
     private var positionReadBuffer: ByteBuffer? = null
 
-    @Volatile
-    private var isPositionTaskRunning = false
+    // ---------- Coroutine ----------
+    private val scope = CoroutineScope(
+        SupervisorJob() + Dispatchers.Default
+    )
 
     @Volatile
-    private var positionUpdateInterval = 50L
+    private var positionJob: Job? = null
 
-    private var positionUpdateTask: ScheduledFuture<*>? = null
+    @Volatile
+    private var positionUpdateIntervalMs: Long = 50L
 
-    private val executor = Executors.newSingleThreadScheduledExecutor(object : ThreadFactory {
-        override fun newThread(r: Runnable): Thread {
-            return Thread(r, "PositionUpdater").apply {
-                isDaemon = true
-                uncaughtExceptionHandler = Thread.UncaughtExceptionHandler { t, e ->
-                    Log.e(TAG, "PositionUpdater uncaught", e)
-                }
-            }
-        }
-    });
+    private val released = AtomicBoolean(false)
 
     init {
         initSharedMemory()
     }
 
-    private fun initSharedMemory() {
-        try {
-            positionSharedMemory =
-                SharedMemory.create(
-                    "music_progress_${android.os.Process.myPid()}",
-                    4 //one int
-                ).apply {
-                    setProtect(OsConstants.PROT_READ or OsConstants.PROT_WRITE)
-                }
-            positionReadBuffer = positionSharedMemory?.mapReadOnly()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize position shared region", e)
-        }
-    }
+    // ---------- Lifecycle ----------
 
     fun release() {
-        stopPositionUpdateTask()
+        if (!released.compareAndSet(false, true)) return
+
+        Log.i(TAG, "release()")
+
+        stopPositionUpdate()
+
         positionReadBuffer?.let {
             SharedMemory.unmap(it)
         }
-        positionSharedMemory?.close()
+
         positionReadBuffer = null
+        positionSharedMemory?.close()
         positionSharedMemory = null
 
-        executor.shutdown()
+        scope.cancel()
     }
 
-    private fun readCurrentPositionFromMemory(): Int {
+    // ---------- SharedMemory ----------
+
+    private fun initSharedMemory() {
+        try {
+            positionSharedMemory = SharedMemory.create(
+                "music_position_${android.os.Process.myPid()}",
+                Int.SIZE_BYTES
+            ).apply {
+                setProtect(OsConstants.PROT_READ or OsConstants.PROT_WRITE)
+            }
+
+            positionReadBuffer = positionSharedMemory!!.mapReadOnly()
+
+            Log.i(TAG, "SharedMemory initialized")
+        } catch (t: Throwable) {
+            Log.e(TAG, "Failed to init SharedMemory", t)
+        }
+    }
+
+    private fun readPosition(): Int {
         val buffer = positionReadBuffer ?: return 0
         return try {
-            buffer.getInt(0).coerceAtLeast(0)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to read position from shared memory", e)
+            synchronized(buffer) {
+                max(0, buffer.getInt(0))
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "Read position failed", t)
             0
         }
     }
 
-    private fun startPositionUpdateTask() {
-        if (isPositionTaskRunning) return
-        isPositionTaskRunning = true
+    // ---------- Position Update ----------
 
-        positionUpdateTask = executor.scheduleAtFixedRate(object : Runnable {
-            override fun run() {
-                val position = readCurrentPositionFromMemory()
-                updatePositionInternal(position)
+    private fun startPositionUpdate() {
+        if (positionJob != null) return
+
+        Log.d(TAG, "Start position updater ,interval $positionUpdateIntervalMs ms")
+
+        positionJob = scope.launch {
+            while (isActive) {
+                val position = readPosition()
+                if (position != recorder.lastPosition) {
+                    recorder.lastPosition = position
+                    playerListener.onPositionChanged(recorder, position)
+                }
+                delay(positionUpdateIntervalMs)
             }
-
-        }, 0, positionUpdateInterval, TimeUnit.MILLISECONDS)
-    }
-
-    override fun setPositionUpdateInterval(interval: Int) {
-        positionUpdateInterval = interval.coerceAtLeast(16).toLong()
-        if (isPositionTaskRunning) {
-            stopPositionUpdateTask()
-            startPositionUpdateTask()
         }
     }
 
-    private fun stopPositionUpdateTask() {
-        isPositionTaskRunning = false
-        positionUpdateTask?.cancel(false)
+    private fun stopPositionUpdate() {
+        positionJob?.cancel()
+        positionJob = null
+        Log.d(TAG, "Stop position updater")
     }
 
+    override fun setPositionUpdateInterval(interval: Int) {
+        check(!released.get()) { "Player is released" }
+
+        positionUpdateIntervalMs = interval.coerceAtLeast(16).toLong()
+        Log.i(TAG, "Update interval = $positionUpdateIntervalMs ms")
+
+        if (positionJob != null) {
+            stopPositionUpdate()
+            startPositionUpdate()
+        }
+    }
+
+    // ---------- AIDL ----------
+
+    @OptIn(ExperimentalSerializationApi::class)
     override fun setSong(songByteArray: ByteArray?) {
-        var song: Song? = if (songByteArray != null) {
-            Log.e(TAG, "Song size ${(songByteArray.size) / 1024} KB")
+        check(!released.get()) { "Player is released" }
+
+        val song = songByteArray?.let {
             try {
                 val start = System.currentTimeMillis()
-                val song = jsonx.decodeFromString(Song.serializer(), String(songByteArray))
-                Log.e(TAG, "Parsed song in ${System.currentTimeMillis() - start} ms")
-                song
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to parse song", e)
+                val parsed = json.decodeFromStream(
+                    Song.serializer(),
+                    it.inputStream()
+                )
+                Log.d(TAG, "Song parsed in ${System.currentTimeMillis() - start} ms")
+                parsed
+            } catch (t: Throwable) {
+                Log.e(TAG, "Song parse failed", t)
                 null
             }
-        } else {
-            Log.e(TAG, "Song is null")
-            null
         }
 
         recorder.song = song
         recorder.text = null
+
+        Log.i(TAG, "Song changed")
         playerListener.onSongChanged(recorder, song)
     }
 
     override fun setPlaybackState(isPlaying: Boolean) {
+        check(!released.get()) { "Player is released" }
+
         recorder.isPlaying = isPlaying
         playerListener.onPlaybackStateChanged(recorder, isPlaying)
 
+        Log.i(TAG, "Playback state = $isPlaying")
+
         if (isPlaying) {
-            startPositionUpdateTask()
+            startPositionUpdate()
         } else {
-            stopPositionUpdateTask()
+            stopPositionUpdate()
         }
     }
 
     override fun seekTo(position: Int) {
-        val safePosition = position.coerceAtLeast(0)
-        recorder.lastPosition = safePosition
-        playerListener.onSeekTo(recorder, safePosition)
-    }
+        check(!released.get()) { "Player is released" }
 
-    private fun updatePositionInternal(position: Int) {
-        if (position == recorder.lastPosition) {
-            return
-        }
-        val safePosition = position.coerceAtLeast(0)
-        recorder.lastPosition = safePosition
-        playerListener.onPositionChanged(recorder, safePosition)
+        val safe = max(0, position)
+        recorder.lastPosition = safe
+
+        Log.d(TAG, "SeekTo $safe")
+        playerListener.onSeekTo(recorder, safe)
     }
 
     override fun sendText(text: String?) {
+        check(!released.get()) { "Player is released" }
+
         recorder.song = null
         recorder.text = text
+
+        Log.i(TAG, "Receive text")
         playerListener.onPostText(recorder, text)
     }
 

@@ -17,6 +17,7 @@
 package io.github.proify.lyricon.central.provider.player
 
 import android.util.Log
+import io.github.proify.lyricon.central.Constants
 import io.github.proify.lyricon.central.subscriber.OnActivePlayerListener
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.provider.ProviderInfo
@@ -31,7 +32,7 @@ import kotlin.concurrent.write
  */
 object ProviderActivePlayerDispatcher : PlayerListener {
     private const val TAG = "GPAPlayerDispatcher"
-    private const val DEBUG = true
+    private const val DEBUG = Constants.DEBUG
 
     private object EventType {
         const val SONG_CHANGED = 1

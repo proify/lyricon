@@ -18,24 +18,24 @@ package io.github.proify.lyricon.central.provider
 
 import io.github.proify.lyricon.central.provider.player.ProviderActivePlayerDispatcher
 import io.github.proify.lyricon.central.provider.player.RemotePlayer
-import io.github.proify.lyricon.provider.IRemotePlayer
 import io.github.proify.lyricon.provider.IRemoteService
 
-class RemoteProviderService(private val provider: RemoteProvider) : IRemoteService.Stub() {
+class RemoteProviderService(var provider: RemoteProvider?) : IRemoteService.Stub() {
 
-    private val remotePlayer: IRemotePlayer =
-        RemotePlayer(provider.providerInfo, ProviderActivePlayerDispatcher)
+    private var remotePlayer: RemotePlayer? =
+        provider?.let { RemotePlayer(it.providerInfo, ProviderActivePlayerDispatcher) }
 
-    override fun getPlayer(): IRemotePlayer = remotePlayer
+    override fun getPlayer() = remotePlayer
 
     fun release() {
-        if (remotePlayer is RemotePlayer) {
-            remotePlayer.release()
+        if (remotePlayer != null && remotePlayer is RemotePlayer) {
+            remotePlayer?.release()
         }
+        remotePlayer = null
+        provider = null
     }
 
     override fun disconnect() {
-        provider.destroy()
+        provider?.destroy()
     }
-
 }

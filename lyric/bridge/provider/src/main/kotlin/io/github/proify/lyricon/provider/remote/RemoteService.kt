@@ -16,10 +16,38 @@
 
 package io.github.proify.lyricon.provider.remote
 
+/**
+ * 中央服务控制接口
+ */
 interface RemoteService {
+
+    /**
+     * 播放器服务
+     */
     val player: RemotePlayer
+
+    /**
+     * 是否处于激活状态
+     */
     val isActivated: Boolean
+
+    /**
+     * 当前连接状态。
+     */
     val connectionStatus: ConnectionStatus
-    fun addConnectionListener(listener: ConnectionListener)
-    fun removeConnectionListener(listener: ConnectionListener)
+
+    /**
+     * 注册连接状态监听器。
+     *
+     * @param listener 监听器实例
+     * @see ConnectionListener
+     */
+    fun addConnectionListener(listener: ConnectionListener): Boolean
+
+    /**
+     * 移除已注册的连接状态监听器。
+     *
+     * @param listener 之前注册的监听器实例
+     */
+    fun removeConnectionListener(listener: ConnectionListener): Boolean
 }

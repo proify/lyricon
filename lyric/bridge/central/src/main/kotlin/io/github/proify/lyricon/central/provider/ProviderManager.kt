@@ -28,8 +28,8 @@ object ProviderManager {
     }
 
     fun unregister(provider: RemoteProvider) {
-        provider.onDestroy()
-        providers -= provider
+        if (providers.remove(provider)) {
+            provider.onDestroy()
+        }
     }
-
 }
