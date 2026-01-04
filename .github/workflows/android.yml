@@ -77,11 +77,20 @@ jobs:
             echo "APK 目录不存在: $APK_DIR"
           fi
 
-      - name: 上传所有 APK 文件
+      # 分别上传不同 ABI 的 APK 文件
+      - name: 上传 armeabi-v7a APK 文件
         uses: actions/upload-artifact@v4
         with:
-          name: apk-${{ matrix.build_type }}-${{ github.run_number }}
-          path: lyricon/build/outputs/apk/${{ matrix.build_type }}/*.apk
+          name: lyricon-${{ matrix.build_type }}-armeabi-v7a-${{ github.run_number }}.apk
+          path: lyricon/build/outputs/apk/${{ matrix.build_type }}/armeabi-v7a/*.apk
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: 上传 arm64-v8a APK 文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: lyricon-${{ matrix.build_type }}-arm64-v8a-${{ github.run_number }}.apk
+          path: lyricon/build/outputs/apk/${{ matrix.build_type }}/arm64-v8a/*.apk
           if-no-files-found: warn
           retention-days: 30
 
