@@ -1,32 +1,25 @@
 name: Android CI
 
 on:
-  push:
-    branches: [ master, develop ]
-    paths:
-      - 'app/**'
-      - 'gradle/**'
-      - '*.gradle'
-      - '*.gradle.kts'
-      - 'gradle.properties'
-      - 'gradlew'
-      - 'gradlew.bat'
-      - '.github/workflows/android.yml'
-  pull_request:
-    branches: [ master, develop ]
-    paths:
-      - 'app/**'
-      - 'gradle/**'
-      - '*.gradle'
-      - '*.gradle.kts'
-      - 'gradle.properties'
-      - 'gradlew'
-      - 'gradlew.bat'
-      - '.github/workflows/android.yml'
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: '构建类型'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+          - both
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        build_type: ${{ github.event.inputs.build_type == 'both' && fromJSON('["debug", "release"]') || fromJSON(format('["{0}"]', github.event.inputs.build_type)) }}
 
     steps:
       - name: 检出代码
@@ -58,16 +51,53 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: 构建 Debug APK
-        run: ./gradlew assembleDebug
+      - name: 构建 ${{ matrix.build_type }} APK
+        run: |
+          if [ "${{ matrix.build_type }}" == "debug" ]; then
+            ./gradlew assembleDebug
+          else
+            ./gradlew assembleRelease
+          fi
 
       - name: 列出生成的 APK 文件
         run: |
-          echo "APK 输出目录结构:"
-          tree lyricon/build/outputs/apk/debug/ -h || ls -lhR lyricon/build/outputs/apk/debug/
+          echo "================================"
+          echo "生成的 ${{ matrix.build_type }} APK 文件列表"
+          echo "================================"
+          BUILD_TYPE="${{ matrix.build_type }}"
+          APK_DIR="lyricon/build/outputs/apk/${BUILD_TYPE}"
+          
+          if [ -d "$APK_DIR" ]; then
+            ls -lh ${APK_DIR}/*.apk 2>/dev/null || echo "未找到 APK 文件"
+            echo ""
+            echo "文件大小统计:"
+            du -h ${APK_DIR}/*.apk 2>/dev/null | sort -h
+            echo ""
+          else
+            echo "APK 目录不存在: $APK_DIR"
+          fi
 
-      - name: 上传 APK (所有 ABI)
+      - name: 上传所有 APK 文件
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-all-abis
-          path: lyricon/build/outputs/apk/debug/*.apk
+          name: apk-${{ matrix.build_type }}-${{ github.run_number }}
+          path: lyricon/build/outputs/apk/${{ matrix.build_type }}/*.apk
+          if-no-files-found: warn
+          retention-days: 30
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: build
+    if: always()
+
+    steps:
+      - name: 构建结果摘要
+        run: |
+          echo "## 构建完成 ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **分支**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **提交**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **构建类型**: ${{ github.event.inputs.build_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **构建编号**: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "APK 文件已上传到 Artifacts，可在 Actions 页面下载。" >> $GITHUB_STEP_SUMMARY
