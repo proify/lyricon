@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ master, develop ]
 
 jobs:
   build:
@@ -31,7 +31,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 缓存 Gradle 依赖
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -50,21 +50,21 @@ jobs:
         run: ./gradlew lint
 
       - name: 上传 APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: 上传测试报告
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: app/build/reports/tests/
 
       - name: 上传 Lint 报告
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lint-reports
           path: app/build/reports/lint-results-*.html
