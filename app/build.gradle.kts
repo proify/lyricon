@@ -45,16 +45,6 @@ android {
         buildConfigField("String", "VERSION_NAME", "\"" + versionName + "\"")
         buildConfigField("long", "BUILD_TIME", System.currentTimeMillis().toString())
 
-        externalNativeBuild {
-            cmake {
-                cppFlags += "-std=c++17"
-                abiFilters += listOf("arm64-v8a", "armeabi-v7a")
-            }
-        }
-
-        ndk {
-            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
-        }
     }
 
     buildTypes {
@@ -125,6 +115,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-layout:1.10.0")
     implementation(libs.androidx.room.ktx)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+    implementation("androidx.compose.runtime:runtime:+")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

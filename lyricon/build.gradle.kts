@@ -22,6 +22,13 @@ android {
         versionName = rootProject.extra["appVersionName"] as String
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-std=c++17"
+                abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+            }
+        }
     }
 
     buildTypes {
@@ -47,6 +54,16 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a")
+            isUniversalApk = false
+        }
+    }
+
 }
 
 dependencies {
