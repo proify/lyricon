@@ -63,11 +63,11 @@ jobs:
 
       - name: 列出生成的 APK 文件
         run: |
-          echo "=== 生成的 APK 文件 ==="
-          find app/build/outputs/apk -name "*.apk" -type f
+          echo "APK 输出目录结构:"
+          tree lyricon/build/outputs/apk/debug/ -h || ls -lhR lyricon/build/outputs/apk/debug/
 
       - name: 上传 APK (所有 ABI)
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-all-abis
-          path: app/build/outputs/apk/debug/*.apk
+          path: lyricon/build/outputs/apk/debug/*.apk
