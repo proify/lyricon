@@ -36,3 +36,7 @@ open class Toasty {
     }
 
 }
+
+fun toast(any: Any, longDuration: Boolean = false) {
+    Toasty.show(any.toString(), longDuration)
+}

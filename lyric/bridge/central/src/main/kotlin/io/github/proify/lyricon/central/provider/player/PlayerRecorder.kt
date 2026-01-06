@@ -22,6 +22,6 @@ import io.github.proify.lyricon.provider.ProviderInfo
 class PlayerRecorder(val info: ProviderInfo) {
     var song: Song? = null
     var isPlaying: Boolean = false
-    var lastPosition: Int = 0
+    var lastPosition: Long = 0
     var text: String? = null
 }

@@ -53,6 +53,7 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import io.github.proify.android.extensions.inflate
+import io.github.proify.lyricon.app.Application.Companion.systemUIChannel
 import io.github.proify.lyricon.app.R
 import io.github.proify.lyricon.app.bridge.AppBridgeConstants
 import io.github.proify.lyricon.app.ui.compose.BlurTopAppBar
@@ -202,7 +203,7 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
                 current.id?.let { id ->
                     colorMap[id] = getNodeColor(current)
                 }
-                current.children.forEach { traverse(it) }
+                current.children?.forEach { traverse(it) }
             }
 
             traverse(node)
@@ -379,7 +380,7 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
         val nodeColor = uiState.nodeColors[nodeId] ?: Color.Transparent
         val displayName = simplifyNodeName(node.name)
 
-        if (node.children.isEmpty()) {
+        if (node.children.isNullOrEmpty()) {
             RenderLeafNode(
                 node = node,
                 displayName = displayName,
@@ -429,7 +430,7 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
             name = displayName,
             secondary = node.id,
         ) {
-            node.children.forEach { childNode ->
+            node.children?.forEach { childNode ->
                 TreeNode(node = childNode)
             }
         }

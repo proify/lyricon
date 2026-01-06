@@ -17,24 +17,11 @@
 package io.github.proify.lyricon.app.ui.activity.lyric
 
 import android.content.SharedPreferences
-import com.highcapable.yukihookapi.hook.factory.dataChannel
-import io.github.proify.lyricon.app.Application
-import io.github.proify.lyricon.app.bridge.AppBridgeConstants
 import io.github.proify.lyricon.app.ui.activity.BaseActivity
-import io.github.proify.lyricon.common.PackageNames
+import io.github.proify.lyricon.app.updateLyricStyle
 
 abstract class BaseLyricActivity : BaseActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
-
-    val systemUIChannel by lazy {
-        dataChannel(packageName = PackageNames.SYSTEM_UI)
-    }
-
-    fun updateLyricStyle() {
-        Application.handler.postDelayed({
-            systemUIChannel.put(AppBridgeConstants.REQUEST_UPDATE_LYRIC_STYLE)
-        }, 0)
-    }
 
     override fun onSharedPreferenceChanged(
         sharedPreferences: SharedPreferences?,

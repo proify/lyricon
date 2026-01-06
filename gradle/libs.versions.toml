@@ -25,6 +25,7 @@ roomKtx = "2.8.4"
 androidsvgAar = "1.4"
 jetbrainsKotlinJvm = "2.2.21"
 uiGraphics = "1.10.0"
+interpolator = "1.0.0"
 
 [libraries]
 # AndroidX 相关
@@ -67,6 +68,7 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 
 androidsvg = { module = "com.caverock:androidsvg-aar", version.ref = "androidsvgAar" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
+androidx-interpolator = { group = "androidx.interpolator", name = "interpolator", version.ref = "interpolator" }
 
 [plugins]
 # Android 相关插件

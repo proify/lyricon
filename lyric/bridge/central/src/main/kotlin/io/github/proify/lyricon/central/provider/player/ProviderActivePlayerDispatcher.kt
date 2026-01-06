@@ -78,7 +78,7 @@ object ProviderActivePlayerDispatcher : PlayerListener {
         }
     }
 
-    override fun onPositionChanged(recorder: PlayerRecorder, position: Int) {
+    override fun onPositionChanged(recorder: PlayerRecorder, position: Long) {
         if (DEBUG) Log.d(TAG, "Received onPositionChanged: $position")
 
         handlePlayerEvent(EventType.POSITION_CHANGED, recorder) { listener ->
@@ -86,7 +86,7 @@ object ProviderActivePlayerDispatcher : PlayerListener {
         }
     }
 
-    override fun onSeekTo(recorder: PlayerRecorder, position: Int) {
+    override fun onSeekTo(recorder: PlayerRecorder, position: Long) {
         if (DEBUG) Log.d(TAG, "Received onSeekTo: $position")
 
         handlePlayerEvent(EventType.SEEK_TO, recorder) { listener ->

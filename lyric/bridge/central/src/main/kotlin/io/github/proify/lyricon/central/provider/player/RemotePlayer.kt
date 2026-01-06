@@ -86,7 +86,7 @@ class RemotePlayer(
         try {
             positionSharedMemory = SharedMemory.create(
                 "music_position_${android.os.Process.myPid()}",
-                Int.SIZE_BYTES
+                Long.SIZE_BYTES
             ).apply {
                 setProtect(OsConstants.PROT_READ or OsConstants.PROT_WRITE)
             }
@@ -99,11 +99,11 @@ class RemotePlayer(
         }
     }
 
-    private fun readPosition(): Int {
+    private fun readPosition(): Long {
         val buffer = positionReadBuffer ?: return 0
         return try {
             synchronized(buffer) {
-                max(0, buffer.getInt(0))
+                max(0, buffer.getLong(0))
             }
         } catch (t: Throwable) {
             Log.w(TAG, "Read position failed", t)
@@ -191,7 +191,7 @@ class RemotePlayer(
         }
     }
 
-    override fun seekTo(position: Int) {
+    override fun seekTo(position: Long) {
         check(!released.get()) { "Player is released" }
 
         val safe = max(0, position)

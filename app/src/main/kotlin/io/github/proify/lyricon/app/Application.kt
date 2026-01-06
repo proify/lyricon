@@ -18,8 +18,12 @@ package io.github.proify.lyricon.app
 
 import android.content.Context
 import android.os.Handler
+import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.xposed.application.ModuleApplication
+import io.github.proify.lyricon.app.Application.Companion.systemUIChannel
+import io.github.proify.lyricon.app.bridge.AppBridgeConstants
 import io.github.proify.lyricon.app.util.AppLangUtils
+import io.github.proify.lyricon.common.PackageNames
 
 class Application : ModuleApplication() {
     override fun attachBaseContext(base: Context) {
@@ -37,5 +41,13 @@ class Application : ModuleApplication() {
         lateinit var handler: Handler
         lateinit var unwrapContext: Context
         lateinit var instance: Application
+
+        val systemUIChannel by lazy {
+            instance.dataChannel(packageName = PackageNames.SYSTEM_UI)
+        }
     }
+}
+
+fun updateLyricStyle() {
+    systemUIChannel.put(AppBridgeConstants.REQUEST_UPDATE_LYRIC_STYLE)
 }

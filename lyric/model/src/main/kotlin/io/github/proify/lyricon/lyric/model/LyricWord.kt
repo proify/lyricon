@@ -19,6 +19,8 @@
 package io.github.proify.lyricon.lyric.model
 
 import android.os.Parcelable
+import io.github.proify.lyricon.lyric.model.interfaces.DeepCopyable
+import io.github.proify.lyricon.lyric.model.interfaces.ILyricWord
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -34,9 +36,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class LyricWord(
-    override var begin: Int = 0,
-    override var end: Int = 0,
-    override var duration: Int = 0,
+    override var begin: Long = 0,
+    override var end: Long = 0,
+    override var duration: Long = 0,
     override var text: String? = null,
     override var metadata: LyricMetadata? = null,
-) : ILyricWord, Parcelable
+) : ILyricWord, Parcelable, DeepCopyable<LyricWord> {
+
+    override fun deepCopy() = copy()
+}

@@ -13,11 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.github.proify.lyricon.lyric.model.extensions
 
-package io.github.proify.lyricon.lyric.model
+import io.github.proify.lyricon.lyric.model.interfaces.DeepCopyable
+import io.github.proify.lyricon.lyric.model.interfaces.ILyricTiming
+import io.github.proify.lyricon.lyric.model.interfaces.Normalize
 
-interface ILyricTiming {
-    var begin: Int
-    var end: Int
-    var duration: Int
-}
+/**
+ * 规范化排序
+ */
+fun <T : ILyricTiming> List<T>.normalizeSortByTime() = sortedBy { it.begin }
+
+/**
+ * 深拷贝对象
+ */
+fun <T : DeepCopyable<T>> List<T>.deepCopy(): List<T> = map { it.deepCopy() }
+
+/**
+ * 规范化对象
+ */
+fun <T : Normalize<T>> List<T>.normalize() = map { it.normalize() }

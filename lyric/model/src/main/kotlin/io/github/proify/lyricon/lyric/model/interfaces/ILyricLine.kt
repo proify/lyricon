@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.github.proify.lyricon.lyric.model.interfaces
 
-package io.github.proify.lyricon.lyric.model
+import io.github.proify.lyricon.lyric.model.interfaces.ILyricTiming
+import io.github.proify.lyricon.lyric.model.LyricMetadata
+import io.github.proify.lyricon.lyric.model.LyricWord
 
-interface IDoubleLyricLine : ILyricLine {
-    var secondaryText: String?
-    var secondaryWords: List<LyricWord>?
+interface ILyricLine : ILyricTiming {
+    var isAlignedRight: Boolean
+    var metadata: LyricMetadata?
+    var text: String?
+    var words: List<LyricWord>?
 }

@@ -57,6 +57,7 @@ android {
 dependencies {
     implementation(project(":lyric:model"))
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.interpolator)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -36,10 +37,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import io.github.proify.lyricon.app.Application.Companion.systemUIChannel
 import io.github.proify.lyricon.app.R
+import io.github.proify.lyricon.app.bridge.AppBridgeConstants
 import io.github.proify.lyricon.app.ui.compose.custom.bonsai.core.node.Node
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperCheckbox
+import io.github.proify.lyricon.app.updateLyricStyle
 import io.github.proify.lyricon.app.util.LyricPrefs
 import io.github.proify.lyricon.common.util.ViewTreeNode
 import io.github.proify.lyricon.lyric.style.VisibilityRule
@@ -73,9 +77,17 @@ class ViewRulesTreeActivity : ViewTreeActivity() {
         }
     }
 
+    fun highlightView(id: String) {
+        systemUIChannel.put(AppBridgeConstants.REQUEST_HIGHLIGHT_VIEW, id)
+    }
+
     @Composable
     override fun OnScaffoldCreated() {
         super.OnScaffoldCreated()
+
+        LaunchedEffect(viewModel.showOptions.value) {
+            highlightView(if (viewModel.showOptions.value) viewModel.editId.value else "")
+        }
 
         val currentMode by viewModel.currentMode
 
@@ -115,6 +127,7 @@ class ViewRulesTreeActivity : ViewTreeActivity() {
             }
 
             LyricPrefs.setViewVisibilityRule(rules)
+            updateLyricStyle()
             _currentMode.intValue = newMode
             showOptions.value = false
         }

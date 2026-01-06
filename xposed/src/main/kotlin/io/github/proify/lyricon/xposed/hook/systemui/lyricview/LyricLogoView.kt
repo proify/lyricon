@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.proify.lyricon.xposed.hook.systemui.lyric
+package io.github.proify.lyricon.xposed.hook.systemui.lyricview
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
@@ -29,6 +29,7 @@ import android.widget.TextView
 import io.github.proify.android.extensions.dp
 import io.github.proify.android.extensions.toBitmap
 import io.github.proify.android.extensions.toRoundedCorner
+import io.github.proify.android.extensions.visibilityIfChanged
 import io.github.proify.lyricon.common.util.SVGHelper
 import io.github.proify.lyricon.lyric.style.LogoStyle
 import io.github.proify.lyricon.lyric.style.LyricStyle
@@ -38,10 +39,11 @@ import io.github.proify.lyricon.xposed.hook.systemui.LyricViewController
 import io.github.proify.lyricon.xposed.util.NotificationCoverHelper
 import io.github.proify.lyricon.xposed.util.StatusBarColorMonitor
 import io.github.proify.lyricon.xposed.util.StatusColor
+import java.io.File
 import kotlin.math.roundToInt
 
 class LyricLogoView(context: Context) : ImageView(context),
-    StatusBarColorMonitor.OnColorChangeListener {
+    StatusBarColorMonitor.OnColorChangeListener, NotificationCoverHelper.OnCoverUpdateListener {
 
     var linkedTextView: TextView? = null
 
@@ -174,7 +176,7 @@ class LyricLogoView(context: Context) : ImageView(context),
     private fun setBitmap(bitmap: Bitmap?, type: LogoType) {
         currentLogoType = type
         super.setImageBitmap(bitmap)
-        visibility = if (bitmap != null) VISIBLE else GONE
+        visibilityIfChanged = if (bitmap != null) VISIBLE else GONE
 
         handleAnimationState(bitmap)
         updateLogoColor()
@@ -258,5 +260,11 @@ class LyricLogoView(context: Context) : ImageView(context),
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         stopRotationAnimation()
+    }
+
+    override fun onCoverUpdated(packageName: String, coverFile: File) {
+        if (currentLogoType == LogoType.COVER && packageName == LyricViewController.activePackage) {
+            refreshLogoDisplay()
+        }
     }
 }

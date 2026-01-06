@@ -16,6 +16,7 @@
 
 package io.github.proify.lyricon.xposed.hook.systemui
 
+import android.util.Log.v
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.highcapable.kavaref.KavaRef.Companion.resolve
@@ -27,7 +28,9 @@ import io.github.proify.lyricon.app.bridge.AppBridgeConstants
 import io.github.proify.lyricon.central.BridgeCentral
 import io.github.proify.lyricon.common.util.ViewHierarchyParser
 import io.github.proify.lyricon.subscriber.LyricSubscriber
+import io.github.proify.lyricon.xposed.util.LyricPrefs
 import io.github.proify.lyricon.xposed.util.NotificationCoverHelper
+import io.github.proify.lyricon.xposed.util.ViewVisibilityTracker
 
 object SystemUIHooker : YukiBaseHooker() {
     private var layoutInflaterResult: YukiMemberHookCreator.MemberHookCreator.Result? = null
@@ -43,6 +46,7 @@ object SystemUIHooker : YukiBaseHooker() {
 
     private fun onAppCreate() {
         init()
+
         layoutInflaterResult = LayoutInflater::class.resolve()
             .firstMethod {
                 name = "inflate"
@@ -51,7 +55,7 @@ object SystemUIHooker : YukiBaseHooker() {
                 after {
                     val id = args(0).int()
                     if (id == Constants.statusBarLayoutId) {
-                        handleStatusBarView(result<ViewGroup>()!!)
+                        setupStatusBarView(result<ViewGroup>()!!)
                         layoutInflaterResult?.remove()
                         layoutInflaterResult = null
                     }
@@ -69,20 +73,26 @@ object SystemUIHooker : YukiBaseHooker() {
         YLog.debug("SystemUIHooker.onInit")
 
         subscriber = LyricSubscriber(appContext)
-        subscriber.service.registerActivePlayerListener(LyricViewController)
+        subscriber.service.apply {
+            registerActivePlayerListener(LyricViewController)
+        }
         subscriber.notifyRegister()
 
         Constants.initResourceIds(appContext)
         initDataChannel()
 
         NotificationCoverHelper.hook(appContext.classLoader)
+        ViewVisibilityTracker.initialize(appContext.classLoader)
     }
 
     private fun initDataChannel() {
-        dataChannel.wait<String>(key = AppBridgeConstants.REQUEST_UPDATE_LYRIC_STYLE) { _ ->
-            statusBarViewManager?.updateLyricView()
+        dataChannel.wait(key = AppBridgeConstants.REQUEST_UPDATE_LYRIC_STYLE) {
+            val style = LyricPrefs.getLyricStyle()
+            statusBarViewManager?.updateLyricStyle(style)
         }
-
+        dataChannel.wait<String>(key = AppBridgeConstants.REQUEST_HIGHLIGHT_VIEW) { id ->
+            statusBarViewManager?.hightlightView(id)
+        }
         dataChannel.wait<String>(key = AppBridgeConstants.REQUEST_VIEW_TREE) { _ ->
             statusBarViewManager?.let {
                 val node = ViewHierarchyParser.buildNodeTree(it.statusBarView)
@@ -94,9 +104,11 @@ object SystemUIHooker : YukiBaseHooker() {
         }
     }
 
-    private fun handleStatusBarView(view: ViewGroup) {
-        statusBarViewManager = StatusBarViewManager(view)
-        statusBarViewManager?.initialize()
+    private fun setupStatusBarView(view: ViewGroup) {
+        statusBarViewManager = StatusBarViewManager(
+            view,
+            LyricPrefs.getLyricStyle()
+        )
         LyricViewController.statusBarViewManager = statusBarViewManager
         BridgeCentral.sendBootCompleted()
     }

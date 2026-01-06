@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package io.github.proify.lyricon.xposed.hook.systemui.lyric
+package io.github.proify.lyricon.xposed.hook.systemui.lyricview
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.fonts.FontStyle
-import android.view.ViewGroup
 import android.widget.TextView
 import io.github.proify.android.extensions.dp
 import io.github.proify.android.extensions.setColorAlpha
 import io.github.proify.android.extensions.sp
 import io.github.proify.lyricon.lyric.style.LyricStyle
 import io.github.proify.lyricon.lyric.style.TextStyle
+import io.github.proify.lyricon.lyric.view.LyricPlayerView
 import io.github.proify.lyricon.lyric.view.MainMarqueeConfig
 import io.github.proify.lyricon.lyric.view.MainSyllableConfig
-import io.github.proify.lyricon.lyric.view.MiniLyricsView
 import io.github.proify.lyricon.xposed.util.StatusBarColorMonitor
 import io.github.proify.lyricon.xposed.util.StatusColor
 import java.io.File
 import kotlin.math.min
 
-class LyricTextView(context: Context) : MiniLyricsView(context),
+class LyricPlayerView(context: Context) : LyricPlayerView(context),
     StatusBarColorMonitor.OnColorChangeListener {
 
     private var currentStatusColor = StatusColor(Color.BLACK, false)
@@ -105,10 +104,10 @@ class LyricTextView(context: Context) : MiniLyricsView(context),
         val margins = textStyle.margins
         val paddings = textStyle.paddings
 
-        val params = (layoutParams as? ViewGroup.MarginLayoutParams)
-            ?: ViewGroup.MarginLayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+        val params = (layoutParams as? MarginLayoutParams)
+            ?: MarginLayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
             )
 
         params.setMargins(margins.left.dp, margins.top.dp, margins.right.dp, margins.bottom.dp)

@@ -22,6 +22,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import io.github.proify.android.extensions.getWorldReadableSharedPreferences
 import io.github.proify.lyricon.app.Application
@@ -29,11 +30,8 @@ import io.github.proify.lyricon.app.ui.activity.MainActivity
 import java.util.Locale
 
 object Utils {
-    inline fun SharedPreferences.commitEdit(action: SharedPreferences.Editor.() -> Unit) {
-        val editor = edit()
-        action(editor)
-        editor.commit()
-    }
+    inline fun SharedPreferences.commitEdit(action: SharedPreferences.Editor.() -> Unit) =
+        edit(commit = true) { action() }
 
     fun getDefaultSharedPreferences(context: Context) =
         context.getWorldReadableSharedPreferences(context.getPackageName() + "_preferences")

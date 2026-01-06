@@ -7,7 +7,7 @@ interface IRemoteActivePlayerListener {
 	void onActiveProviderChanged(in ProviderInfo provider);
     void onSongChanged(in Song song);
     void onPlaybackStateChanged(boolean isPlaying);
-    void onSeekTo(int position);
-    void onPositionChanged(int position);
+    void onSeekTo(long position);
+    void onPositionChanged(long position);
     void onPostText(String text);
 }

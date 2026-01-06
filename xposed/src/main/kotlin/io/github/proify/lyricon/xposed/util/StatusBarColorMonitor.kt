@@ -16,6 +16,7 @@
 
 package io.github.proify.lyricon.xposed.util
 
+import android.R.attr.targetClass
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
@@ -42,7 +43,7 @@ object StatusBarColorMonitor {
         colorChangeListeners.remove(listener)
     }
 
-    fun hook(targetClass: Class<out View>) {
+    fun hook(targetClass: Class<View>) {
         unhookAll()
         val classLoader = targetClass.classLoader
         val methods = findMethodsRecursively(targetClass, "onDarkChanged")
@@ -79,6 +80,7 @@ object StatusBarColorMonitor {
         hookUnlocks.forEach { it.unhook() }
         hookUnlocks.clear()
     }
+
 
     fun interface OnColorChangeListener {
         fun onColorChange(color: StatusColor)

@@ -18,9 +18,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * 核心歌词提供者类。
- *
- * 用于向中心服务注册提供者，并维护与中心服务的连接状态。
+ * 歌词提供者类
  *
  * @property providerInfo 提供者信息
  * @property service 对外暴露的远程服务接口

@@ -13,27 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.github.proify.lyricon.common.util
 
+import android.content.res.Resources
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.forEach
 import java.lang.ref.WeakReference
+import java.util.concurrent.ConcurrentHashMap
 
 object ViewHierarchyParser {
+    private val resourceNameCache = ConcurrentHashMap<Int, String?>()
 
     fun buildNodeTree(viewGroup: ViewGroup): ViewTreeNode {
         val name = viewGroup.javaClass.name
-        val node =
-            ViewTreeNode(getResourceName(viewGroup), name, WeakReference<View>(viewGroup))
 
-        for (i in 0 until viewGroup.childCount) {
-            createNodeFromView(viewGroup.getChildAt(i))?.let {
-                node.addChild(it)
+        var children = mutableListOf<ViewTreeNode>()
+
+        viewGroup.forEach {
+            createNodeFromView(it)?.let {
+                children.add(it)
             }
         }
 
-        return node
+        return ViewTreeNode(
+            id = getResourceName(viewGroup),
+            name = name,
+            children = children,
+            view = WeakReference<View>(viewGroup)
+        )
     }
 
     private fun createNodeFromView(view: View): ViewTreeNode? {
@@ -41,16 +49,28 @@ object ViewHierarchyParser {
             buildNodeTree(view)
         } else {
             val name = view.javaClass.name
-            ViewTreeNode(getResourceName(view), name, WeakReference<View>(view))
+            ViewTreeNode(
+                id = getResourceName(view),
+                name = name,
+                view = WeakReference<View>(view)
+            )
         }
     }
 
-    private fun getResourceName(view: View): String? {
-        return if (view.id == View.NO_ID) null else try {
-            view.resources.getResourceEntryName(view.id)
-        } catch (_: Exception) {
-            null
-        }
-    }
+    fun getResourceName(
+        view: View,
+        resources: Resources = view.resources
+    ): String? {
+        val id = view.id
+        if (id == View.NO_ID) return null
 
+        if (resourceNameCache.containsKey(id)) return resourceNameCache[id]
+
+        val name = runCatching {
+            resources.getResourceEntryName(id)
+        }.getOrNull()
+
+        resourceNameCache[id] = name
+        return name
+    }
 }

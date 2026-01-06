@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package io.github.proify.lyricon.xposed.hook.systemui.lyric
+package io.github.proify.lyricon.xposed.hook.systemui.lyricview
 
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.children
 import io.github.proify.android.extensions.dp
+import io.github.proify.android.extensions.visibilityIfChanged
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.lyric.style.LyricStyle
 import io.github.proify.lyricon.xposed.util.StatusBarColorMonitor
@@ -40,19 +42,30 @@ class LyricView(
     }
 
     val logoView = LyricLogoView(context)
-    val textView = LyricTextView(context)
+    val textView = LyricPlayerView(context)
 
-    private var currentStyle: LyricStyle = initialStyle
+    var currentStyle: LyricStyle = initialStyle
+        private set
+
     private var currentStatusColor: StatusColor = StatusColor(Color.BLACK, false)
 
     private var isPlaying: Boolean = false
+
+    private val onHierarchyChangeListener = object : OnHierarchyChangeListener {
+        override fun onChildViewAdded(parent: View?, child: View?) {
+            updateVisibility()
+        }
+
+        override fun onChildViewRemoved(parent: View?, child: View?) {
+            updateVisibility()
+        }
+    }
 
     init {
         tag = VIEW_TAG
         gravity = Gravity.CENTER_VERTICAL
         logoView.linkedTextView = linkedTextView
         textView.linkedTextView = linkedTextView
-
         addView(logoView)
         addView(textView)
 
@@ -61,10 +74,12 @@ class LyricView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        textView.setOnHierarchyChangeListener(onHierarchyChangeListener)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        textView.setOnHierarchyChangeListener(null)
     }
 
     fun updateStyle(style: LyricStyle) {
@@ -122,15 +137,15 @@ class LyricView(
         updateVisibility()
     }
 
-    private fun updateVisibility() {
+    fun updateVisibility() {
         if (isPlaying && textView.childCount > 0) {
-            visibility = VISIBLE
+            visibilityIfChanged = VISIBLE
         } else {
-            visibility = GONE
+            visibilityIfChanged = GONE
         }
     }
 
-    fun updatePosition(position: Int) {
+    fun updatePosition(position: Long) {
         textView.setPosition(position)
     }
 

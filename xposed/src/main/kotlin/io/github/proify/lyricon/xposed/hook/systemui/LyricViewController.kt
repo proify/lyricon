@@ -20,12 +20,16 @@ import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.provider.ProviderInfo
 import io.github.proify.lyricon.subscriber.service.OnActivePlayerListener
-import io.github.proify.lyricon.xposed.hook.systemui.lyric.LyricView
+import io.github.proify.lyricon.xposed.hook.systemui.lyricview.LyricView
 import io.github.proify.lyricon.xposed.util.LyricPrefs
 import io.github.proify.lyricon.xposed.util.StatusBarColorMonitor
 import io.github.proify.lyricon.xposed.util.StatusColor
 
-object LyricViewController : OnActivePlayerListener, StatusBarColorMonitor.OnColorChangeListener {
+object LyricViewController : OnActivePlayerListener,
+    StatusBarColorMonitor.OnColorChangeListener {
+
+    var isPlaying = false
+        private set
 
     var activePackage = ""
         private set
@@ -38,9 +42,9 @@ object LyricViewController : OnActivePlayerListener, StatusBarColorMonitor.OnCol
 
     override fun onActiveProviderChanged(info: ProviderInfo) {
         val packageName = info.playerPackageName
-
         activePackage = packageName
         LyricPrefs.activePackageName = packageName
+
         callView {
             it.logoView.providerLogo = info.logo
             YLog.debug("LyricViewController.onActiveProviderChanged: $info")
@@ -57,18 +61,19 @@ object LyricViewController : OnActivePlayerListener, StatusBarColorMonitor.OnCol
 
     override fun onPlaybackStateChanged(isPlaying: Boolean) {
         YLog.debug("LyricViewController.onPlaybackStateChanged: $isPlaying")
+        this.isPlaying = isPlaying
         callView {
             it.setPlaying(isPlaying)
         }
     }
 
-    override fun onPositionChanged(position: Int) {
+    override fun onPositionChanged(position: Long) {
         callView {
             it.updatePosition(position)
         }
     }
 
-    override fun onSeekTo(position: Int) {
+    override fun onSeekTo(position: Long) {
         callView {
             it.updatePosition(position)
         }
@@ -80,8 +85,10 @@ object LyricViewController : OnActivePlayerListener, StatusBarColorMonitor.OnCol
         }
     }
 
-    private inline fun callView(crossinline action: (LyricView) -> Unit) {
-        statusBarViewManager?.getLyricView()?.let { action(it) }
+    inline fun callView(crossinline action: (LyricView) -> Unit) {
+        statusBarViewManager?.lyricView?.let {
+            if (it.isAttachedToWindow) action(it)
+        }
     }
 
     override fun onColorChange(color: StatusColor) {

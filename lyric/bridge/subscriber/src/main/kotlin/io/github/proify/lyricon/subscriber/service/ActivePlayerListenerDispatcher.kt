@@ -37,10 +37,10 @@ internal class ActivePlayerListenerDispatcher : IRemoteActivePlayerListener.Stub
     override fun onPlaybackStateChanged(isPlaying: Boolean) =
         dispatchEvent { it.onPlaybackStateChanged(isPlaying) }
 
-    override fun onSeekTo(position: Int) =
+    override fun onSeekTo(position: Long) =
         dispatchEvent { it.onSeekTo(position) }
 
-    override fun onPositionChanged(position: Int) =
+    override fun onPositionChanged(position: Long) =
         dispatchEvent { it.onPositionChanged(position) }
 
     override fun onPostText(text: String?) =

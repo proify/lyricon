@@ -49,7 +49,7 @@ interface RemotePlayer {
      *
      * @param position 播放位置
      */
-    fun seekTo(@IntRange(from = 0) position: Int): Boolean
+    fun seekTo(@IntRange(from = 0) position: Long): Boolean
 
     /**
      * 将播放位置写入到待同步区，根据轮询间隔读取并同步。
@@ -57,7 +57,7 @@ interface RemotePlayer {
      * @param position 播放位置
      * @see setPositionUpdateInterval
      */
-    fun setPosition(@IntRange(from = 0) position: Int): Boolean
+    fun setPosition(@IntRange(from = 0) position: Long): Boolean
 
     /**
      * 设置轮询间隔

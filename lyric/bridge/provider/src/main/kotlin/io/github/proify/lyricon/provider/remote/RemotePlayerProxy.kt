@@ -89,12 +89,12 @@ internal class RemotePlayerProxy : RemotePlayer, RemoteServiceBinder<IRemotePlay
     override fun setPlaybackState(isPlaying: Boolean): Boolean =
         executeRemoteCall { it.setPlaybackState(isPlaying) }
 
-    override fun seekTo(position: Int): Boolean =
+    override fun seekTo(position: Long): Boolean =
         executeRemoteCall { it.seekTo(max(0, position)) }
 
-    override fun setPosition(position: Int): Boolean {
+    override fun setPosition(position: Long): Boolean {
         return try {
-            positionByteBuffer?.putInt(0, position)
+            positionByteBuffer?.putLong(0, position)
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to write position to shared buffer", e)

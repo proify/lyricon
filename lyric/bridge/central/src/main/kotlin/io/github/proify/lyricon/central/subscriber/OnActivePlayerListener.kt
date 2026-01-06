@@ -23,7 +23,7 @@ interface OnActivePlayerListener {
     fun onActiveProviderChanged(info: ProviderInfo)
     fun onSongChanged(song: Song?)
     fun onPlaybackStateChanged(isPlaying: Boolean)
-    fun onPositionChanged(position: Int)
-    fun onSeekTo(position: Int)
+    fun onPositionChanged(position: Long)
+    fun onSeekTo(position: Long)
     fun onPostText(text: String?)
 }

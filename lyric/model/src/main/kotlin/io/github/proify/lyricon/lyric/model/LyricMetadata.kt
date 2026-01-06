@@ -6,8 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-@JvmInline
-value class LyricMetadata(
+data class LyricMetadata(
     val map: Map<String, String?> = emptyMap(),
 ) : Map<String, String?> by map, Parcelable
 

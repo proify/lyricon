@@ -61,6 +61,7 @@ import io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet.Package
 import io.github.proify.lyricon.app.ui.compose.AppToolBarContainer
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.MiuixScrollBehavior
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.ScrollBehavior
+import io.github.proify.lyricon.app.updateLyricStyle
 import io.github.proify.lyricon.app.util.LyricPrefs
 import io.github.proify.lyricon.app.util.Utils.commitEdit
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -176,7 +177,7 @@ class PackageStyleActivity : BaseLyricActivity() {
     private val viewModel: PackageStyleViewModel by viewModels {
         PackageStyleViewModelFactory(
             context = applicationContext,
-            onLyricStyleUpdate = ::updateLyricStyle,
+            onLyricStyleUpdate = { updateLyricStyle() },
         )
     }
 

@@ -18,6 +18,8 @@ package com.makino.lyricon.bridge
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import io.github.proify.lyricon.provider.remote.RemoteService
+import io.github.proify.lyricon.provider.remote.addOnConnectionListener
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,10 +31,22 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+
+    lateinit var a: RemoteService
+
     @Test
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.makino.lyricon.bridge.test", appContext.packageName)
+
+
+        a.addOnConnectionListener {
+            onConnected {
+
+            }
+        }
+
+
     }
 }

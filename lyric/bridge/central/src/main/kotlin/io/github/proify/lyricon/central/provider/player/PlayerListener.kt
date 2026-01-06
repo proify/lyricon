@@ -21,7 +21,7 @@ import io.github.proify.lyricon.lyric.model.Song
 interface PlayerListener {
     fun onSongChanged(recorder: PlayerRecorder, song: Song?)
     fun onPlaybackStateChanged(recorder: PlayerRecorder, isPlaying: Boolean)
-    fun onPositionChanged(recorder: PlayerRecorder, position: Int)
-    fun onSeekTo(recorder: PlayerRecorder, position: Int)
+    fun onPositionChanged(recorder: PlayerRecorder, position: Long)
+    fun onSeekTo(recorder: PlayerRecorder, position: Long)
     fun onPostText(recorder: PlayerRecorder, text: String?)
 }

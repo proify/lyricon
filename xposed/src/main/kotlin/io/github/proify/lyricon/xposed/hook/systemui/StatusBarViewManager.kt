@@ -17,28 +17,57 @@
 package io.github.proify.lyricon.xposed.hook.systemui
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.proify.android.extensions.dp
 import io.github.proify.lyricon.lyric.style.BasicStyle
-import io.github.proify.lyricon.xposed.hook.systemui.lyric.LyricView
-import io.github.proify.lyricon.xposed.util.LyricPrefs
+import io.github.proify.lyricon.lyric.style.LyricStyle
+import io.github.proify.lyricon.xposed.hook.systemui.lyricview.LyricView
+import io.github.proify.lyricon.xposed.util.ResourceMapper
 import io.github.proify.lyricon.xposed.util.StatusBarColorMonitor
+import io.github.proify.lyricon.xposed.util.ViewVisibilityController
 
 class StatusBarViewManager(
-    val statusBarView: ViewGroup
+    val statusBarView: ViewGroup,
+    private var lyricStyle: LyricStyle
 ) {
-
-    val context: Context = statusBarView.context.applicationContext
-    private var lyricView: LyricView
+    private var lastAnchor = ""
+    private var lastInsertionOrder = -1
 
     private val viewAttachStateChangeListener: ViewAttachStateChangeListener =
         ViewAttachStateChangeListener()
 
+    private val onGlobalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            checkLyricViewExists()
+            visibilityController.applyVisibilityRules(
+                lyricStyle.basicStyle.visibilityRules,
+                LyricViewController.isPlaying
+            )
+        }
+
+        private fun checkLyricViewExists() {
+            if (!lyricView.isAttachedToWindow) {
+                lastAnchor = ""
+                lastInsertionOrder = -1
+                updateLyricStyle(lyricStyle)
+            }
+        }
+    }
+
+    val context: Context = statusBarView.context.applicationContext
+    val visibilityController = ViewVisibilityController(statusBarView)
+
+    val lyricView: LyricView
+
     init {
-        lyricView = createLyricView()
+        statusBarView.addOnAttachStateChangeListener(viewAttachStateChangeListener)
+        statusBarView.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
 
         val clockView = getClockView()
         if (clockView != null) {
@@ -46,28 +75,13 @@ class StatusBarViewManager(
         } else {
             YLog.error("LyricViewManager clock view not found")
         }
-    }
-
-    fun initialize() {
-        runCatching {
-            updateLyricView()
-        }.getOrElse {
-            YLog.error("LyricViewManager initialize failed", it)
-        }
-        statusBarView.addOnAttachStateChangeListener(viewAttachStateChangeListener)
+        lyricView = createLyricView(lyricStyle)
     }
 
     fun getClockView(): View? = statusBarView.findViewById(Constants.clockId)
 
-    fun getLyricView(): LyricView {
-        return lyricView
-    }
-
-    private var lastAnchor = ""
-    private var lastInsertionOrder = -1
-
-    fun updateLyricView() {
-        val lyricStyle = LyricPrefs.getLyricStyle()
+    fun updateLyricStyle(lyricStyle: LyricStyle) {
+        this.lyricStyle = lyricStyle
         val basicStyle = lyricStyle.basicStyle
 
         val needUpdateLocation =
@@ -81,17 +95,17 @@ class StatusBarViewManager(
         lyricView.updateStyle(lyricStyle)
     }
 
-
     private fun updateLocation(baseStyle: BasicStyle) {
         val anchor = baseStyle.anchor
-
         val anchorId = context.resources.getIdentifier(anchor, "id", context.packageName)
 
         if (anchorId == 0) {
             YLog.error("Lyric anchor $anchor not found")
             return
         }
+
         val anchorView = statusBarView.findViewById<View>(anchorId)
+
         if (anchorView == null) {
             YLog.error("Lyric anchor view $anchor not found")
             return
@@ -106,13 +120,10 @@ class StatusBarViewManager(
 
         val anchorIndex = anchorParent.indexOfChild(anchorView)
 
-        var lp = lyricView.layoutParams
-        if (lp == null) {
-            lp = ViewGroup.LayoutParams(
-                baseStyle.width.dp,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        }
+        val lp = lyricView.layoutParams ?: ViewGroup.LayoutParams(
+            baseStyle.width.dp,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
 
         if (baseStyle.insertionOrder == BasicStyle.INSERTION_ORDER_AFTER) {
             anchorParent.addView(lyricView, anchorIndex + 1, lp)
@@ -121,15 +132,44 @@ class StatusBarViewManager(
         }
 
         YLog.info("Lyric added to status bar, anchor $anchor, order ${baseStyle.insertionOrder}")
+
         lastAnchor = anchor
         lastInsertionOrder = baseStyle.insertionOrder
+
+        restoreMusicProgress()
     }
 
-    private fun createLyricView(): LyricView {
-        val style = LyricPrefs.getLyricStyle()
-        val view = LyricView(context, style, getClockView() as? TextView)
-        return view
+    private fun restoreMusicProgress() {
+
     }
+
+    private var lastHightlightView: View? = null
+
+    fun hightlightView(idName: String?) {
+        lastHightlightView?.let {
+            lastHightlightView = null
+            it.setBackground(null)
+        }
+        if (idName.isNullOrBlank()) return
+
+        val id = ResourceMapper.getIdByName(context, idName)
+        val view: View? = statusBarView.findViewById<View>(id)
+        if (view == null) {
+            YLog.error("Lyric hightlight view $idName not found")
+        } else {
+            view.setBackground(createHighlightDrawable(view))
+            lastHightlightView = view
+        }
+    }
+
+    private fun createHighlightDrawable(view: View) = GradientDrawable().apply {
+        shape = GradientDrawable.RECTANGLE
+        setColor(Color.parseColor("#FF3582FF"))
+        cornerRadius = 20.dp.toFloat()
+    }
+
+    private fun createLyricView(style: LyricStyle) =
+        LyricView(context, style, getClockView() as? TextView)
 
     private class ViewAttachStateChangeListener : View.OnAttachStateChangeListener {
         override fun onViewAttachedToWindow(v: View) {
@@ -139,7 +179,5 @@ class StatusBarViewManager(
         override fun onViewDetachedFromWindow(v: View) {
             // do nothing
         }
-
     }
-
 }

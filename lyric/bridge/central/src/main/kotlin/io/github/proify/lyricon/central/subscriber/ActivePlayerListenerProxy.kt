@@ -41,11 +41,11 @@ class ActivePlayerListenerProxy : OnActivePlayerListener {
         safeInvoke { it.onPlaybackStateChanged(isPlaying) }
     }
 
-    override fun onSeekTo(position: Int) {
+    override fun onSeekTo(position: Long) {
         safeInvoke { it.onSeekTo(position) }
     }
 
-    override fun onPositionChanged(position: Int) {
+    override fun onPositionChanged(position: Long) {
         safeInvoke { it.onPositionChanged(position) }
     }
 

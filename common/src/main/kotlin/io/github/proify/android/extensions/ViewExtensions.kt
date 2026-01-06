@@ -25,17 +25,31 @@ var View.visibilityIfChanged
         if (visibility != value) visibility = value
     }
 
-inline fun ViewGroup.doOnChildrenChanged(
-    crossinline onAdded: (child: View, count: Int) -> Unit = { _, _ -> },
-    crossinline onRemoved: (child: View, count: Int) -> Unit = { _, _ -> }
+inline fun ViewGroup.setOnHierarchyChangeListener(
+    crossinline block: HierarchyChangeListener.() -> Unit
 ) {
+    val listener = HierarchyChangeListener().apply(block)
+
     setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
         override fun onChildViewAdded(parent: View?, child: View?) {
-            child?.let { onAdded(it, childCount) }
+            child?.let { listener.onAddView(this@setOnHierarchyChangeListener, it) }
         }
 
         override fun onChildViewRemoved(parent: View?, child: View?) {
-            child?.let { onRemoved(it, childCount) }
+            child?.let { listener.onRemoveView(this@setOnHierarchyChangeListener, it) }
         }
     })
+}
+
+class HierarchyChangeListener {
+    var onAddView: (ViewGroup, View) -> Unit = { _, _ -> }
+    var onRemoveView: (ViewGroup, View) -> Unit = { _, _ -> }
+
+    fun onAdd(block: (ViewGroup, View) -> Unit) {
+        onAddView = block
+    }
+
+    fun onRemove(block: (ViewGroup, View) -> Unit) {
+        onRemoveView = block
+    }
 }

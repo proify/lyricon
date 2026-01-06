@@ -17,6 +17,10 @@
 package io.github.proify.lyricon.lyric.model
 
 import android.os.Parcelable
+import io.github.proify.lyricon.lyric.model.extensions.deepCopy
+import io.github.proify.lyricon.lyric.model.extensions.normalizeSortByTime
+import io.github.proify.lyricon.lyric.model.interfaces.DeepCopyable
+import io.github.proify.lyricon.lyric.model.interfaces.Normalize
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -36,7 +40,24 @@ data class Song(
     var id: String? = null,
     var name: String? = null,
     var artist: String? = null,
-    var duration: Int = 0,
+    var duration: Long = 0,
     var metadata: LyricMetadata? = null,
     var lyrics: List<DoubleLyricLine>? = null,
-) : Parcelable
+) : Parcelable, DeepCopyable<Song>, Normalize<Song> {
+
+    override fun deepCopy() = copy(
+        lyrics = lyrics?.deepCopy()
+    )
+
+    override fun normalize() = deepCopy().apply {
+        lyrics = lyrics?.map { line ->
+            if (line.duration <= 0) {
+                line.copy(duration = line.end - line.begin)
+            } else {
+                line
+            }
+        }?.filter { line ->
+            line.begin >= 0 && line.begin < line.end
+        }?.normalizeSortByTime()
+    }
+}

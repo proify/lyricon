@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.github.proify.lyricon.common.util
 
-package io.github.proify.lyricon.lyric.model
+import android.content.res.Resources
+import java.util.concurrent.ConcurrentHashMap
 
-interface ILyricLine : ILyricTiming {
-    var isAlignedRight: Boolean
-    var metadata: LyricMetadata?
-    var text: String?
-    var words: List<LyricWord>?
+class ResourcesHelper {
+    private val map = ConcurrentHashMap<Resources, String>()
+
+    private val resourceNameCache = ConcurrentHashMap<Int, String?>()
+
+
 }

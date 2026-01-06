@@ -17,6 +17,11 @@
 package io.github.proify.lyricon.lyric.model
 
 import android.os.Parcelable
+import io.github.proify.lyricon.lyric.model.extensions.deepCopy
+import io.github.proify.lyricon.lyric.model.extensions.normalize
+import io.github.proify.lyricon.lyric.model.interfaces.DeepCopyable
+import io.github.proify.lyricon.lyric.model.interfaces.IDoubleLyricLine
+import io.github.proify.lyricon.lyric.model.interfaces.Normalize
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -36,13 +41,30 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class DoubleLyricLine(
-    override var begin: Int = 0,
-    override var end: Int = 0,
-    override var duration: Int = 0,
+    override var begin: Long = 0,
+    override var end: Long = 0,
+    override var duration: Long = 0,
     override var isAlignedRight: Boolean = false,
     override var metadata: LyricMetadata? = null,
     override var text: String? = null,
     override var words: List<LyricWord>? = null,
     override var secondaryText: String? = null,
     override var secondaryWords: List<LyricWord>? = null,
-) : IDoubleLyricLine, Parcelable
+) : IDoubleLyricLine, Parcelable, DeepCopyable<DoubleLyricLine>, Normalize<DoubleLyricLine> {
+
+    override fun deepCopy() = copy(
+        words = words?.deepCopy(),
+        secondaryWords = secondaryWords?.deepCopy()
+    )
+
+    override fun normalize() = deepCopy().apply {
+        words = words?.normalize()
+        if (!words.isNullOrEmpty()) {
+            text = words!!.joinToString("") { it.text ?: "" }
+        }
+        secondaryWords = secondaryWords?.normalize()
+        if (!secondaryWords.isNullOrEmpty()) {
+            secondaryText = secondaryWords!!.joinToString("") { it.text ?: "" }
+        }
+    }
+}

@@ -22,9 +22,15 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import io.github.proify.lyricon.lyric.model.DoubleLyricLine
 import io.github.proify.lyricon.lyric.model.LyricLine
+import io.github.proify.lyricon.lyric.view.line.LyricLineView
+import io.github.proify.lyricon.lyric.view.util.visible
 
 class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
     LinearLayout(context, attrs) {
+
+    companion object {
+        private val EMPTY_LYRIC_LINE = LyricLine()
+    }
 
     val customLayoutTransition = LayoutTransition().apply {
         enableTransitionType(LayoutTransition.CHANGING)
@@ -56,7 +62,7 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
 
     private fun setMainLine(lyricLine: DoubleLyricLine?) {
         val line = if (lyricLine == null) {
-            LyricLine()
+            EMPTY_LYRIC_LINE
         } else {
             LyricLine(
                 begin = lyricLine.begin,
@@ -94,7 +100,7 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
         secondary.visible = false
     }
 
-    fun setPosition(position: Int) {
+    fun setPosition(position: Long) {
         main.setPosition(position)
         secondary.setPosition(position)
     }
@@ -117,7 +123,6 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
         )
         view.setStyle(config)
         invalidate()
-
     }
 
 }

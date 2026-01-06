@@ -60,10 +60,10 @@ internal object SubscriberManager {
         override fun onPlaybackStateChanged(isPlaying: Boolean) =
             broadcast { it.activePlayerListener.onPlaybackStateChanged(isPlaying) }
 
-        override fun onPositionChanged(position: Int) =
+        override fun onPositionChanged(position: Long) =
             broadcast { it.activePlayerListener.onPositionChanged(position) }
 
-        override fun onSeekTo(position: Int) =
+        override fun onSeekTo(position: Long) =
             broadcast { it.activePlayerListener.onSeekTo(position) }
 
         override fun onPostText(text: String?) =
