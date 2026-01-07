@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        =
+
         <activity
             android:name=".ui.activity.AboutActivity"
             android:label="@string/activity_about" />

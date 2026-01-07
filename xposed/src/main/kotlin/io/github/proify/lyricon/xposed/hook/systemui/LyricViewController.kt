@@ -28,10 +28,10 @@ import io.github.proify.lyricon.xposed.util.StatusColor
 object LyricViewController : OnActivePlayerListener,
     StatusBarColorMonitor.OnColorChangeListener {
 
-    var isPlaying = false
+    var isPlaying: Boolean = false
         private set
 
-    var activePackage = ""
+    var activePackage: String = ""
         private set
 
     var statusBarViewManager: StatusBarViewManager? = null

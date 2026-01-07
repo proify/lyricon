@@ -22,7 +22,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +37,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -48,6 +46,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,7 +61,6 @@ import io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet.AppCach
 import io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet.AsyncAppIcon
 import io.github.proify.lyricon.app.ui.compose.AppToolBarListContainer
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentDefaults
-import io.github.proify.lyricon.app.util.LyricPrefs.DEFAULT_PACKAGE_NAME
 import io.github.proify.lyricon.app.util.SignatureValidator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,6 +68,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.Text
@@ -95,9 +94,6 @@ class LyricProviderActivity : BaseActivity() {
         val author: String?,
         val certified: Boolean
     ) {
-        val isDefault: Boolean
-            get() = applicationInfo.packageName == DEFAULT_PACKAGE_NAME
-
         fun getLabel(): String {
             val cached = AppCache.getCachedLabel(applicationInfo.packageName)
             if (cached != null) return cached
@@ -108,7 +104,6 @@ class LyricProviderActivity : BaseActivity() {
             AppCache.cacheLabel(applicationInfo.packageName, label)
             return label
         }
-
     }
 
     data class UiState(
@@ -131,7 +126,6 @@ class LyricProviderActivity : BaseActivity() {
                     val items = mutableListOf<PackageItem>()
                     val packageInfos =
                         packageManager.getInstalledPackages(PackageManager.GET_META_DATA or PackageManager.GET_SIGNING_CERTIFICATES)
-
 
                     for (packageInfo in packageInfos) {
                         val metaData = packageInfo.applicationInfo?.metaData ?: continue
@@ -160,11 +154,6 @@ class LyricProviderActivity : BaseActivity() {
                 _uiState.value = _uiState.value.copy(isLoading = false, allApps = apps)
             }
         }
-
-        fun loadApps() {
-
-        }
-
     }
 
     private data class AppCategory(
@@ -204,9 +193,7 @@ class LyricProviderActivity : BaseActivity() {
         val state by viewModel.uiState.collectAsState()
         val categorized = categorizeApps(state.allApps)
         val showEmpty = remember(state.allApps) {
-            derivedStateOf {
-                state.allApps.isEmpty()
-            }
+            derivedStateOf { state.allApps.isEmpty() }
         }
 
         AppToolBarListContainer(
@@ -236,7 +223,6 @@ class LyricProviderActivity : BaseActivity() {
                         Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
-
                 scope.items(category.items, key = { it.applicationInfo.packageName }) {
                     Card(
                         modifier = Modifier
@@ -260,7 +246,6 @@ class LyricProviderActivity : BaseActivity() {
                             verticalArrangement = Arrangement.Top,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-
                             val interactionSource = remember { MutableInteractionSource() }
                             val indication = LocalIndication.current
                             Row(
@@ -299,18 +284,12 @@ class LyricProviderActivity : BaseActivity() {
                                         Spacer(modifier = Modifier.height(4.dp))
 
                                         Row(verticalAlignment = Alignment.CenterVertically) {
-                                            if (it.certified) {
-                                                Box(
-                                                    modifier = Modifier.background(
-                                                        Color(0xff66bb6a),
-                                                        RoundedCornerShape(10.dp)
-                                                    )
-                                                ) {
-                                                    Text(
-                                                        "受认证",
-                                                        color = Color.White,
-                                                        fontSize = 12.sp,
-                                                        modifier = Modifier.padding(3.dp)
+                                            if (certified) {
+                                                Box {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.verified_24px),
+                                                        contentDescription = null,
+                                                        tint = Color(color = 0XFF66BB6A)
                                                     )
                                                 }
                                                 Spacer(modifier = Modifier.width(4.dp))
@@ -321,16 +300,13 @@ class LyricProviderActivity : BaseActivity() {
                                                 color = summaryColor.color(true)
                                             )
                                         }
-
                                     }
-
                                     Spacer(modifier = Modifier.width(10.dp))
                                     Switch(checked, onCheckedChange = {})
                                 }
                             }
 
                             if (description != null) {
-                                //Spacer(modifier = Modifier.height(16.dp))
                                 Text(
                                     modifier = Modifier.padding(
                                         start = 16.dp,
@@ -352,26 +328,13 @@ class LyricProviderActivity : BaseActivity() {
             scope.item(key = "bottom_spacer") {
                 Spacer(modifier = Modifier.height(4.dp))
             }
-
         }
     }
 
-    @Composable
-    private fun MainContent() {
-        Card(
-            modifier = Modifier
-                .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 16.dp)
-                .fillMaxWidth(),
-            insideMargin = PaddingValues(vertical = 7.dp),
-        ) {
-
-        }
-    }
 
     @Preview(showBackground = true)
     @Composable
     private fun ContentPreview() {
         Content()
     }
-
 }

@@ -29,9 +29,8 @@ import io.github.proify.lyricon.app.util.Utils.commitEdit
 import io.github.proify.lyricon.lyric.style.VisibilityRule
 
 object LyricPrefs {
-
-    const val DEFAULT_PACKAGE_NAME = LyricStylePrefs.DEFAULT_PACKAGE_NAME
-    const val KEY_CONFIGURED_PACKAGES = "configured"
+    const val DEFAULT_PACKAGE_NAME: String = LyricStylePrefs.DEFAULT_PACKAGE_NAME
+    const val KEY_CONFIGURED_PACKAGES: String = "configured"
 
     private val packageStyleManager: SharedPreferences =
         getSharedPreferences(LyricStylePrefs.PREF_PACKAGE_STYLE_MANAGER)
@@ -43,7 +42,7 @@ object LyricPrefs {
         return Application.instance.getSharedPreferences(name, worldReadable = true)
     }
 
-    fun getPackagePrefName(packageName: String) =
+    fun getPackagePrefName(packageName: String): String =
         LyricStylePrefs.getPackageStylePreferenceName(packageName)
 
     fun setEnabledPackageNames(names: Set<String>) {
@@ -78,5 +77,4 @@ object LyricPrefs {
         val json = basicStylePrefs.getString("lyric_style_base_visibility_rules", null)
         return json?.fromJson<List<VisibilityRule>>() ?: emptyList()
     }
-
 }

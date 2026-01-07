@@ -37,12 +37,11 @@ class LyricView(
 ) : LinearLayout(context), StatusBarColorMonitor.OnColorChangeListener {
 
     companion object {
-        const val TAG = "LyricView"
-        const val VIEW_TAG = "lyricon:lyric_view"
+        const val VIEW_TAG: String = "lyricon:lyric_view"
     }
 
-    val logoView = LyricLogoView(context)
-    val textView = LyricPlayerView(context)
+    val logoView: LyricLogoView = LyricLogoView(context)
+    val textView: LyricPlayerView = LyricPlayerView(context)
 
     var currentStyle: LyricStyle = initialStyle
         private set
@@ -138,10 +137,10 @@ class LyricView(
     }
 
     fun updateVisibility() {
-        if (isPlaying && textView.childCount > 0) {
-            visibilityIfChanged = VISIBLE
+        visibilityIfChanged = if (isPlaying && textView.childCount > 0) {
+            VISIBLE
         } else {
-            visibilityIfChanged = GONE
+            GONE
         }
     }
 
@@ -153,6 +152,6 @@ class LyricView(
         textView.setSong(song)
     }
 
-    fun updateText(text: String?) {
+    fun updateText(@Suppress("unused") text: String?) {
     }
 }

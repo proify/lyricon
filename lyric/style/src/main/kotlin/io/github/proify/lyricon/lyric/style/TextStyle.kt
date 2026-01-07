@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("KotlinConstantConditions")
+
 package io.github.proify.lyricon.lyric.style
 
 import android.content.SharedPreferences
@@ -56,35 +58,35 @@ data class TextStyle(
 ) : AbstractStyle(), Parcelable {
 
     object Defaults {
-        const val TEXT_SIZE = 0f
-        val MARGINS = RectF()
-        val PADDINGS = RectF()
-        const val REPEAT_OUTPUT = false
+        const val TEXT_SIZE: Float = 0f
+        val MARGINS: RectF = RectF()
+        val PADDINGS: RectF = RectF()
+        const val REPEAT_OUTPUT: Boolean = false
 
-        const val FADING_EDGE_ENABLED = false
-        const val FADING_EDGE_LENGTH = 0
+        const val FADING_EDGE_ENABLED: Boolean = false
+        const val FADING_EDGE_LENGTH: Int = 0
 
-        const val ENABLE_CUSTOM_TEXT_COLOR = false
+        const val ENABLE_CUSTOM_TEXT_COLOR: Boolean = false
         val LIGHT_MODE_COLOR: TextColor? = null
         val DARK_MODE_COLOR: TextColor? = null
 
         val TYPE_FACE: String? = null
-        const val TYPE_FACE_BOLD = false
-        const val TYPE_FACE_ITALIC = false
-        const val FONT_WEIGHT = -1
+        const val TYPE_FACE_BOLD: Boolean = false
+        const val TYPE_FACE_ITALIC: Boolean = false
+        const val FONT_WEIGHT: Int = -1
 
-        const val MARQUEE_SPEED = 40f
-        const val MARQUEE_GHOST_SPACING = 50f
-        const val MARQUEE_LOOP_DELAY = 300
-        const val MARQUEE_DELAY_ENABLE = false
-        const val MARQUEE_REPEAT_COUNT = -1
-        const val MARQUEE_STOP_AT_END = false
-        const val MARQUEE_INITIAL_DELAY = 300
-        const val MARQUEE_REPEAT_UNLIMITED = true
-        const val ENABLE_GRADIENT_PROGRESS_STYLE = true
+        const val MARQUEE_SPEED: Float = 40f
+        const val MARQUEE_GHOST_SPACING: Float = 50f
+        const val MARQUEE_LOOP_DELAY: Int = 300
+        const val MARQUEE_DELAY_ENABLE: Boolean = false
+        const val MARQUEE_REPEAT_COUNT: Int = -1
+        const val MARQUEE_STOP_AT_END: Boolean = false
+        const val MARQUEE_INITIAL_DELAY: Int = 300
+        const val MARQUEE_REPEAT_UNLIMITED: Boolean = true
+        const val ENABLE_GRADIENT_PROGRESS_STYLE: Boolean = true
     }
 
-    fun color(lightMode: Boolean) = if (lightMode) lightModeColor else darkModeColor
+    fun color(lightMode: Boolean): TextColor? = if (lightMode) lightModeColor else darkModeColor
 
     override fun onLoad(preferences: SharedPreferences) {
         textSize = preferences.getFloat("lyric_style_text_size", Defaults.TEXT_SIZE)

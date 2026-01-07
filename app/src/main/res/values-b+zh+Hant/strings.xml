@@ -157,6 +157,8 @@
     <string name="option_app_theme_mode_light">淺色</string>
     <string name="option_app_theme_mode_dark">深色</string>
     <string name="option_app_theme_mode_follow_system">跟隨系統</string>
-    <string name="item_app_theme_monet_color">Material You 配色</string>
+    <string name="item_app_theme_monet_color">莫奈配色</string>
+    <string name="item_logo_size">大小</string>
+    <string name="option_logo_color_follow_text">跟随文字颜色</string>
 
 </resources>

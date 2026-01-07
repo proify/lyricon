@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponent
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentColors
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Icon
@@ -75,7 +76,7 @@ fun SuperArrow(
     holdDownState: Boolean = false,
     enabled: Boolean = true
 ) {
-    io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.BasicComponent(
+    BasicComponent(
         modifier = modifier,
         insideMargin = insideMargin,
         title = title,
@@ -122,7 +123,7 @@ object SuperArrowDefaults {
      * The default color of the arrow.
      */
     @Composable
-    fun rightActionColors() = RightActionColors(
+    fun rightActionColors(): RightActionColors = RightActionColors(
         color = MiuixTheme.colorScheme.onSurfaceVariantActions,
         disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
     )

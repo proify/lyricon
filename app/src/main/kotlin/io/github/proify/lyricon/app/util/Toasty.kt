@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.app.util
 
 import android.widget.Toast
 import io.github.proify.lyricon.app.Application
 
-open class Toasty {
-
-    companion object {
-        fun show(text: CharSequence, longDuration: Boolean = false) {
-            Toast.makeText(
-                Application.instance,
-                text,
-                if (longDuration) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        fun show(text: Int) = show(Application.instance.getString(text), true)
-
-        fun showLong(text: CharSequence) = show(text, false)
+object Toasty {
+    fun show(
+        text: CharSequence,
+        longDuration: Boolean = false
+    ): Toast {
+        val toast = Toast.makeText(
+            Application.instance,
+            text,
+            if (longDuration) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+        )
+        toast.show()
+        return toast
     }
 
+    fun show(text: Int): Toast = show(Application.instance.getString(text), true)
+
+    fun showLong(text: CharSequence): Toast = show(text)
 }
 
-fun toast(any: Any, longDuration: Boolean = false) {
+fun toast(any: Any, longDuration: Boolean = false): Toast =
     Toasty.show(any.toString(), longDuration)
-}

@@ -33,7 +33,6 @@ fun List<LyricWord>.normalize(): List<LyricWord> {
     val invalidBuffer = ArrayList<LyricWord>()
 
     var lastEndTime = 0L
-    val DEFAULT_DURATION = 100L
 
     for (word in validTextWords) {
         // 判断单词时间是否有效: 开始时间必须非负,且结束时间必须大于开始时间
@@ -94,8 +93,8 @@ fun List<LyricWord>.normalize(): List<LyricWord> {
             val newWord = LyricWord().apply {
                 this.text = combinedText
                 this.begin = 0
-                this.end = DEFAULT_DURATION
-                this.duration = DEFAULT_DURATION
+                this.end = 100
+                this.duration = 100
             }
             result.add(newWord)
         }

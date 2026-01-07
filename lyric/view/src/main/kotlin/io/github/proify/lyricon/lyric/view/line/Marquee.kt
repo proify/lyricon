@@ -23,7 +23,6 @@ import io.github.proify.lyricon.lyric.view.util.dp
 import java.lang.ref.WeakReference
 
 internal class Marquee(val view: WeakReference<LyricLineView>) {
-
     companion object {
         private const val DEFAULT_SCROLL_SPEED = 40f
     }

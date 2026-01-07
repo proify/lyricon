@@ -1,19 +1,3 @@
-/*
- * Copyright 2026 Proify
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -26,9 +10,9 @@ plugins {
 
 apply(from = "language-generator.gradle")
 
-val versionCode = rootProject.extra["appVersionCode"] as Int
-val versionName = rootProject.extra["appVersionName"] as String
-val buildTime = rootProject.extra["buildTime"] as Long
+val versionCode: Int = rootProject.extra["appVersionCode"] as Int
+val versionName: String = rootProject.extra["appVersionName"] as String
+val buildTime: Long = rootProject.extra["buildTime"] as Long
 
 android {
     namespace = "io.github.proify.lyricon.app"
@@ -44,7 +28,6 @@ android {
         buildConfigField("int", "VERSION_CODE", versionCode.toString())
         buildConfigField("String", "VERSION_NAME", "\"" + versionName + "\"")
         buildConfigField("long", "BUILD_TIME", System.currentTimeMillis().toString())
-
     }
 
     buildTypes {

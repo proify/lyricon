@@ -9,7 +9,7 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
-val version = "0.1.46-SNAPSHOT"
+val version: String = "0.1.46-SNAPSHOT"
 
 android {
     namespace = "io.github.proify.lyricon.provider"

@@ -15,7 +15,6 @@
  */
 package io.github.proify.lyricon.lyric.model.interfaces
 
-import io.github.proify.lyricon.lyric.model.interfaces.ILyricTiming
 import io.github.proify.lyricon.lyric.model.LyricMetadata
 import io.github.proify.lyricon.lyric.model.LyricWord
 

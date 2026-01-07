@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("AssignedValueIsNeverRead")
+
 package io.github.proify.lyricon.app.ui.preference
 
 import android.content.SharedPreferences
@@ -85,7 +87,7 @@ fun InputPreference(
     holdDownState: Boolean = false,
     enabled: Boolean = true
 ) {
-    val prefValueState = rememberStringPreference(sharedPreferences, key, null)
+    val prefValueState = rememberStringPreference(sharedPreferences, key)
     val currentSummary = summary ?: prefValueState.value ?: stringResource(id = R.string.def)
 
     var showDialog by remember { mutableStateOf(false) }

@@ -26,10 +26,10 @@ import java.util.Locale
 
 object AppLangUtils {
     private const val KEY_LANGUAGE = "language"
-    const val DEFAULT_LANGUAGE = "system"
-    val DEFAULT_LOCALE = Locale.getDefault()
+    const val DEFAULT_LANGUAGE: String = "system"
+    val DEFAULT_LOCALE: Locale = Locale.getDefault()
 
-    fun wrap(context: Context) = wrap(context, getCurrentLanguage(context))
+    fun wrap(context: Context): Context = wrap(context, getCurrentLanguage(context))
 
     private fun wrap(context: Context, language: String): Context {
         val locale = if (language == DEFAULT_LANGUAGE) {
@@ -52,6 +52,6 @@ object AppLangUtils {
         getDefaultSharedPreferences(context).commitEdit { putString(KEY_LANGUAGE, language) }
     }
 
-    fun getLanguages() = GeneratedLangs.LANGUAGES
+    fun getLanguages(): List<String> = GeneratedLangs.LANGUAGES
 
 }

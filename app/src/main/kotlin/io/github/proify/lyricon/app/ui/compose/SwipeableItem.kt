@@ -48,9 +48,9 @@ import kotlin.math.roundToInt
  * 滑动展开状态
  */
 enum class SwipeState {
-    CLOSED,      // 关闭
-    LEFT_OPEN,   // 展开左侧操作(向右滑动)
-    RIGHT_OPEN   // 展开右侧操作(向左滑动)
+    CLOSED, // 关闭
+    LEFT_OPEN, // 展开左侧操作(向右滑动)
+    RIGHT_OPEN, // 展开右侧操作(向左滑动)
 }
 
 @Composable
@@ -60,21 +60,22 @@ fun SwipeableItem(
     rightActions: @Composable RowScope.(close: () -> Unit) -> Unit = {},
     enableOverscroll: Boolean = true, // 启用过度滑动效果
     overscrollDistance: Dp = 200.dp, // 最大过度滑动距离
-    content: @Composable (close: () -> Unit) -> Unit
+    content: @Composable (close: () -> Unit) -> Unit,
 ) {
     var offsetX by remember { mutableFloatStateOf(0f) }
     val animatableOffsetX = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
     var isDragging by remember { mutableStateOf(false) }
-    var currentState by remember { mutableStateOf(SwipeState.CLOSED) }
+    val currentState = remember { mutableStateOf(SwipeState.CLOSED) }
 
     // 自动测量左右 action 的宽度
-    var leftActionsWidth by remember { mutableStateOf(0f) }
-    var rightActionsWidth by remember { mutableStateOf(0f) }
+    var leftActionsWidth by remember { mutableFloatStateOf(0f) }
+    var rightActionsWidth by remember { mutableFloatStateOf(0f) }
 
-    val overscrollDistancePx = with(LocalDensity.current) {
-        overscrollDistance.toPx()
-    }
+    val overscrollDistancePx =
+        with(LocalDensity.current) {
+            overscrollDistance.toPx()
+        }
 
     // 根据状态计算目标偏移量
     val getTargetOffset: (SwipeState) -> Float = { state ->
@@ -100,7 +101,7 @@ fun SwipeableItem(
             animatableOffsetX.snapTo(offsetX)
             animatableOffsetX.animateTo(0f)
             offsetX = 0f
-            currentState = SwipeState.CLOSED
+            currentState.value = SwipeState.CLOSED
         }
     }
 
@@ -110,117 +111,128 @@ fun SwipeableItem(
 //    }
 
     Box(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         // 左侧操作
         Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .align(Alignment.CenterStart)
-                .onSizeChanged { size ->
-                    leftActionsWidth = if (size.width > 0) size.width.toFloat() else 0f
-                },
-            horizontalArrangement = Arrangement.Start
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.CenterStart)
+                    .onSizeChanged { size ->
+                        leftActionsWidth = if (size.width > 0) size.width.toFloat() else 0f
+                    },
+            horizontalArrangement = Arrangement.Start,
         ) {
             leftActions(closeActions)
         }
 
         // 右侧操作
         Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .align(Alignment.CenterEnd)
-                .onSizeChanged { size ->
-                    rightActionsWidth = if (size.width > 0) size.width.toFloat() else 0f
-                },
-            horizontalArrangement = Arrangement.End
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.CenterEnd)
+                    .onSizeChanged { size ->
+                        rightActionsWidth = if (size.width > 0) size.width.toFloat() else 0f
+                    },
+            horizontalArrangement = Arrangement.End,
         ) {
             rightActions(closeActions)
         }
 
         // 主内容
         Box(
-            modifier = Modifier
-                .offset {
-                    val currentOffset = if (isDragging) offsetX else animatableOffsetX.value
-                    IntOffset(currentOffset.roundToInt(), 0)
-                }
-                .fillMaxWidth()
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onTap = {
-                            if (offsetX != 0f) {
-                                closeActions()
-                            }
-                        }
-                    )
-                }
-                .pointerInput(Unit) {
-                    detectHorizontalDragGestures(
-                        onDragStart = {
-                            isDragging = true
-                        },
-                        onDragEnd = {
-                            isDragging = false
-                            scope.launch {
-                                val clampedOffset =
-                                    offsetX.coerceIn(-rightActionsWidth, leftActionsWidth)
-                                val targetState = getCurrentState(clampedOffset)
-                                val targetOffset = getTargetOffset(targetState)
-
-                                animatableOffsetX.snapTo(offsetX)
-                                animatableOffsetX.animateTo(targetOffset)
-                                offsetX = targetOffset
-                                currentState = targetState
-                            }
-                        },
-                        onDragCancel = {
-                            isDragging = false
-                        },
-                        onHorizontalDrag = { _, dragAmount ->
-                            val currentOffset = offsetX
-
-                            val newOffset = if (enableOverscroll) {
-                                val resistanceFactor = when {
-                                    currentOffset > leftActionsWidth -> {
-                                        val overscroll = currentOffset - leftActionsWidth
-                                        1f / (1f + overscroll / overscrollDistancePx)
-                                    }
-
-                                    currentOffset < -rightActionsWidth -> {
-                                        val overscroll = -currentOffset - rightActionsWidth
-                                        1f / (1f + overscroll / overscrollDistancePx)
-                                    }
-
-                                    else -> {
-                                        val nextOffset = currentOffset + dragAmount
-                                        when {
-                                            nextOffset > leftActionsWidth -> {
-                                                val overscroll = nextOffset - leftActionsWidth
-                                                1f / (1f + overscroll / overscrollDistancePx)
-                                            }
-
-                                            nextOffset < -rightActionsWidth -> {
-                                                val overscroll = -nextOffset - rightActionsWidth
-                                                1f / (1f + overscroll / overscrollDistancePx)
-                                            }
-
-                                            else -> 1f
-                                        }
-                                    }
+            modifier =
+                Modifier
+                    .offset {
+                        val currentOffset = if (isDragging) offsetX else animatableOffsetX.value
+                        IntOffset(currentOffset.roundToInt(), 0)
+                    }
+                    .fillMaxWidth()
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = {
+                                if (offsetX != 0f) {
+                                    closeActions()
                                 }
-                                currentOffset + dragAmount * resistanceFactor
-                            } else {
-                                (currentOffset + dragAmount).coerceIn(
-                                    -rightActionsWidth,
-                                    leftActionsWidth
-                                )
-                            }
+                            },
+                        )
+                    }
+                    .pointerInput(Unit) {
+                        detectHorizontalDragGestures(
+                            onDragStart = {
+                                isDragging = true
+                            },
+                            onDragEnd = {
+                                isDragging = false
+                                scope.launch {
+                                    val clampedOffset =
+                                        offsetX.coerceIn(-rightActionsWidth, leftActionsWidth)
+                                    val targetState = getCurrentState(clampedOffset)
+                                    val targetOffset = getTargetOffset(targetState)
 
-                            offsetX = newOffset
-                        }
-                    )
-                }
+                                    animatableOffsetX.snapTo(offsetX)
+                                    animatableOffsetX.animateTo(targetOffset)
+                                    offsetX = targetOffset
+                                    currentState.value = targetState
+                                }
+                            },
+                            onDragCancel = {
+                                isDragging = false
+                            },
+                            onHorizontalDrag = { _, dragAmount ->
+                                val currentOffset = offsetX
+
+                                val newOffset =
+                                    if (enableOverscroll) {
+                                        val resistanceFactor =
+                                            when {
+                                                currentOffset > leftActionsWidth -> {
+                                                    val overscroll =
+                                                        currentOffset - leftActionsWidth
+                                                    1f / (1f + overscroll / overscrollDistancePx)
+                                                }
+
+                                                currentOffset < -rightActionsWidth -> {
+                                                    val overscroll =
+                                                        -currentOffset - rightActionsWidth
+                                                    1f / (1f + overscroll / overscrollDistancePx)
+                                                }
+
+                                                else -> {
+                                                    val nextOffset = currentOffset + dragAmount
+                                                    when {
+                                                        nextOffset > leftActionsWidth -> {
+                                                            val overscroll =
+                                                                nextOffset - leftActionsWidth
+                                                            1f / (1f + overscroll / overscrollDistancePx)
+                                                        }
+
+                                                        nextOffset < -rightActionsWidth -> {
+                                                            val overscroll =
+                                                                -nextOffset - rightActionsWidth
+                                                            1f / (1f + overscroll / overscrollDistancePx)
+                                                        }
+
+                                                        else -> {
+                                                            1f
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        currentOffset + dragAmount * resistanceFactor
+                                    } else {
+                                        (currentOffset + dragAmount).coerceIn(
+                                            -rightActionsWidth,
+                                            leftActionsWidth,
+                                        )
+                                    }
+
+                                offsetX = newOffset
+                            },
+                        )
+                    },
         ) {
             content(closeActions)
         }

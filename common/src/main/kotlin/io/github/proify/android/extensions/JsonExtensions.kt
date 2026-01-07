@@ -19,7 +19,7 @@ package io.github.proify.android.extensions
 import kotlinx.serialization.json.Json
 
 
-val jsonx = Json {
+val jsonx: Json = Json {
     ignoreUnknownKeys = true
     encodeDefaults = false
 }

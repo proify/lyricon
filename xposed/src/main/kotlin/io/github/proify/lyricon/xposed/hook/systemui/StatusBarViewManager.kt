@@ -25,10 +25,10 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.proify.android.extensions.dp
+import io.github.proify.lyricon.common.util.ResourceMapper
 import io.github.proify.lyricon.lyric.style.BasicStyle
 import io.github.proify.lyricon.lyric.style.LyricStyle
 import io.github.proify.lyricon.xposed.hook.systemui.lyricview.LyricView
-import io.github.proify.lyricon.xposed.util.ResourceMapper
 import io.github.proify.lyricon.xposed.util.StatusBarColorMonitor
 import io.github.proify.lyricon.xposed.util.ViewVisibilityController
 
@@ -39,12 +39,12 @@ class StatusBarViewManager(
     private var lastAnchor = ""
     private var lastInsertionOrder = -1
 
-    private val viewAttachStateChangeListener: ViewAttachStateChangeListener =
-        ViewAttachStateChangeListener()
+    private val viewAttachStateChangeListener = ViewAttachStateChangeListener()
 
     private val onGlobalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
             checkLyricViewExists()
+
             visibilityController.applyVisibilityRules(
                 lyricStyle.basicStyle.visibilityRules,
                 LyricViewController.isPlaying
@@ -61,7 +61,7 @@ class StatusBarViewManager(
     }
 
     val context: Context = statusBarView.context.applicationContext
-    val visibilityController = ViewVisibilityController(statusBarView)
+    val visibilityController: ViewVisibilityController = ViewVisibilityController(statusBarView)
 
     val lyricView: LyricView
 
@@ -135,12 +135,6 @@ class StatusBarViewManager(
 
         lastAnchor = anchor
         lastInsertionOrder = baseStyle.insertionOrder
-
-        restoreMusicProgress()
-    }
-
-    private fun restoreMusicProgress() {
-
     }
 
     private var lastHightlightView: View? = null
@@ -148,7 +142,7 @@ class StatusBarViewManager(
     fun hightlightView(idName: String?) {
         lastHightlightView?.let {
             lastHightlightView = null
-            it.setBackground(null)
+            it.background = null
         }
         if (idName.isNullOrBlank()) return
 
@@ -157,12 +151,12 @@ class StatusBarViewManager(
         if (view == null) {
             YLog.error("Lyric hightlight view $idName not found")
         } else {
-            view.setBackground(createHighlightDrawable(view))
+            view.background = createHighlightDrawable()
             lastHightlightView = view
         }
     }
 
-    private fun createHighlightDrawable(view: View) = GradientDrawable().apply {
+    private fun createHighlightDrawable() = GradientDrawable().apply {
         shape = GradientDrawable.RECTANGLE
         setColor(Color.parseColor("#FF3582FF"))
         cornerRadius = 20.dp.toFloat()

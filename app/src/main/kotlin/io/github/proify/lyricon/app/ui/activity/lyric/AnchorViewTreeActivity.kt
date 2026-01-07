@@ -45,7 +45,7 @@ class AnchorViewTreeActivity : ViewTreeActivity() {
         preferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    override fun createViewModel() = object : ViewTreeViewModel() {
+    override fun createViewModel(): ViewTreeViewModel = object : ViewTreeViewModel() {
         override fun handleNodeClick(node: Node<ViewTreeNode>) {
             val value = node.content
             val id = value.id ?: return

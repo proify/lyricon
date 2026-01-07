@@ -15,7 +15,7 @@
  */
 
 
-@file:Suppress("COMPOSE_APPLIER_CALL_MISMATCH")
+@file:Suppress("COMPOSE_APPLIER_CALL_MISMATCH", "AssignedValueIsNeverRead")
 
 package io.github.proify.lyricon.app.ui.compose.custom.miuix.basic
 
@@ -357,7 +357,7 @@ private class ExitUntilCollapsedScrollBehavior(
                 // Don't intercept if scrolling down.
                 if (!canScroll() || available.y > 0) return Offset.Zero
                 val prevHeightOffset = state.heightOffset
-                state.heightOffset = state.heightOffset + available.y
+                state.heightOffset += available.y
                 return if (prevHeightOffset != state.heightOffset) {
                     // We're in the middle of top app bar collapse or expand.
                     // Consume only the scroll on the Y axis.
@@ -378,7 +378,7 @@ private class ExitUntilCollapsedScrollBehavior(
                 if (available.y < 0f || consumed.y < 0f) {
                     // When scrolling up, just update the state's height offset.
                     val oldHeightOffset = state.heightOffset
-                    state.heightOffset = state.heightOffset + consumed.y
+                    state.heightOffset += consumed.y
                     return Offset(0f, state.heightOffset - oldHeightOffset)
                 }
 
@@ -386,7 +386,7 @@ private class ExitUntilCollapsedScrollBehavior(
                     // Adjust the height offset in case the consumed delta Y is less than what was
                     // recorded as available delta Y in the pre-scroll.
                     val oldHeightOffset = state.heightOffset
-                    state.heightOffset = state.heightOffset + available.y
+                    state.heightOffset += available.y
                     return Offset(0f, state.heightOffset - oldHeightOffset)
                 }
                 return Offset.Zero

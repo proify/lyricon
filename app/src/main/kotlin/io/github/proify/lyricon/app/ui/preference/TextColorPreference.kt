@@ -53,7 +53,6 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 private const val EMPTY_COLOR = 0
 private val ITEM_SPACING = 16.dp
-private val COLOR_BOX_SIZE = 28.dp
 
 @Composable
 fun TextColorPreference(

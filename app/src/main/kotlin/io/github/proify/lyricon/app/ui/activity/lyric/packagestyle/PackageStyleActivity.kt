@@ -41,7 +41,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -70,7 +69,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.TabRowWithContour
 
-const val DEFAULT_PACKAGE_NAME = LyricPrefs.DEFAULT_PACKAGE_NAME
+const val DEFAULT_PACKAGE_NAME: String = LyricPrefs.DEFAULT_PACKAGE_NAME
 private const val TAB_COUNT = 3
 
 class PackageStyleViewModel(
@@ -265,7 +264,7 @@ private fun StyleTabRow(
             stringResource(R.string.tab_style_anim),
         )
 
-    var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val selectedTabIndex = remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
     TabRowWithContour(
@@ -275,9 +274,9 @@ private fun StyleTabRow(
                 .padding(horizontal = 13.dp)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
         tabs = tabs,
-        selectedTabIndex = selectedTabIndex,
+        selectedTabIndex = selectedTabIndex.intValue,
         onTabSelected = { index ->
-            selectedTabIndex = index
+            selectedTabIndex.intValue = index
             coroutineScope.launch {
                 pagerState.animateScrollToPage(index)
             }
@@ -286,7 +285,7 @@ private fun StyleTabRow(
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }
-            .collect { selectedTabIndex = it }
+            .collect { selectedTabIndex.intValue = it }
     }
 }
 
@@ -302,15 +301,14 @@ private fun StyleContentPager(
         modifier = Modifier.fillMaxSize(),
         key = { page -> "$page-$refreshTrigger" },
     ) { page ->
-        val sp = sharedPreferences
-        if (sp == null) {
+        if (sharedPreferences == null) {
             Box(modifier = Modifier.fillMaxSize())
             return@HorizontalPager
         }
 
         when (page) {
-            0 -> TextPage(scrollBehavior, sp)
-            1 -> LogoPage(scrollBehavior, sp)
+            0 -> TextPage(scrollBehavior, sharedPreferences)
+            1 -> LogoPage(scrollBehavior, sharedPreferences)
             2 -> AnimPage(scrollBehavior)
         }
     }

@@ -17,39 +17,9 @@
 package io.github.proify.android.extensions
 
 import android.view.View
-import android.view.ViewGroup
 
-var View.visibilityIfChanged
+var View.visibilityIfChanged: Int
     get() = visibility
     set(value) {
         if (visibility != value) visibility = value
     }
-
-inline fun ViewGroup.setOnHierarchyChangeListener(
-    crossinline block: HierarchyChangeListener.() -> Unit
-) {
-    val listener = HierarchyChangeListener().apply(block)
-
-    setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
-        override fun onChildViewAdded(parent: View?, child: View?) {
-            child?.let { listener.onAddView(this@setOnHierarchyChangeListener, it) }
-        }
-
-        override fun onChildViewRemoved(parent: View?, child: View?) {
-            child?.let { listener.onRemoveView(this@setOnHierarchyChangeListener, it) }
-        }
-    })
-}
-
-class HierarchyChangeListener {
-    var onAddView: (ViewGroup, View) -> Unit = { _, _ -> }
-    var onRemoveView: (ViewGroup, View) -> Unit = { _, _ -> }
-
-    fun onAdd(block: (ViewGroup, View) -> Unit) {
-        onAddView = block
-    }
-
-    fun onRemove(block: (ViewGroup, View) -> Unit) {
-        onRemoveView = block
-    }
-}

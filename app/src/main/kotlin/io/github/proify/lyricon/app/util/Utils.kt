@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.app.util
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Process
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.edit
@@ -30,11 +33,11 @@ import io.github.proify.lyricon.app.ui.activity.MainActivity
 import java.util.Locale
 
 object Utils {
-    inline fun SharedPreferences.commitEdit(action: SharedPreferences.Editor.() -> Unit) =
+    inline fun SharedPreferences.commitEdit(action: SharedPreferences.Editor.() -> Unit): Unit =
         edit(commit = true) { action() }
 
-    fun getDefaultSharedPreferences(context: Context) =
-        context.getWorldReadableSharedPreferences(context.getPackageName() + "_preferences")
+    fun getDefaultSharedPreferences(context: Context): SharedPreferences =
+        context.getWorldReadableSharedPreferences(context.packageName + "_preferences")
 
     fun Activity.restartApp() {
         val intent =
@@ -46,7 +49,7 @@ object Utils {
 
         @Suppress("DEPRECATION")
         overridePendingTransition(0, 0)
-        android.os.Process.killProcess(android.os.Process.myPid())
+        Process.killProcess(Process.myPid())
     }
 
     fun forceStop(packageName: String?) {

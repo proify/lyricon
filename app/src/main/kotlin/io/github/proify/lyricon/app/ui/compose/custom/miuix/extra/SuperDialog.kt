@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import top.yukonga.miuix.kmp.extra.SuperDialogDefaults
 
-@Suppress("unused")
 @Composable
 fun SuperDialog(
     show: MutableState<Boolean>,
@@ -39,13 +38,11 @@ fun SuperDialog(
     summaryColor: Color = SuperDialogDefaults.summaryColor(),
     backgroundColor: Color = SuperDialogDefaults.backgroundColor(),
     enableWindowDim: Boolean = true,
-    onDismissRequest: (() -> Unit)? = {
-        show.value = false
-    },
+    onDismissRequest: (() -> Unit)? = { show.value = false },
     outsideMargin: DpSize = SuperDialogDefaults.outsideMargin,
     insideMargin: DpSize = SuperDialogDefaults.insideMargin,
     defaultWindowInsetsPadding: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(show.value) {
@@ -64,7 +61,7 @@ fun SuperDialog(
         onDismissRequest,
         outsideMargin,
         insideMargin,
-        defaultWindowInsetsPadding
+        defaultWindowInsetsPadding,
     ) {
         Spacer(modifier = Modifier.height(10.dp))
         content()

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.app.bridge
 
 import android.content.Context
@@ -25,20 +27,22 @@ import java.io.File
 object AppBridge {
 
     @Keep
-    fun isModuleActive(): Boolean = YukiHookAPI.Status.isXposedModuleActive
+    fun isModuleActive(): Boolean =
+        runCatching {
+            YukiHookAPI.Status.isXposedModuleActive
+        }.getOrDefault(false)
 
     @Keep
     fun getPreferenceDirectory(context: Context): File = File(context.filesDir, "preferences")
 
     object LyricStylePrefs {
-        const val DEFAULT_PACKAGE_NAME = Constants.APP_PACKAGE_NAME
-        const val PREF_NAME_BASE_STYLE = "baseLyricStyle"
-        const val PREF_PACKAGE_STYLE_MANAGER = "packageStyleManager"
-        const val KEY_ENABLED_PACKAGES = "enables"
+        const val DEFAULT_PACKAGE_NAME: String = Constants.APP_PACKAGE_NAME
+        const val PREF_NAME_BASE_STYLE: String = "baseLyricStyle"
+        const val PREF_PACKAGE_STYLE_MANAGER: String = "packageStyleManager"
+        const val KEY_ENABLED_PACKAGES: String = "enables"
 
         fun getPackageStylePreferenceName(packageName: String): String =
             "package_style_${packageName.replace(".", "_")}"
 
     }
-
 }

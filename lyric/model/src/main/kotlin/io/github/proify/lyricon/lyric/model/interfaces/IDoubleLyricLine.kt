@@ -15,7 +15,6 @@
  */
 package io.github.proify.lyricon.lyric.model.interfaces
 
-import io.github.proify.lyricon.lyric.model.interfaces.ILyricLine
 import io.github.proify.lyricon.lyric.model.LyricWord
 
 interface IDoubleLyricLine : ILyricLine {

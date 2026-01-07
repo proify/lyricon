@@ -16,7 +16,6 @@
 
 package io.github.proify.lyricon.xposed.hook.systemui
 
-import android.util.Log.v
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.highcapable.kavaref.KavaRef.Companion.resolve
@@ -55,7 +54,8 @@ object SystemUIHooker : YukiBaseHooker() {
                 after {
                     val id = args(0).int()
                     if (id == Constants.statusBarLayoutId) {
-                        setupStatusBarView(result<ViewGroup>()!!)
+                        val result = result<ViewGroup>() ?: return@after
+                        setupStatusBarView(result)
                         layoutInflaterResult?.remove()
                         layoutInflaterResult = null
                     }

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.github.proify.lyricon.app.ui.activity
 
 import android.content.Intent
@@ -42,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
@@ -79,13 +79,11 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MiuixTheme {
-                MainContent(
-                    showRestartFailDialog = model.showRestartFailDialog,
-                    onRestartSysUi = { killSystemUi() },
-                    onRestartApp = { restartApp() },
-                )
-            }
+            MainContent(
+                showRestartFailDialog = model.showRestartFailDialog,
+                onRestartSysUi = { killSystemUi() },
+                onRestartApp = { restartApp() },
+            )
         }
 
         collectEvent<SettingChangedEvent>(state = Lifecycle.State.CREATED) {
@@ -94,7 +92,7 @@ class MainActivity : BaseActivity() {
     }
 
     class MyViewModel : ViewModel() {
-        val showRestartFailDialog = mutableStateOf(false)
+        val showRestartFailDialog: MutableState<Boolean> = mutableStateOf(false)
     }
 }
 
@@ -117,7 +115,6 @@ fun MainContent(
             RestartFailDialog(showRestartFailDialog)
         },
     ) { scope ->
-
         scope.item("state") {
             val isModuleActive = AppBridge.isModuleActive()
             Card(
@@ -180,7 +177,6 @@ fun MainContent(
                 )
             }
         }
-
         scope.item("style") {
             Card(
                 modifier =
@@ -214,7 +210,6 @@ fun MainContent(
                 )
             }
         }
-
         scope.item("provider") {
             Card(
                 modifier =
@@ -234,7 +229,6 @@ fun MainContent(
                 )
             }
         }
-
         scope.item("other") {
             Card(
                 modifier =
@@ -267,14 +261,11 @@ fun MainContent(
     }
 }
 
-/**
- * 提取重复的 Icon 容器，保持代码整洁
- */
 @Composable
 fun IconBox(
     backgroundColor: Color,
     iconRes: Int,
-    iconSize: androidx.compose.ui.unit.Dp = 24.dp,
+    iconSize: Dp = 24.dp,
 ) {
     Box(
         modifier =
@@ -296,13 +287,13 @@ fun IconBox(
 @Composable
 fun RestartFailDialog(showState: MutableState<Boolean>) {
     SuperDialog(
-        title = stringResource(id = R.string.restart_fail),
-        summary = stringResource(id = R.string.message_app_restart_fail),
+        title = stringResource(R.string.restart_fail),
+        summary = stringResource(R.string.message_app_restart_fail),
         show = showState,
         onDismissRequest = { showState.value = false },
     ) {
         TextButton(
-            text = stringResource(id = R.string.ok),
+            text = stringResource(R.string.ok),
             onClick = { showState.value = false },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -326,7 +317,6 @@ fun Actions(
                 tint = MiuixTheme.colorScheme.onSurface,
             )
         }
-
         ListPopup(
             show = showPopup,
             alignment = PopupPositionProvider.Align.TopRight,
@@ -334,8 +324,8 @@ fun Actions(
         ) {
             val items =
                 listOf(
-                    stringResource(id = R.string.restart_sui),
-                    stringResource(id = R.string.restart_app),
+                    stringResource(R.string.restart_sui),
+                    stringResource(R.string.restart_app),
                 )
             ListPopupColumn {
                 items.forEachIndexed { index, string ->

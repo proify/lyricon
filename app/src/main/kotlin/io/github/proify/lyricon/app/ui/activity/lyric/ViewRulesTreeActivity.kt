@@ -58,12 +58,11 @@ private data class VisibilityOption(
 class ViewRulesTreeActivity : ViewTreeActivity() {
 
     private val viewModel: RuleViewModel by viewModels()
-
     private val activeRuleColor = Color(color = 0xFF66BB6A)
 
     override fun getToolBarTitle(): String = getString(R.string.activity_view_rules)
 
-    override fun createViewModel() = object : ViewTreeViewModel() {
+    override fun createViewModel(): ViewTreeViewModel = object : ViewTreeViewModel() {
         override fun handleNodeClick(node: Node<ViewTreeNode>) {
             val nodeId = node.content.id ?: return
             viewModel.openSelection(nodeId)
@@ -103,8 +102,8 @@ class ViewRulesTreeActivity : ViewTreeActivity() {
     }
 
     class RuleViewModel : ViewModel() {
-        val showOptions = mutableStateOf(false)
-        val editId = mutableStateOf("")
+        val showOptions: MutableState<Boolean> = mutableStateOf(false)
+        val editId: MutableState<String> = mutableStateOf("")
 
         private val _currentMode = mutableIntStateOf(VisibilityRule.MODE_NORMAL)
         val currentMode: State<Int> = _currentMode

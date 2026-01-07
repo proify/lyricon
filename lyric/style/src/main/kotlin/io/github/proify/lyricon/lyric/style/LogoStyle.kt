@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("KotlinConstantConditions")
+
 package io.github.proify.lyricon.lyric.style
 
 import android.content.SharedPreferences
@@ -86,7 +88,7 @@ data class LogoStyle(
         editor.putFloat("lyric_style_logo_height", height)
     }
 
-    fun color(lightMode: Boolean) = if (lightMode) lightModeColor else darkModeColor
+    fun color(lightMode: Boolean): LogoColor = if (lightMode) lightModeColor else darkModeColor
 
     object Defaults {
         const val ENABLE: Boolean = true

@@ -25,7 +25,7 @@ class RemoteProviderService(var provider: RemoteProvider?) : IRemoteService.Stub
     private var remotePlayer: RemotePlayer? =
         provider?.let { RemotePlayer(it.providerInfo, ProviderActivePlayerDispatcher) }
 
-    override fun getPlayer() = remotePlayer
+    override fun getPlayer(): RemotePlayer? = remotePlayer
 
     fun release() {
         if (remotePlayer != null && remotePlayer is RemotePlayer) {

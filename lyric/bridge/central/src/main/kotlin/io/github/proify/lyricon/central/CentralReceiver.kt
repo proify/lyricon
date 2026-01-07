@@ -74,8 +74,8 @@ internal object CentralReceiver : BroadcastReceiver() {
                 )
             }
             if (providerInfo == null
-                || providerInfo.providerPackageName.isNullOrBlank()
-                || providerInfo.playerPackageName.isNullOrBlank()
+                || providerInfo.providerPackageName.isBlank()
+                || providerInfo.playerPackageName.isBlank()
             ) {
                 Log.e(TAG, "Provider info is invalid")
                 return
@@ -102,7 +102,9 @@ internal object CentralReceiver : BroadcastReceiver() {
 
         try {
             val subscriberInfo = binder.subscriberInfo
-            if (subscriberInfo.packageName.isNullOrBlank()) {
+            if (subscriberInfo.packageName.isBlank()
+                || subscriberInfo.processName.isBlank()
+            ) {
                 Log.e(TAG, "Subscriber info is invalid")
                 return
             }

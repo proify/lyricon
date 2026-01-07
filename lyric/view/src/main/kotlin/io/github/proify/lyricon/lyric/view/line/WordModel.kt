@@ -32,29 +32,29 @@ data class WordModel(
     var textWidth: Float = 0f
         private set
 
-    var startPosition = 0f
+    var startPosition: Float = 0f
         private set
 
     var endPosition: Float = 0f
         private set
 
     val chars: CharArray = text.toCharArray()
-    val charWidths = FloatArray(text.length)
-    val charStartPositions = FloatArray(text.length) { 0f }
-    val charEndPositions = FloatArray(text.length) { 0f }
+    val charWidths: FloatArray = FloatArray(text.length)
+    val charStartPositions: FloatArray = FloatArray(text.length) { 0f }
+    val charEndPositions: FloatArray = FloatArray(text.length) { 0f }
 
-    val charOffsetMode = chars.all { isCharChinese(it) }
-    val charOffsetYArray = Array(chars.size) { CharOffset() }
+    val charOffsetMode: Boolean = chars.all { isCharChinese(it) }
+    val charOffsetYArray: Array<CharOffset> = Array(chars.size) { CharOffset() }
 
     private fun isCharChinese(char: Char) = char in '\u4e00'..'\u9fff'
 
-    inner class CharOffset(
+     class CharOffset(
         var from: Float = 0f,
         var to: Float = 0f,
         var value: Float = 0f
     )
 
-    fun getCharOffsetY(charIndex: Int) = charOffsetYArray.getOrNull(charIndex)?.value ?: 0f
+    fun getCharOffsetY(charIndex: Int): Float = charOffsetYArray.getOrNull(charIndex)?.value ?: 0f
 
     val offsetY: Float
         get() = charOffsetYArray.firstOrNull()?.from ?: 0f

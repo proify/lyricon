@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.common.util
 
 import android.content.SharedPreferences
@@ -60,8 +62,7 @@ class SafePreferences private constructor(
         key = key,
         primary = { delegate.getBoolean(key, defValue) },
         fallback = {
-            val value = delegate.all[key]
-            when (value) {
+            when (val value = delegate.all[key]) {
                 is Boolean -> value
                 is String -> value.toBooleanStrictOrNull()
                 is Number -> value.toInt() != 0
@@ -161,11 +162,7 @@ class SafePreferences private constructor(
          * 如果已经是SafePreferences则直接返回,避免重复包装
          */
         fun from(preferences: SharedPreferences): SafePreferences =
-            if (preferences is SafePreferences) {
-                preferences
-            } else {
-                SafePreferences(preferences)
-            }
+            preferences as? SafePreferences ?: SafePreferences(preferences)
     }
 }
 

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.xposed.util
 
 import android.view.View
@@ -29,11 +31,11 @@ import java.util.concurrent.ConcurrentHashMap
 object ViewVisibilityTracker {
 
     // 用于标记被追踪的视图
-    const val TRACKING_TAG_ID = 0x7F137666
+    const val TRACKING_TAG_ID: Int = 0x7F137666
 
     // 自定义可见性标记(避免与系统常量冲突)
-    const val CUSTOM_VISIBLE = 123456789
-    const val CUSTOM_GONE = 987654321
+    const val CUSTOM_VISIBLE: Int = 114514
+    const val CUSTOM_GONE: Int = 1919810
 
     // Android 系统可见性标志掩码
     private const val VISIBILITY_FLAG_MASK = 0x0000000C
@@ -46,7 +48,7 @@ object ViewVisibilityTracker {
     /**
      * 初始化 Hook
      */
-    fun initialize(classLoader: ClassLoader) {
+    fun initialize(@Suppress("unused") classLoader: ClassLoader) {
         hookResult = View::class.resolve()
             .firstMethod {
                 name = "setFlags"
@@ -56,7 +58,7 @@ object ViewVisibilityTracker {
                     handleSetFlags(instance as View, args)
                 }
             }
-        YLog.debug("ViewVisibilityTracker initialized. hookResult: " + hookResult)
+        YLog.debug("ViewVisibilityTracker initialized. hookResult: $hookResult")
     }
 
     private fun handleSetFlags(view: View, args: Array<Any?>) {

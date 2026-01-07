@@ -31,7 +31,7 @@ class LicensesActivity : BaseActivity() {
 
 @Composable
 private fun Content() {
-    AppToolBarListContainer { scope ->
+    AppToolBarListContainer { _ ->
 
     }
 }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package io.github.proify.lyricon.lyric.model
 
 import android.os.Parcelable
@@ -45,19 +47,23 @@ data class Song(
     var lyrics: List<DoubleLyricLine>? = null,
 ) : Parcelable, DeepCopyable<Song>, Normalize<Song> {
 
-    override fun deepCopy() = copy(
+    override fun deepCopy(): Song = copy(
         lyrics = lyrics?.deepCopy()
     )
 
-    override fun normalize() = deepCopy().apply {
-        lyrics = lyrics?.map { line ->
-            if (line.duration <= 0) {
-                line.copy(duration = line.end - line.begin)
-            } else {
-                line
+    override fun normalize(): Song = deepCopy().apply {
+        lyrics = lyrics
+            ?.map { line ->
+                //尝试修复
+                if (line.duration <= 0) {
+                    line.copy(duration = line.end - line.begin)
+                } else {
+                    line
+                }
             }
-        }?.filter { line ->
-            line.begin >= 0 && line.begin < line.end
-        }?.normalizeSortByTime()
+            ?.filter { line ->
+                line.begin >= 0 && line.begin < line.end && line.duration > 0
+            }
+            ?.normalizeSortByTime()
     }
 }

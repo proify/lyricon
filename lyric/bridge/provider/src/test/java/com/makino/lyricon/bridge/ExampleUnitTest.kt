@@ -16,6 +16,8 @@
 
 package com.makino.lyricon.bridge
 
+import io.github.proify.lyricon.provider.remote.RemoteService
+import io.github.proify.lyricon.provider.remote.addOnConnectionListener
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -28,5 +30,11 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+        val service: RemoteService? = null
+        service?.addOnConnectionListener {
+            onConnected {
+                it.service
+            }
+        }
     }
 }

@@ -43,5 +43,5 @@ data class LyricWord(
     override var metadata: LyricMetadata? = null,
 ) : ILyricWord, Parcelable, DeepCopyable<LyricWord> {
 
-    override fun deepCopy() = copy()
+    override fun deepCopy(): LyricWord = copy()
 }

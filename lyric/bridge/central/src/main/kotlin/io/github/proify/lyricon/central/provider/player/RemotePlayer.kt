@@ -89,10 +89,8 @@ class RemotePlayer(
                 Long.SIZE_BYTES
             ).apply {
                 setProtect(OsConstants.PROT_READ or OsConstants.PROT_WRITE)
+                positionReadBuffer = mapReadOnly()
             }
-
-            positionReadBuffer = positionSharedMemory!!.mapReadOnly()
-
             Log.i(TAG, "SharedMemory initialized")
         } catch (t: Throwable) {
             Log.e(TAG, "Failed to init SharedMemory", t)

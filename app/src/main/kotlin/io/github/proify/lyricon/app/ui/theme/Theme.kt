@@ -31,17 +31,17 @@ import top.yukonga.miuix.kmp.theme.darkColorScheme
 import top.yukonga.miuix.kmp.theme.lightColorScheme
 import top.yukonga.miuix.kmp.theme.platformDynamicColors
 
-
 @Composable
 fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val view = LocalView.current
-    val window = (view.context as Activity).window
+    val context = view.context
+    val window = if (context is Activity) context.window else null
 
     val color = getThemeColorScheme()
     SideEffect {
-        WindowInsetsControllerCompat(window, view)
+        if (window != null) WindowInsetsControllerCompat(window, view)
             .isAppearanceLightStatusBars = color.isDark.not()
     }
     MiuixTheme(
@@ -62,7 +62,6 @@ fun getThemeColorScheme(): AppColors {
         AppThemeUtils.MODE_SYSTEM -> isSystemInDarkTheme()
         else -> isSystemInDarkTheme()
     }
-
     return when {
         isEnableMonet -> AppColors(platformDynamicColors(dark), dark)
         dark -> AppColors(appDarkColorScheme(), true)
@@ -75,7 +74,7 @@ class AppColors(
     val isDark: Boolean
 )
 
-fun appDarkColorScheme() = darkColorScheme(
+fun appDarkColorScheme(): Colors = darkColorScheme(
     error = Color(0xFFF44336),
     errorContainer = Color(0xFFEF9A9A),
 )

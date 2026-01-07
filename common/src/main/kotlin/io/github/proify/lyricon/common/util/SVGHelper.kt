@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.common.util
 
 import android.graphics.Bitmap

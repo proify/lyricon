@@ -26,14 +26,12 @@ internal class ProviderBinder(
     private val remoteServiceBinder: RemoteServiceBinder<IRemoteService?>
 ) : IProviderBinder.Stub() {
 
-    val providerInfoByteArray by lazy {
+    private val providerInfoByteArray by lazy {
         json.encodeToString(ProviderInfo.serializer(), provider.providerInfo).toByteArray()
     }
 
     companion object {
-        val json = Json {
-            ignoreUnknownKeys = true
-        }
+        val json = Json { ignoreUnknownKeys = true }
     }
 
     private val registrationCallbacks = CopyOnWriteArraySet<OnRegistrationCallback>()
@@ -50,7 +48,7 @@ internal class ProviderBinder(
     }
 
     override fun getProviderService(): IProviderService = providerService
-    override fun getProviderInfo(): ByteArray? = providerInfoByteArray
+    override fun getProviderInfo(): ByteArray = providerInfoByteArray
 
     interface OnRegistrationCallback {
         fun onRegistered()

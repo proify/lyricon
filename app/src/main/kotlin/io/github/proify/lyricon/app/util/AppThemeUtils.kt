@@ -21,9 +21,9 @@ import io.github.proify.lyricon.app.util.Utils.commitEdit
 import io.github.proify.lyricon.app.util.Utils.getDefaultSharedPreferences
 
 object AppThemeUtils {
-    const val MODE_SYSTEM = 0
-    const val MODE_LIGHT = 1
-    const val MODE_DARK = 2
+    const val MODE_SYSTEM: Int = 0
+    const val MODE_LIGHT: Int = 1
+    const val MODE_DARK: Int = 2
 
     private const val KEY_THEME_MODE = "theme_mode"
     private const val KEY_MONET_COLOR = "theme_monet_color"

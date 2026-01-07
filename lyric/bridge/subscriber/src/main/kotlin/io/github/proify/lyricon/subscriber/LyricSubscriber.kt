@@ -56,8 +56,6 @@ class LyricSubscriber(var context: Context) {
         )
     }
 
-    val isActivate: Boolean get() = service.isActivate
-
     fun notifyRegister() {
         val bundle = Bundle()
         bundle.putBinder(Constants.EXTRA_BINDER, binder)
@@ -78,9 +76,5 @@ class LyricSubscriber(var context: Context) {
                 }
             }
         }
-    }
-
-    companion object {
-        private const val TAG = "Subscriber"
     }
 }

@@ -158,5 +158,7 @@
     <string name="option_app_theme_mode_dark">Dark</string>
     <string name="option_app_theme_mode_follow_system">Follow System</string>
     <string name="item_app_theme_monet_color">Dynamic Color</string>
+    <string name="item_logo_size">Size</string>
+    <string name="option_logo_color_follow_text">Follow the text color</string>
 
 </resources>

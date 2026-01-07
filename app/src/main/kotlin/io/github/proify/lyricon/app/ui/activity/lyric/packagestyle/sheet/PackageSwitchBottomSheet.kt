@@ -285,7 +285,7 @@ fun PackageSwitchBottomSheet(
 // Helper Functions - 业务逻辑辅助函数
 // ============================================================================
 
-private suspend fun handlePackageSelectionChanged(
+private fun handlePackageSelectionChanged(
     viewModel: PackageSwitchViewModel,
     state: PackageSwitchUiState,
     selectedPackages: Set<String>,

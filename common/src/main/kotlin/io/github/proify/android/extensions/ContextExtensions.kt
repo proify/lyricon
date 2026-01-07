@@ -19,7 +19,7 @@ package io.github.proify.android.extensions
 import android.content.Context
 import android.content.SharedPreferences
 
-fun Context.getPrivateSharedPreferences(name: String) =
+fun Context.getPrivateSharedPreferences(name: String): SharedPreferences =
     getSharedPreferences(name, Context.MODE_PRIVATE)
 
 fun Context.getWorldReadableSharedPreferences(name: String): SharedPreferences = try {
@@ -28,6 +28,6 @@ fun Context.getWorldReadableSharedPreferences(name: String): SharedPreferences =
     getPrivateSharedPreferences(name)
 }
 
-fun Context.getSharedPreferences(name: String, worldReadable: Boolean) =
+fun Context.getSharedPreferences(name: String, worldReadable: Boolean): SharedPreferences =
     if (worldReadable) getWorldReadableSharedPreferences(name)
     else getPrivateSharedPreferences(name)

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.app.ui.preference
 
 import android.content.SharedPreferences
@@ -82,7 +84,7 @@ fun LogoColorPreference(
                 var isChecked by remember { mutableStateOf(logoColor.followTextColor) }
                 SuperCheckbox(
                     insideMargin = PaddingValues(horizontal = 16.dp),
-                    title = stringResource(R.string.option_logo_color_follow_text_color),
+                    title = stringResource(R.string.option_logo_color_follow_text),
                     checked = isChecked,
                     onCheckedChange = {
                         isChecked = it

@@ -39,7 +39,9 @@ data class ViewTreeNode(
     fun findById(id: String?): ViewTreeNode? {
         if (this.id == id) return this
         children?.forEach {
-            it.findById(id)?.let { return it }
+            it.findById(id)?.let { node ->
+                return node
+            }
         }
         return null
     }

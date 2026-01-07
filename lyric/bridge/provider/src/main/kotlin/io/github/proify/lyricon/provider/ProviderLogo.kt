@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package io.github.proify.lyricon.provider
 
 import android.graphics.Bitmap
@@ -25,7 +27,6 @@ import androidx.core.graphics.drawable.toBitmap
 import io.github.proify.lyricon.provider.ProviderLogo.Companion.TYPE_BITMAP
 import io.github.proify.lyricon.provider.ProviderLogo.Companion.TYPE_SVG
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.TypeParceler
 import kotlinx.serialization.Serializable
 import java.io.ByteArrayOutputStream
 import kotlin.io.encoding.Base64
@@ -38,7 +39,7 @@ import kotlin.io.encoding.Base64
 @Parcelize
 data class ProviderLogo(
     val data: ByteArray,
-    @param:Type @property:Type val type: Int
+    val type: Int
 ) : Parcelable {
 
     /**
@@ -47,17 +48,13 @@ data class ProviderLogo(
     fun toBitmap(): Bitmap? = if (type == TYPE_BITMAP) {
         runCatching {
             BitmapFactory.decodeByteArray(
-                data,
-                0,
-                data.size,
+                data, 0, data.size,
                 BitmapFactory.Options().apply {
                     inPreferredConfig = Bitmap.Config.ARGB_8888
                 }
             )
         }.getOrNull()
-    } else {
-        null
-    }
+    } else null
 
     /**
      * 将数据解析为 SVG 字符串。
@@ -69,8 +66,8 @@ data class ProviderLogo(
     annotation class Type
 
     companion object {
-        const val TYPE_BITMAP = 0
-        const val TYPE_SVG = 1
+        const val TYPE_BITMAP: Int = 0
+        const val TYPE_SVG: Int = 1
 
         /**
          * 由 [Bitmap] 构建 Logo。
@@ -97,19 +94,28 @@ data class ProviderLogo(
          * 由 Base64 编码的 PNG 数据构建 Logo。
          */
         fun fromBase64(base64: String): ProviderLogo =
-            ProviderLogo(Base64.Default.decode(base64), TYPE_BITMAP)
+            ProviderLogo(Base64.decode(base64), TYPE_BITMAP)
 
         private fun Bitmap.toPngBytes(recycle: Boolean): ByteArray =
             ByteArrayOutputStream().use { out ->
                 compress(Bitmap.CompressFormat.PNG, 100, out)
                 out.toByteArray()
             }.also { if (recycle) recycle() }
+    }
 
-        private fun typeToString(type: Int): String =
-            when (type) {
-                TYPE_BITMAP -> "BITMAP"
-                TYPE_SVG -> "SVG"
-                else -> "UNKNOWN"
-            }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ProviderLogo) return false
+
+        if (type != other.type) return false
+        if (!data.contentEquals(other.data)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = type
+        result = 31 * result + data.contentHashCode()
+        return result
     }
 }

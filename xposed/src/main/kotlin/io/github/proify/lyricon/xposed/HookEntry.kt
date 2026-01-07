@@ -27,15 +27,17 @@ import io.github.proify.lyricon.xposed.util.Utils
 @InjectYukiHookWithXposed(modulePackageName = PackageNames.APPLICATION)
 open class HookEntry : IYukiHookXposedInit {
 
-    override fun onHook() = YukiHookAPI.encase {
-        onAppLifecycle {
-            onCreate {
-                Dirs.initialize(applicationContext)
-                Utils.appContext = this.applicationContext
+    override fun onHook() {
+        YukiHookAPI.encase {
+            onAppLifecycle {
+                onCreate {
+                    Dirs.initialize(applicationContext)
+                    Utils.appContext = this.applicationContext
+                }
             }
+            loadApp(PackageNames.APPLICATION, AppHooker)
+            loadApp(PackageNames.SYSTEM_UI, SystemUIHooker)
         }
-        loadApp(PackageNames.APPLICATION, AppHooker)
-        loadApp(PackageNames.SYSTEM_UI, SystemUIHooker)
     }
 
     override fun onInit() {

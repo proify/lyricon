@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("AssignedValueIsNeverRead")
+
 package io.github.proify.lyricon.app.ui.compose.color
 
 import android.content.ClipData

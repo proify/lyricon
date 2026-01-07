@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.lyric.model.extensions
 
 import io.github.proify.lyricon.lyric.model.interfaces.ILyricTiming

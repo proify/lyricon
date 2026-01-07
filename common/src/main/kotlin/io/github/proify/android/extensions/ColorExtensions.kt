@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.android.extensions
 
 import android.graphics.Color
@@ -40,7 +42,7 @@ val Int.isDarkColor: Boolean
  * @param threshold 亮度阈值 (0.0-1.0)，低于此值视为深色。
  */
 fun Int.isDarkAgainst(
-    @ColorInt background: Int = Color.WHITE,
+    @ColorInt background: Int,
     @FloatRange(from = 0.0, to = 1.0) threshold: Double = 0.5
 ): Boolean {
     val alpha = Color.alpha(this)

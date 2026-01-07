@@ -48,14 +48,15 @@ data class LyricLine(
     override var words: List<LyricWord>? = null,
 ) : ILyricLine, Parcelable, DeepCopyable<LyricLine>, Normalize<LyricLine> {
 
-    override fun deepCopy() = copy(
+    override fun deepCopy(): LyricLine = copy(
         words = words?.deepCopy()
     )
 
-    override fun normalize() = deepCopy().apply {
+    override fun normalize(): LyricLine = deepCopy().apply {
         words = words?.normalize()
-        if (!words.isNullOrEmpty()) {
-            text = words!!.joinToString("") { it.text ?: "" }
-        }
+        text = words
+            ?.takeIf { it.isNotEmpty() }
+            ?.joinToString("") { it.text.orEmpty() }
+            ?: text
     }
 }

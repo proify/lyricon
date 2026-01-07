@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.xposed.util
 
-import android.R.attr.targetClass
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
@@ -104,7 +105,9 @@ object StatusBarColorMonitor {
                         color.isDarkAgainst(Color.BLACK)
                     }
                     it.onColorChange(StatusColor(color, isLight))
-                }.onFailure { YLog.error(it) }
+                }.onFailure { e ->
+                    YLog.error(e)
+                }
             }
         }
 

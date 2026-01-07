@@ -33,8 +33,8 @@ import kotlinx.serialization.Serializable
  * @property duration 持续时间
  * @property isAlignedRight 是否显示在右边
  * @property metadata 元数据
- * @property text 文本
- * @property words 文本单词列表
+ * @property text 主文本
+ * @property words 主文本单词列表
  * @property secondaryText 次要文本
  * @property secondaryWords 次要文本单词列表
  */
@@ -52,19 +52,22 @@ data class DoubleLyricLine(
     override var secondaryWords: List<LyricWord>? = null,
 ) : IDoubleLyricLine, Parcelable, DeepCopyable<DoubleLyricLine>, Normalize<DoubleLyricLine> {
 
-    override fun deepCopy() = copy(
+    override fun deepCopy(): DoubleLyricLine = copy(
         words = words?.deepCopy(),
         secondaryWords = secondaryWords?.deepCopy()
     )
 
-    override fun normalize() = deepCopy().apply {
+    override fun normalize(): DoubleLyricLine = deepCopy().apply {
         words = words?.normalize()
-        if (!words.isNullOrEmpty()) {
-            text = words!!.joinToString("") { it.text ?: "" }
-        }
+        text = words
+            ?.takeIf { it.isNotEmpty() }
+            ?.joinToString("") { it.text.orEmpty() }
+            ?: text
+
         secondaryWords = secondaryWords?.normalize()
-        if (!secondaryWords.isNullOrEmpty()) {
-            secondaryText = secondaryWords!!.joinToString("") { it.text ?: "" }
-        }
+        secondaryText = secondaryWords
+            ?.takeIf { it.isNotEmpty() }
+            ?.joinToString("") { it.text.orEmpty() }
+            ?: secondaryText
     }
 }

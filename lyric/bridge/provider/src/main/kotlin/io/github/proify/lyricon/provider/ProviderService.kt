@@ -17,5 +17,4 @@
 package io.github.proify.lyricon.provider
 
 /** no impl  */
-class ProviderService : IProviderService.Stub() {
-}
+class ProviderService : IProviderService.Stub()

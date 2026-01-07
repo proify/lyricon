@@ -18,7 +18,7 @@ package io.github.proify.lyricon.xposed.util
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.forEach
-import com.highcapable.yukihookapi.hook.log.YLog
+import io.github.proify.lyricon.common.util.ResourceMapper
 import io.github.proify.lyricon.lyric.style.VisibilityRule
 
 /**
@@ -33,7 +33,7 @@ class ViewVisibilityController(private val rootViewGroup: ViewGroup) {
      * @param isPlaying 是否正在播放
      */
     fun applyVisibilityRules(rules: List<VisibilityRule>, isPlaying: Boolean) {
-        YLog.debug("Applying visibility rules... " + rules)
+        //YLog.debug("Applying visibility rules... $rules")
         if (rules.isEmpty()) return
 
         rules.forEach { rule ->
@@ -43,7 +43,7 @@ class ViewVisibilityController(private val rootViewGroup: ViewGroup) {
 
     private fun applyRuleToView(rule: VisibilityRule, isPlaying: Boolean) {
         val viewId = rule.id
-        if (viewId.isNullOrBlank()) return
+        if (viewId.isBlank()) return
 
         val targetView = findViewByResourceName(rootViewGroup, viewId) ?: return
 

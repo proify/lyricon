@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.app.util
 
 import androidx.lifecycle.Lifecycle
@@ -37,32 +39,33 @@ import kotlinx.coroutines.launch
  * - 防止内存泄漏
  */
 object EventBus {
-
-    val _bus = MutableSharedFlow<Any>(
-        replay = 0,
-        extraBufferCapacity = 64,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
+    val bus: MutableSharedFlow<Any> =
+        MutableSharedFlow(
+            replay = 0,
+            extraBufferCapacity = 64,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        )
 
     /**
      * 发送事件(非挂起,适用于非协程环境)
      * @return 是否成功发送
      */
-    fun post(event: Any): Boolean = _bus.tryEmit(event)
+    fun post(event: Any): Boolean = bus.tryEmit(event)
 
     /**
      * 发送事件(挂起函数,保证发送成功)
      */
     suspend fun emit(event: Any) {
-        _bus.emit(event)
+        bus.emit(event)
     }
 
     /**
      * 获取指定类型事件的 Flow
      * @param T 事件类型
      */
-    inline fun <reified T> flow(): Flow<T> = _bus
-        .filterIsInstance<T>()
+    inline fun <reified T> flow(): Flow<T> =
+        bus
+            .filterIsInstance<T>()
 
     /**
      * 在 LifecycleOwner 中安全收集事件
@@ -75,7 +78,7 @@ object EventBus {
     inline fun <reified T> collect(
         owner: LifecycleOwner,
         state: Lifecycle.State = Lifecycle.State.STARTED,
-        crossinline block: suspend (T) -> Unit
+        crossinline block: suspend (T) -> Unit,
     ) {
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(state) {
@@ -92,7 +95,7 @@ object EventBus {
      */
     inline fun <reified T> collect(
         scope: CoroutineScope,
-        crossinline block: suspend (T) -> Unit
+        crossinline block: suspend (T) -> Unit,
     ) {
         scope.launch {
             flow<T>().collect { block(it) }
@@ -107,10 +110,10 @@ object EventBus {
      */
     inline fun <reified T> collectOnce(
         scope: CoroutineScope,
-        crossinline block: suspend (T) -> Unit
+        crossinline block: suspend (T) -> Unit,
     ) {
         scope.launch {
-            flow<T>().first().let { block(it) }
+            block(flow<T>().first())
         }
     }
 
@@ -118,24 +121,22 @@ object EventBus {
      * 获取订阅者数量(用于调试)
      */
     val subscriberCount: Int
-        get() = _bus.subscriptionCount.value
+        get() = bus.subscriptionCount.value
 }
 
 /**
- * 扩展函数: LifecycleOwner 快速订阅事件
+ * LifecycleOwner 快速订阅事件
  */
 inline fun <reified T> LifecycleOwner.collectEvent(
     state: Lifecycle.State = Lifecycle.State.STARTED,
-    crossinline block: suspend (T) -> Unit
+    crossinline block: suspend (T) -> Unit,
 ) {
     EventBus.collect(this, state, block)
 }
 
 /**
- * 扩展函数: CoroutineScope 快速订阅事件
+ * CoroutineScope 快速订阅事件
  */
-inline fun <reified T> CoroutineScope.collectEvent(
-    crossinline block: suspend (T) -> Unit
-) {
+inline fun <reified T> CoroutineScope.collectEvent(crossinline block: suspend (T) -> Unit) {
     EventBus.collect(this, block)
 }

@@ -85,11 +85,6 @@ import kotlin.coroutines.resumeWithException
 
 abstract class ViewTreeActivity : BaseLyricActivity() {
 
-    // ==================== UI State & Event ====================
-
-    /**
-     * UI 状态的单一数据源
-     */
     data class ViewTreeUiState(
         val isLoading: Boolean = true,
         val viewTreeData: ViewTreeNode? = null,
@@ -97,21 +92,16 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
         val nodeColors: Map<String, Color> = emptyMap()
     )
 
-    /**
-     * UI 事件
-     */
     sealed interface ViewTreeUiEvent {
         data class NodeClicked(val node: Node<ViewTreeNode>) : ViewTreeUiEvent
         data object RefreshRequested : ViewTreeUiEvent
         data object RetryLoading : ViewTreeUiEvent
     }
 
-    // ==================== Repository ====================
-
     /**
      * Repository 负责数据获取和缓存
      */
-    inner class ViewTreeRepository {
+    class ViewTreeRepository {
         private var cachedTree: ViewTreeNode? = null
 
         suspend fun getViewTree(): Result<ViewTreeNode> {
@@ -131,7 +121,7 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
                 ) { compressedData ->
                     try {
                         val jsonData = compressedData.inflate()
-                        val viewTree = Json.Default.decodeFromString<ViewTreeNode>(jsonData)
+                        val viewTree = Json.decodeFromString<ViewTreeNode>(jsonData)
                         continuation.resume(viewTree)
                     } catch (e: Exception) {
                         continuation.resumeWithException(e)
@@ -142,9 +132,7 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
             }
     }
 
-    // ==================== ViewModel ====================
-
-    abstract inner class ViewTreeViewModel : ViewModel() {
+    abstract class ViewTreeViewModel : ViewModel() {
         private val repository = ViewTreeRepository()
 
         private val _uiState = MutableStateFlow(ViewTreeUiState())
@@ -318,7 +306,7 @@ abstract class ViewTreeActivity : BaseLyricActivity() {
     @Composable
     private fun ViewTreeList(
         viewTree: ViewTreeNode,
-        nodeColors: Map<String, Color>,
+        @Suppress("unused") nodeColors: Map<String, Color>,
         hazeState: HazeState,
         scrollBehavior: ScrollBehavior,
         paddingValues: PaddingValues

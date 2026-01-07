@@ -28,7 +28,7 @@ object AppCache {
 
     @Synchronized
     fun cacheIcon(packageName: String, icon: Drawable) {
-        iconCache.put(packageName, icon)
+        iconCache[packageName] = icon
     }
 
     @Synchronized
@@ -36,6 +36,6 @@ object AppCache {
 
     @Synchronized
     fun cacheLabel(packageName: String, label: String) {
-        labelCache.put(packageName, label)
+        labelCache[packageName] = label
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("COMPOSE_APPLIER_CALL_MISMATCH")
+@file:Suppress("COMPOSE_APPLIER_CALL_MISMATCH", "unused")
 
 package io.github.proify.lyricon.app.ui.compose.custom.miuix.extra
 

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.provider
 
 import android.content.Context
@@ -20,9 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * 歌词提供者类
  *
- * @property providerInfo 提供者信息
- * @property service 对外暴露的远程服务接口
- * @property isActivated 是否处于激活状态
+ * @property context 上下文
+ * @property providerPackageName 提供者包名
+ * @property playerPackageName 播放器包名
+ * @property logo 播放器Logo
+ * @property metadata 提供者元数据
  */
 class LyriconProvider(
     context: Context,
@@ -70,10 +74,6 @@ class LyriconProvider(
     /** 远程服务接口 */
     val service: RemoteService = remoteServiceProxy
 
-    /** 远程服务是否已激活 */
-    val isActivated: Boolean
-        get() = service.isActivated
-
     init {
         CentralServiceReceiver.initialize(appContext)
         CentralServiceReceiver.addServiceListener(centralServiceListener)
@@ -109,7 +109,6 @@ class LyriconProvider(
      * - 向中心服务发送注册广播
      */
     private fun performRegistration() {
-
         connectionTimeoutJob?.cancel()
         connectionTimeoutJob = null
 

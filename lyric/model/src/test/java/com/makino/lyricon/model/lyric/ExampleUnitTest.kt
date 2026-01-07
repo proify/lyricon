@@ -1,10 +1,12 @@
+@file:Suppress("ReplacePrintlnWithLogging")
+
+package com.makino.lyricon.model.lyric
+
 import io.github.proify.lyricon.lyric.model.LyricLine
 import io.github.proify.lyricon.lyric.model.extensions.filterByPosition
 import io.github.proify.lyricon.lyric.model.extensions.filterByPositionOrPrevious
 import org.junit.Test
-import kotlin.collections.toIntArray
 import kotlin.random.Random
-import kotlin.random.nextLong
 import kotlin.system.measureTimeMillis
 
 class ExampleUnitTest {
@@ -82,7 +84,7 @@ class ExampleUnitTest {
         println()
     }
 
-    fun testPosition(
+    private fun testPosition(
         lyrics: List<LyricLine>,
         position: Long,
         label: String,

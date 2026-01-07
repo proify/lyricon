@@ -25,19 +25,13 @@ import java.nio.ByteBuffer
 import kotlin.math.max
 
 internal class RemotePlayerProxy : RemotePlayer, RemoteServiceBinder<IRemotePlayer?> {
-
     companion object {
         private const val TAG = "RemotePlayerProxy"
-
-        private val jsonx = Json {
-            ignoreUnknownKeys = true
-            encodeDefaults = false
-        }
+        private val jsonx = Json { ignoreUnknownKeys = true }
     }
 
     @Volatile
     private var remoteService: IRemotePlayer? = null
-
     private var positionSharedMemory: SharedMemory? = null
     private var positionByteBuffer: ByteBuffer? = null
 
@@ -77,7 +71,7 @@ internal class RemotePlayerProxy : RemotePlayer, RemoteServiceBinder<IRemotePlay
         }
     }
 
-    override fun setSong(song: Song?): Boolean =
+    override fun setSong(song: Song?) =
         executeRemoteCall {
             val bytes = if (song != null) {
                 jsonx.encodeToString(song).toByteArray()
@@ -86,36 +80,31 @@ internal class RemotePlayerProxy : RemotePlayer, RemoteServiceBinder<IRemotePlay
             it.setSong(bytes)
         }
 
-    override fun setPlaybackState(isPlaying: Boolean): Boolean =
+    override fun setPlaybackState(isPlaying: Boolean) =
         executeRemoteCall { it.setPlaybackState(isPlaying) }
 
     override fun seekTo(position: Long): Boolean =
         executeRemoteCall { it.seekTo(max(0, position)) }
 
-    override fun setPosition(position: Long): Boolean {
-        return try {
-            positionByteBuffer?.putLong(0, position)
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to write position to shared buffer", e)
-            false
-        }
+    override fun setPosition(position: Long) = try {
+        positionByteBuffer?.putLong(0, position)
+        true
+    } catch (e: Exception) {
+        Log.e(TAG, "Failed to write position to shared buffer", e)
+        false
     }
 
-    override fun setPositionUpdateInterval(interval: Int): Boolean =
+    override fun setPositionUpdateInterval(interval: Int) =
         executeRemoteCall { it.setPositionUpdateInterval(interval) }
 
-    override fun sendText(text: String?): Boolean =
-        executeRemoteCall { it.sendText(text) }
+    override fun sendText(text: String?) = executeRemoteCall { it.sendText(text) }
 
-    override val isActivated: Boolean
-        get() = remoteService?.asBinder()?.isBinderAlive == true
+    override val isActivated get() = remoteService?.asBinder()?.isBinderAlive == true
 
     private inline fun executeRemoteCall(block: (IRemotePlayer) -> Any?): Boolean {
         val service = remoteService ?: return false
         return try {
-            val result = block(service)
-            when (result) {
+            when (val result = block(service)) {
                 is Boolean -> result
                 else -> true
             }

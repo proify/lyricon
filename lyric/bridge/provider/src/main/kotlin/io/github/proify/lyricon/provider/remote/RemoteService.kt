@@ -1,3 +1,5 @@
+@file:Suppress("unused", "UnusedReceiverParameter")
+
 package io.github.proify.lyricon.provider.remote
 
 import io.github.proify.lyricon.provider.LyriconProvider
@@ -80,8 +82,15 @@ class ConnectionListenerBuilder(
     var onDisconnected: ((LyriconProvider) -> Unit)? = null,
     var onConnectTimeout: ((LyriconProvider) -> Unit)? = null
 ) {
-    fun onConnected(block: (LyriconProvider) -> Unit) = apply { onConnected = block }
-    fun onReconnected(block: (LyriconProvider) -> Unit) = apply { onReconnected = block }
-    fun onDisconnected(block: (LyriconProvider) -> Unit) = apply { onDisconnected = block }
-    fun onConnectTimeout(block: (LyriconProvider) -> Unit) = apply { onConnectTimeout = block }
+    fun onConnected(block: (LyriconProvider) -> Unit): ConnectionListenerBuilder =
+        apply { onConnected = block }
+
+    fun onReconnected(block: (LyriconProvider) -> Unit): ConnectionListenerBuilder =
+        apply { onReconnected = block }
+
+    fun onDisconnected(block: (LyriconProvider) -> Unit): ConnectionListenerBuilder =
+        apply { onDisconnected = block }
+
+    fun onConnectTimeout(block: (LyriconProvider) -> Unit): ConnectionListenerBuilder =
+        apply { onConnectTimeout = block }
 }

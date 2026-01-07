@@ -1,3 +1,7 @@
+@file:Suppress("ReplacePrintlnWithLogging")
+
+package com.makino.lyricon.model.lyric
+
 import io.github.proify.lyricon.lyric.model.LyricWord
 import io.github.proify.lyricon.lyric.model.extensions.normalize
 import org.junit.Assert.assertEquals
@@ -21,7 +25,7 @@ class LyricWordNormalizeTest {
             createWord(begin = -1, end = -1, duration = 0, text = " gon"),
         )
         val result = words.normalize()
-        println("test1 Result: size: ${result.size}, text: ${result}")
+        println("test1 Result: size: ${result.size}, text: $result")
 
         assertEquals(2, result.size)
         assertEquals("Hello,", result[0].text)
@@ -37,7 +41,7 @@ class LyricWordNormalizeTest {
             createWord(begin = 101, end = 200, duration = 100, text = "Hi"),
         )
         val result = words.normalize()
-        println("test2 Result: size: ${result.size}, text: ${result}")
+        println("test2 Result: size: ${result.size}, text: $result")
 
         assertEquals("?Hello", result[0].text)
         assertEquals(0, result[0].begin)
@@ -58,7 +62,7 @@ class LyricWordNormalizeTest {
             createWord(begin = 10, end = 20, duration = 10, text = "b"),
         )
         val result = words.normalize()
-        println("test3 Result: size: ${result.size}, text: ${result}")
+        println("test3 Result: size: ${result.size}, text: $result")
 
         assertEquals(2, result.size)
     }

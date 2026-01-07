@@ -32,7 +32,7 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
         private val EMPTY_LYRIC_LINE = LyricLine()
     }
 
-    val customLayoutTransition = LayoutTransition().apply {
+    val customLayoutTransition: LayoutTransition = LayoutTransition().apply {
         enableTransitionType(LayoutTransition.CHANGING)
     }
 

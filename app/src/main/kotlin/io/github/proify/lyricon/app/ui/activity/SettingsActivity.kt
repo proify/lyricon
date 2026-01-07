@@ -64,7 +64,7 @@ class SettingsActivity : BaseActivity() {
 }
 
 @Composable
-private fun SettingsScreen(onSettingsChanged: () -> Unit) {
+internal fun SettingsScreen(onSettingsChanged: () -> Unit) {
     AppToolBarListContainer(
         title = stringResource(id = R.string.activity_settings),
         canBack = true
@@ -147,15 +147,13 @@ private fun LanguageSelector(onChanged: () -> Unit) {
     val spinnerEntries = remember(languages) {
         languages.map { code ->
             val title = context.getLanguageDisplayName(code)
-            val summary = context.getLanguageTranslationName(code)
             SpinnerEntry(
                 title = title,
-                // summary = if (title == summary) null else summary
             )
         }
     }
 
-    var selectedIndex = remember(currentLanguage) {
+    val selectedIndex = remember(currentLanguage) {
         languages.indexOf(currentLanguage).coerceAtLeast(0)
     }
 
@@ -165,7 +163,6 @@ private fun LanguageSelector(onChanged: () -> Unit) {
         items = spinnerEntries,
         selectedIndex = selectedIndex,
         onSelectedIndexChange = { index ->
-            //selectedIndex = index
             AppLangUtils.setLanguage(context, languages[index])
             onChanged()
         }
@@ -180,14 +177,6 @@ private fun Context.getLanguageDisplayName(languageCode: String): String {
         val locale = Locale.forLanguageTag(languageCode)
         locale.getDisplayName(locale).capitalize(locale)
     }.getOrDefault(languageCode)
-}
-
-private fun Context.getLanguageTranslationName(languageCode: String): String? {
-    if (languageCode == AppLangUtils.DEFAULT_LANGUAGE) return null
-    return runCatching {
-        val locale = Locale.forLanguageTag(languageCode)
-        locale.getDisplayName(AppLangUtils.DEFAULT_LOCALE).capitalize(locale)
-    }.getOrNull()
 }
 
 private fun String.capitalize(locale: Locale): String = replaceFirstChar {

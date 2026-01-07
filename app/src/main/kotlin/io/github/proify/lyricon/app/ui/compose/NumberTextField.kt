@@ -40,7 +40,7 @@ fun NumberTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: String = "",
-    allowDecimal: Boolean = true,
+    allowDecimal: Boolean = false,
     allowNegative: Boolean = true,
     maxValue: Double? = null,
     minValue: Double? = null,
@@ -54,7 +54,7 @@ fun NumberTextField(
 
     // 跟踪焦点状态
     var isFocused by remember { mutableStateOf(false) }
-    var shouldSelectAll by remember { mutableStateOf(false) }
+    val shouldSelectAll = remember { mutableStateOf(false) }
 
     // 当 value 从外部改变时更新
     LaunchedEffect(value) {
@@ -67,12 +67,12 @@ fun NumberTextField(
     }
 
     // 当需要全选时执行
-    LaunchedEffect(shouldSelectAll) {
-        if (shouldSelectAll && textFieldValueState.text.isNotEmpty()) {
+    LaunchedEffect(shouldSelectAll.value) {
+        if (shouldSelectAll.value && textFieldValueState.text.isNotEmpty()) {
             textFieldValueState = textFieldValueState.copy(
                 selection = TextRange(0, textFieldValueState.text.length)
             )
-            shouldSelectAll = false
+            shouldSelectAll.value = false
         }
     }
 
@@ -102,7 +102,7 @@ fun NumberTextField(
                 .onFocusChanged { focusState ->
                     if (focusState.isFocused && !isFocused) {
                         // 刚获得焦点
-                        shouldSelectAll = true
+                        shouldSelectAll.value = true
                     }
                     isFocused = focusState.isFocused
                 },

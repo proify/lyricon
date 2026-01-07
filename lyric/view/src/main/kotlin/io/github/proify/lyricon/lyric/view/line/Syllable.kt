@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.lyric.view.line
 
 import android.graphics.Canvas
@@ -132,7 +134,7 @@ internal class Syllable(val view: LyricLineView) {
      * 高亮动画控制器
      * 职责：管理歌词高亮进度的动画
      */
-    private inner class HighlightAnimator {
+    private class HighlightAnimator {
         private val interpolator: Interpolator = Interpolators.linear
 
         var currentWidth = 0f
@@ -173,7 +175,7 @@ internal class Syllable(val view: LyricLineView) {
             startWidth = currentWidth
             targetWidth = target
             startTime = System.nanoTime()
-            duration = max(1L, durationMs.toLong() * 1_000_000L)
+            duration = max(1L, durationMs * 1_000_000L)
             isAnimating = true
         }
 
@@ -398,7 +400,7 @@ internal class Syllable(val view: LyricLineView) {
      * 歌词渲染器
      * 职责：负责绘制背景文字和高亮文字
      */
-    private inner class LyricRenderer {
+    private class LyricRenderer {
         private val gradientColors = intArrayOf(0, 0, Color.TRANSPARENT)
         private val gradientPositions = floatArrayOf(0f, 0f, 1f)
 

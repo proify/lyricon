@@ -22,7 +22,7 @@ package io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.sheet
  */
 
 // ROM系统厂商音乐App
-val romMusicApps = arrayOf(
+val romMusicApps: Array<String> = arrayOf(
     // 小米/红米
     "com.miui.player",                        // 小米音乐(MIUI音乐)
     "com.xiaomi.music",                       // 小米音乐(新版)
@@ -80,7 +80,7 @@ val romMusicApps = arrayOf(
 )
 
 // 运营商定制版音乐App
-val carrierCustomizedApps = arrayOf(
+val carrierCustomizedApps: Array<String> = arrayOf(
     // 中国移动
     "com.cmcc.migumusic",                     // 咪咕音乐(移动定制)
     "cmccwm.mobilemusic.activity",            // 咪咕音乐(移动版)
@@ -100,7 +100,7 @@ val carrierCustomizedApps = arrayOf(
 )
 
 // 国内音乐App
-val domesticMusicApps = arrayOf(
+val domesticMusicApps: Array<String> = arrayOf(
     // 主流平台
     "com.tencent.qqmusic",                    // QQ音乐
     "com.tencent.qqmusiclite",                // QQ音乐极速版
@@ -150,7 +150,7 @@ val domesticMusicApps = arrayOf(
 )
 
 // 国际主流音乐App
-val internationalMainstreamApps = arrayOf(
+val internationalMainstreamApps: Array<String> = arrayOf(
     // Spotify系列
     "com.spotify.music",                      // Spotify
     "com.spotify.lite",                       // Spotify Lite
@@ -187,7 +187,7 @@ val internationalMainstreamApps = arrayOf(
 )
 
 // 其他地区特色音乐App
-val regionalMusicApps = arrayOf(
+val regionalMusicApps: Array<String> = arrayOf(
     // 日本
     "jp.klab.utapass",                        // うたパス
     "com.linecorp.linemusic.android",         // LINE MUSIC
@@ -223,7 +223,7 @@ val regionalMusicApps = arrayOf(
 )
 
 // 独立/小众音乐App
-val indieMusicApps = arrayOf(
+val indieMusicApps: Array<String> = arrayOf(
     "com.bandcamp.android",                   // Bandcamp
     "com.audiomack",                          // Audiomack
     "com.mixcloud.player",                    // Mixcloud
@@ -237,7 +237,7 @@ val indieMusicApps = arrayOf(
 )
 
 // 播客/电台App
-val podcastRadioApps = arrayOf(
+val podcastRadioApps: Array<String> = arrayOf(
     "com.google.android.apps.podcasts",       // Google Podcasts
     "fm.player",                              // Player FM
     "fm.castbox.audiobook.radio.podcast",     // Castbox
@@ -252,7 +252,7 @@ val podcastRadioApps = arrayOf(
 )
 
 // 音乐识别/工具App
-val musicToolApps = arrayOf(
+val musicToolApps: Array<String> = arrayOf(
     "com.shazam.android",                     // Shazam
     "com.soundhound.android",                 // SoundHound
     "com.musixmatch.android.lyrify",          // Musixmatch
@@ -260,7 +260,7 @@ val musicToolApps = arrayOf(
 )
 
 // 离线/本地音乐播放器
-val offlineMusicPlayers = arrayOf(
+val offlineMusicPlayers: Array<String> = arrayOf(
     "com.maxmpz.audioplayer",                 // Poweramp
     "com.maxmpz.audioplayer.unlock",          // Poweramp Unlocker
     "ch.blinkenlights.android.vanilla",       // Vanilla Music
@@ -280,14 +280,14 @@ val offlineMusicPlayers = arrayOf(
 )
 
 // 古典音乐专门App
-val classicalMusicApps = arrayOf(
+val classicalMusicApps: Array<String> = arrayOf(
     "com.idagio.app",                         // IDAGIO
     "com.primephonic.android",                // Primephonic(已被Apple收购)
     "com.naxos",                              // Naxos Music Library
 )
 
 // 高品质/Hi-Res音乐App
-val hiresMusicApps = arrayOf(
+val hiresMusicApps: Array<String> = arrayOf(
     "com.qobuz.music",                        // Qobuz
     "com.aspiro.tidal",                       // Tidal HiFi
     "com.mora.app",                           // mora
@@ -295,7 +295,7 @@ val hiresMusicApps = arrayOf(
 )
 
 // DJ/混音App
-val djMixingApps = arrayOf(
+val djMixingApps: Array<String> = arrayOf(
     "com.mixvibes.remixlive",                 // Remixlive
     "com.djit.djstudio5",                     // DJ Studio
     "com.MWM.Edjing",                         // edjing Mix
@@ -303,7 +303,7 @@ val djMixingApps = arrayOf(
 )
 
 // 合并所有包名
-val allMusicAppPackages = romMusicApps +
+val allMusicAppPackages: Array<String> = romMusicApps +
         carrierCustomizedApps +
         domesticMusicApps +
         internationalMainstreamApps +

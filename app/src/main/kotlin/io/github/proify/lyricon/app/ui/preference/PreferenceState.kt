@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.app.ui.preference
 
 import android.content.SharedPreferences
@@ -89,7 +91,7 @@ fun rememberBooleanPreference(
     sharedPreferences: SharedPreferences,
     key: String,
     defaultValue: Boolean = false
-) =
+): MutableState<Boolean> =
     rememberPreference(
         sharedPreferences,
         key,
@@ -104,7 +106,7 @@ fun rememberStringPreference(
     sharedPreferences: SharedPreferences,
     key: String,
     defaultValue: String? = null
-) =
+): MutableState<String?> =
     rememberPreference(
         sharedPreferences,
         key,
@@ -113,13 +115,12 @@ fun rememberStringPreference(
         SharedPreferences.Editor::putString
     )
 
-/** Int 简化版 */
 @Composable
 fun rememberIntPreference(
     sharedPreferences: SharedPreferences,
     key: String,
     defaultValue: Int = 0
-) =
+): MutableState<Int> =
     rememberPreference(
         sharedPreferences,
         key,
@@ -128,13 +129,12 @@ fun rememberIntPreference(
         SharedPreferences.Editor::putInt
     )
 
-/** Long 简化版 */
 @Composable
 fun rememberLongPreference(
     sharedPreferences: SharedPreferences,
     key: String,
     defaultValue: Long = 0L
-) =
+): MutableState<Long> =
     rememberPreference(
         sharedPreferences,
         key,
@@ -143,13 +143,12 @@ fun rememberLongPreference(
         SharedPreferences.Editor::putLong
     )
 
-/** Float 简化版 */
 @Composable
 fun rememberFloatPreference(
     sharedPreferences: SharedPreferences,
     key: String,
     defaultValue: Float = 0f
-) =
+): MutableState<Float> =
     rememberPreference(
         sharedPreferences,
         key,

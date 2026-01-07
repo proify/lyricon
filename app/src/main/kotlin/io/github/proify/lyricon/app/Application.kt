@@ -16,10 +16,12 @@
 
 package io.github.proify.lyricon.app
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.xposed.application.ModuleApplication
+import com.highcapable.yukihookapi.hook.xposed.channel.YukiHookDataChannel
 import io.github.proify.lyricon.app.Application.Companion.systemUIChannel
 import io.github.proify.lyricon.app.bridge.AppBridgeConstants
 import io.github.proify.lyricon.app.util.AppLangUtils
@@ -39,10 +41,14 @@ class Application : ModuleApplication() {
 
     companion object {
         lateinit var handler: Handler
+
+        @SuppressLint("StaticFieldLeak")
         lateinit var unwrapContext: Context
+
+        @SuppressLint("StaticFieldLeak")
         lateinit var instance: Application
 
-        val systemUIChannel by lazy {
+        val systemUIChannel: YukiHookDataChannel.NameSpace by lazy {
             instance.dataChannel(packageName = PackageNames.SYSTEM_UI)
         }
     }

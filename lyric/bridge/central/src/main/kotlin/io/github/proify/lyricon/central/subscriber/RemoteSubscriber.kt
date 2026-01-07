@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.central.subscriber
 
 import android.os.IBinder
@@ -42,9 +44,8 @@ class RemoteSubscriber(private val binder: IRemoteSubscriberBinder) {
 
     @Synchronized
     fun setDeathRecipient(newDeathRecipient: IBinder.DeathRecipient?) {
-        if (deathRecipient != null) {
-            binder.asBinder().unlinkToDeath(deathRecipient!!, 0)
-        }
+        deathRecipient?.let { binder.asBinder().unlinkToDeath(it, 0) }
+
         if (newDeathRecipient != null) {
             try {
                 binder.asBinder().linkToDeath(newDeathRecipient, 0)

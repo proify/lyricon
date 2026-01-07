@@ -107,7 +107,7 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
         invalidate()
     }
 
-    fun isSyllableMode() = !isMarqueeMode()
+    fun isSyllableMode(): Boolean = !isMarqueeMode()
 
     fun setPosition(position: Long) {
         if (isSyllableMode()) {
@@ -197,7 +197,7 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
 
     fun setLyric(line: LyricLine?) {
         reset()
-        lyricModel = if (line == null) emptyLyricModel() else line.normalize().createModel()
+        lyricModel = line?.normalize()?.createModel() ?: emptyLyricModel()
         Log.d("LyricLineView", "setLyric: $lyricModel")
 
         refreshModelSizes()
@@ -219,11 +219,11 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
         }
     }
 
-    fun isMarqueeMode() = lyricModel.isPlainText()
+    fun isMarqueeMode(): Boolean = lyricModel.isPlainText()
 
-    fun isOverflow() = lyricWidth > width
+    fun isOverflow(): Boolean = lyricWidth > width
 
-    val lyricWidth get() = lyricModel.width
+    val lyricWidth: Float get() = lyricModel.width
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)

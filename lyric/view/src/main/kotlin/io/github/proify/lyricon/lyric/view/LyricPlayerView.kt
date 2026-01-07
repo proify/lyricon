@@ -18,14 +18,8 @@ import io.github.proify.lyricon.lyric.view.util.visible
 open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
     LinearLayout(context, attrs) {
 
-    companion object {
-        const val TAG = "LyricPlayerLiteView"
-    }
-
     private val activeLines = mutableListOf<DoubleLyricLine>()
-
     private var song: Song? = null
-
     private var config: DoubleLyricConfig = DoubleLyricConfig()
 
     private val myLayoutTransition =
@@ -181,9 +175,9 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
 
         if (isSingleViewSwap) {
             val recycleView = getChildAt(0) as DoubleLineView
-            val newLine = tempViewsToAdd[0].line!!
+            val newLine = tempViewsToAdd[0].line
 
-            activeLines[0] = newLine
+            newLine?.let { activeLines[0] = it }
             recycleView.line = newLine
         } else {
             // 批量处理移除
@@ -198,7 +192,7 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
             val addSize = tempViewsToAdd.size
             for (i in 0 until addSize) {
                 val view = tempViewsToAdd[i]
-                activeLines.add(view.line!!)
+                view.line?.let { activeLines.add(it) }
                 autoAddView(view)
             }
         }
@@ -217,12 +211,12 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
     private fun findActiveLines(progress: Long) =
         song?.lyrics?.filterByPositionOrPrevious(progress) ?: emptyList()
 
-    fun setStyle(config: DoubleLyricConfig) = apply {
+    fun setStyle(config: DoubleLyricConfig): LyricPlayerView = apply {
         this.config = config
         forEach { if (it is DoubleLineView) it.setStyle(config) }
     }
 
-    fun getStyle() = config
+    fun getStyle(): DoubleLyricConfig = config
 
     fun fillGapAtStart(song: Song) {
         val songTitle = getSongTitle(song) ?: return
@@ -231,7 +225,7 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
 
         if (lyrics.isEmpty()) {
             val duration = if (song.duration > 0) song.duration else 1145141919L
-            lyrics.add(SongTitleLine(songTitle).apply {
+            lyrics.add(songTitleLine(songTitle).apply {
                 begin = duration
                 end = duration
                 this.duration = duration
@@ -239,7 +233,7 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
         } else {
             val firstLine = lyrics.first()
             if (firstLine.begin > 0) {
-                lyrics.add(0, SongTitleLine(songTitle).apply {
+                lyrics.add(0, songTitleLine(songTitle).apply {
                     begin = 0
                     end = firstLine.begin
                     duration = firstLine.begin
@@ -250,7 +244,7 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
         song.lyrics = lyrics
     }
 
-    private fun SongTitleLine(songTitle: String) = DoubleLyricLine(text = songTitle)
+    private fun songTitleLine(songTitle: String) = DoubleLyricLine(text = songTitle)
 
     private fun getSongTitle(song: Song): String? {
         val hasName = song.name?.isNotBlank() ?: false

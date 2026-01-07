@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("KotlinConstantConditions", "RedundantValueArgument")
+
 package io.github.proify.lyricon.app.ui.activity.lyric.packagestyle.page
 
 import android.content.SharedPreferences

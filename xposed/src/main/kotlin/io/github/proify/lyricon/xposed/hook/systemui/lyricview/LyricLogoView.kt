@@ -68,7 +68,7 @@ class LyricLogoView(context: Context) : ImageView(context),
         private const val TEXT_SIZE_MULTIPLIER = 1.2f
         private const val DEFAULT_TEXT_SIZE_DP = 14
         private const val SQUIRCLE_CORNER_RADIUS_DP = 12
-        const val VIEW_TAG = "lyricon:logo_view"
+        const val VIEW_TAG: String = "lyricon:logo_view"
     }
 
     init {
@@ -163,7 +163,7 @@ class LyricLogoView(context: Context) : ImageView(context),
             else -> 0f
         }
 
-        return bitmap.toRoundedCorner(cornerRadius, true)
+        return bitmap.toRoundedCorner(cornerRadius, recycleSource = true)
     }
 
     private fun convertSvgToBitmap(logo: ProviderLogo): Bitmap? {
@@ -218,7 +218,7 @@ class LyricLogoView(context: Context) : ImageView(context),
         }
     }
 
-    private fun calculateProviderLogoTint(): ColorStateList? {
+    private fun calculateProviderLogoTint(): ColorStateList {
         val logoStyle = currentStyle?.packageStyle?.logo ?: return ColorStateList.valueOf(
             currentStatusColor.color
         )

@@ -41,7 +41,7 @@ class LyricPlayerView(context: Context) : LyricPlayerView(context),
     private var currentLyricStyle: LyricStyle? = null
 
     companion object {
-        const val VIEW_TAG = "lyricon:text_view"
+        const val VIEW_TAG: String = "lyricon:text_view"
     }
 
     var linkedTextView: TextView? = null

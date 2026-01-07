@@ -34,6 +34,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -92,39 +94,42 @@ fun ColorPalette(
     val rowSV = remember(rows) { buildRowSV(rows) }
     val grayV = remember(rows) { buildGrayV(rows) }
 
-    var selectedRow by remember { mutableStateOf(0) }
-    var selectedCol by remember { mutableStateOf(0) }
-    var alpha by remember { mutableStateOf(initialColor.alpha.coerceIn(0f, 1f)) }
+    var selectedRow by remember { mutableIntStateOf(0) }
+    var selectedCol by remember { mutableIntStateOf(0) }
+    var alpha by remember { mutableFloatStateOf(initialColor.alpha.coerceIn(0f, 1f)) }
     var lastEmittedColor by remember { mutableStateOf<Color?>(null) }
-    var lastAcceptedHSV by remember { mutableStateOf<Triple<Float, Float, Float>?>(null) }
+    val lastAcceptedHSV = remember { mutableStateOf<Triple<Float, Float, Float>?>(null) }
+
     LaunchedEffect(initialColor, rows, hueColumns, includeGrayColumn) {
         val hsvInit = initialColor.toHsv()
         val h = hsvInit.h.toFloat()
         val s = (hsvInit.s / 100.0).toFloat()
         val v = (hsvInit.v / 100.0).toFloat()
         val currentHSV = Triple(h, s, v)
-        if (lastAcceptedHSV?.let { hsvEqualApprox(it, currentHSV) } == true) {
+        if (lastAcceptedHSV.value?.let { hsvEqualApprox(it, currentHSV) } == true) {
             alpha = initialColor.alpha
-            lastAcceptedHSV = currentHSV
+            lastAcceptedHSV.value = currentHSV
             return@LaunchedEffect
         }
 
         val isGray = includeGrayColumn && s < 0.05f
-        val col = if (isGray) {
-            totalColumns - 1
-        } else {
-            val k = (h % 360f) / 360f * hueColumns
-            k.roundToInt().coerceIn(0, hueColumns - 1)
-        }
-        val row = if (isGray) {
-            grayV.indexOfMinBy { rv -> sq(v - rv) }
-        } else {
-            rowSV.indexOfMinBy { (rs, rv) -> sq(s - rs) + sq(v - rv) }
-        }
+        val col =
+            if (isGray) {
+                totalColumns - 1
+            } else {
+                val k = (h % 360f) / 360f * hueColumns
+                k.roundToInt().coerceIn(0, hueColumns - 1)
+            }
+        val row =
+            if (isGray) {
+                grayV.indexOfMinBy { rv -> sq(v - rv) }
+            } else {
+                rowSV.indexOfMinBy { (rs, rv) -> sq(s - rs) + sq(v - rv) }
+            }
         selectedCol = col
         selectedRow = row
         alpha = initialColor.alpha
-        lastAcceptedHSV = currentHSV
+        lastAcceptedHSV.value = currentHSV
     }
 
     val onColorChangedState = rememberUpdatedState(onColorChanged)
@@ -133,7 +138,6 @@ fun ColorPalette(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-
         PaletteCanvas(
             rows = rows,
             hueColumns = hueColumns,
@@ -147,26 +151,28 @@ fun ColorPalette(
                 selectedCol = c
                 val base = cellColor(c, r, rowSV, grayV, hueColumns, includeGrayColumn)
                 val newColor = base.copy(alpha = alpha)
-                lastAcceptedHSV = base.toHsv().let {
-                    Triple(
-                        it.h.toFloat(),
-                        (it.s / 100.0).toFloat(),
-                        (it.v / 100.0).toFloat()
-                    )
-                }
+                lastAcceptedHSV.value =
+                    base.toHsv().let {
+                        Triple(
+                            it.h.toFloat(),
+                            (it.s / 100.0).toFloat(),
+                            (it.v / 100.0).toFloat(),
+                        )
+                    }
                 lastEmittedColor = newColor
                 onColorChangedState.value(newColor)
-            }
+            },
         )
 
         // Color preview
         if (showPreview) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(26.dp)
-                    .clip(ContinuousCapsule)
-                    .background(lastEmittedColor ?: initialColor)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(26.dp)
+                        .clip(ContinuousCapsule)
+                        .background(lastEmittedColor ?: initialColor),
             )
         }
 
@@ -184,17 +190,17 @@ fun ColorPalette(
             onAlphaChanged = {
                 alpha = it
                 val newColor = base.copy(alpha = it)
-                lastAcceptedHSV =
-                    base.toHsv().let {
+                lastAcceptedHSV.value =
+                    base.toHsv().let { hsv ->
                         Triple(
-                            it.h.toFloat(),
-                            (it.s / 100.0).toFloat(),
-                            (it.v / 100.0).toFloat()
+                            hsv.h.toFloat(),
+                            (hsv.s / 100.0).toFloat(),
+                            (hsv.v / 100.0).toFloat(),
                         )
                     }
                 lastEmittedColor = newColor
                 onColorChangedState.value(newColor)
-            }
+            },
         )
     }
 }
@@ -219,25 +225,26 @@ private fun PaletteCanvas(
     var sizePx by remember { mutableStateOf(IntSize.Zero) }
 
     Box(
-        modifier = Modifier
-            .clip(shape)
-            .onGloballyPositioned { sizePx = it.size }
-            .pointerInput(rows, hueColumns, includeGrayColumn) {
-                detectTapGestures { pos ->
-                    if (sizePx.width == 0 || sizePx.height == 0) return@detectTapGestures
-                    val (r, c) = pointToCell(pos, sizePx, rows, totalColumns)
-                    onSelectState.value(r, c)
+        modifier =
+            Modifier
+                .clip(shape)
+                .onGloballyPositioned { sizePx = it.size }
+                .pointerInput(rows, hueColumns, includeGrayColumn) {
+                    detectTapGestures { pos ->
+                        if (sizePx.width == 0 || sizePx.height == 0) return@detectTapGestures
+                        val (r, c) = pointToCell(pos, sizePx, rows, totalColumns)
+                        onSelectState.value(r, c)
+                    }
                 }
-            }
-            .pointerInput(rows, hueColumns, includeGrayColumn) {
-                detectDragGestures { change, _ ->
-                    if (sizePx.width == 0 || sizePx.height == 0) return@detectDragGestures
-                    val (r, c) = pointToCell(change.position, sizePx, rows, totalColumns)
-                    onSelectState.value(r, c)
+                .pointerInput(rows, hueColumns, includeGrayColumn) {
+                    detectDragGestures { change, _ ->
+                        if (sizePx.width == 0 || sizePx.height == 0) return@detectDragGestures
+                        val (r, c) = pointToCell(change.position, sizePx, rows, totalColumns)
+                        onSelectState.value(r, c)
+                    }
                 }
-            }
-            .fillMaxWidth()
-            .height(180.dp)
+                .fillMaxWidth()
+                .height(180.dp),
     ) {
         Canvas(Modifier.fillMaxSize()) {
             val w = size.width.toInt()
@@ -258,7 +265,7 @@ private fun PaletteCanvas(
                     drawRect(
                         color = color,
                         topLeft = Offset(left, top),
-                        size = Size(cellW, cellH)
+                        size = Size(cellW, cellH),
                     )
                 }
             }
@@ -279,43 +286,49 @@ private fun PaletteCanvas(
             val indicatorSize = indicatorRadius * 2
             val density = LocalDensity.current
             Box(
-                modifier = Modifier
-                    .offset(
-                        x = with(density) { cxPx.toDp() - indicatorSize / 2 },
-                        y = with(density) { cyPx.toDp() - indicatorSize / 2 }
-                    )
-                    .size(indicatorSize)
-                    .drawBehind {
-                        val strokeWidth = 6.dp.toPx()
-                        val halfStroke = strokeWidth / 2f
-                        val glowSpread = 2.dp.toPx()
-                        val glowColor = Color.Black.copy(alpha = 0.25f)
-
-                        val ringCenterRadius = (size.minDimension / 2f) - halfStroke
-                        val gradientRadius = ringCenterRadius + halfStroke + glowSpread
-
-                        val glowBrush = Brush.radialGradient(
-                            colorStops = listOf(
-                                ((ringCenterRadius - halfStroke - glowSpread).coerceAtLeast(0f) / gradientRadius) to Color.Transparent,
-                                ((ringCenterRadius - halfStroke) / gradientRadius) to glowColor,
-                                ((ringCenterRadius + halfStroke) / gradientRadius) to glowColor,
-                                ((ringCenterRadius + halfStroke + glowSpread) / gradientRadius) to Color.Transparent
-                            ).toTypedArray(),
-                            center = center,
-                            radius = gradientRadius
+                modifier =
+                    Modifier
+                        .offset(
+                            x = with(density) { cxPx.toDp() - indicatorSize / 2 },
+                            y = with(density) { cyPx.toDp() - indicatorSize / 2 },
                         )
+                        .size(indicatorSize)
+                        .drawBehind {
+                            val strokeWidth = 6.dp.toPx()
+                            val halfStroke = strokeWidth / 2f
+                            val glowSpread = 2.dp.toPx()
+                            val glowColor = Color.Black.copy(alpha = 0.25f)
 
-                        drawCircle(
-                            brush = glowBrush,
-                            radius = gradientRadius
-                        )
+                            val ringCenterRadius = (size.minDimension / 2f) - halfStroke
+                            val gradientRadius = ringCenterRadius + halfStroke + glowSpread
 
-                        drawCircle(
-                            color = Color.White,
-                            radius = ringCenterRadius,
-                            style = Stroke(width = strokeWidth)
-                        )
-                    }
+                            val glowBrush =
+                                Brush.radialGradient(
+                                    colorStops =
+                                        listOf(
+                                            ((ringCenterRadius - halfStroke - glowSpread).coerceAtLeast(
+                                                0f
+                                            ) / gradientRadius) to
+                                                    Color.Transparent,
+                                            ((ringCenterRadius - halfStroke) / gradientRadius) to glowColor,
+                                            ((ringCenterRadius + halfStroke) / gradientRadius) to glowColor,
+                                            ((ringCenterRadius + halfStroke + glowSpread) / gradientRadius) to Color.Transparent,
+                                        ).toTypedArray(),
+                                    center = center,
+                                    radius = gradientRadius,
+                                )
+
+                            drawCircle(
+                                brush = glowBrush,
+                                radius = gradientRadius,
+                            )
+
+                            drawCircle(
+                                color = Color.White,
+                                radius = ringCenterRadius,
+                                style = Stroke(width = strokeWidth),
+                            )
+                        },
             )
         }
     }
@@ -335,10 +348,13 @@ private fun buildRowSV(rows: Int): List<Pair<Float, Float>> {
         val t = i / (rows - 1f)
         val sRamp = (t / 0.35f).coerceIn(0f, 1f)
         val s = (0.10f + 0.90f * sRamp).coerceIn(0f, 1f)
-        val v = if (t <= topBrightCut) 1f else {
-            val k = ((t - topBrightCut) / (1f - topBrightCut)).coerceIn(0f, 1f)
-            lerp(1f, 0.20f, k)
-        }
+        val v =
+            if (t <= topBrightCut) {
+                1f
+            } else {
+                val k = ((t - topBrightCut) / (1f - topBrightCut)).coerceIn(0f, 1f)
+                lerp(1f, 0.20f, k)
+            }
         s to v
     }
 }
@@ -367,7 +383,12 @@ private fun cellColor(
     }
 }
 
-private fun pointToCell(pos: Offset, size: IntSize, rows: Int, totalColumns: Int): Pair<Int, Int> {
+private fun pointToCell(
+    pos: Offset,
+    size: IntSize,
+    rows: Int,
+    totalColumns: Int,
+): Pair<Int, Int> {
     val x = pos.x.coerceIn(0f, size.width.toFloat() - 1)
     val y = pos.y.coerceIn(0f, size.height.toFloat() - 1)
     val col = ((x / size.width) * totalColumns).toInt().coerceIn(0, totalColumns - 1)
@@ -379,7 +400,7 @@ private fun hsvEqualApprox(
     a: Triple<Float, Float, Float>,
     b: Triple<Float, Float, Float>,
     epsH: Float = 1.5f,
-    eps: Float = 0.02f
+    eps: Float = 0.02f,
 ): Boolean {
     val dhRaw = abs(a.first - b.first)
     val dh = min(dhRaw, 360f - dhRaw)
@@ -392,7 +413,8 @@ private fun <T> List<T>.indexOfMinBy(selector: (T) -> Float): Int {
     for (i in indices) {
         val v = selector(this[i])
         if (v < minVal) {
-            minVal = v; idx = i
+            minVal = v
+            idx = i
         }
     }
     return idx

@@ -17,7 +17,6 @@
 package io.github.proify.lyricon.app.ui.compose.custom.bonsai.core.node
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,15 +44,15 @@ import androidx.compose.ui.unit.times
 import io.github.proify.lyricon.app.ui.compose.custom.bonsai.core.BonsaiScope
 
 @Composable
-internal fun <T> BonsaiScope<T>.Node(
-    node: Node<T>
-) {
+internal fun <T> BonsaiScope<T>.Node(node: Node<T>) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(
-                start = 16.dp + node.depth * style.toggleIconSize, end = 16.dp
-            )
+        modifier =
+            Modifier
+                .padding(
+                    start = 16.dp + node.depth * style.toggleIconSize,
+                    end = 16.dp,
+                ),
     ) {
         ToggleIcon(node)
         NodeContent(node)
@@ -61,26 +60,25 @@ internal fun <T> BonsaiScope<T>.Node(
 }
 
 @Composable
-private fun <T> BonsaiScope<T>.ToggleIcon(
-    node: Node<T>
-) {
+private fun <T> BonsaiScope<T>.ToggleIcon(node: Node<T>) {
     val toggleIcon = style.toggleIcon(node) ?: return
 
     if (node is BranchNode) {
         val rotationDegrees by animateFloatAsState(
-            if (node.isExpanded) style.toggleIconRotationDegrees else 0f
+            if (node.isExpanded) style.toggleIconRotationDegrees else 0f,
         )
 
         Image(
             painter = toggleIcon,
             contentDescription = if (node.isExpanded) "Collapse node" else "Expand node",
             colorFilter = style.toggleIconColorFilter,
-            modifier = Modifier
-                .clip(style.toggleShape)
-                .clickable { expandableManager.toggleExpansion(node) }
-                .size(style.nodeIconSize)
-                .requiredSize(style.toggleIconSize)
-                .rotate(rotationDegrees)
+            modifier =
+                Modifier
+                    .clip(style.toggleShape)
+                    .clickable { expandableManager.toggleExpansion(node) }
+                    .size(style.nodeIconSize)
+                    .requiredSize(style.toggleIconSize)
+                    .rotate(rotationDegrees),
         )
     } else {
         Spacer(Modifier.size(style.nodeIconSize))
@@ -88,22 +86,35 @@ private fun <T> BonsaiScope<T>.ToggleIcon(
 }
 
 @Composable
-private fun <T> BonsaiScope<T>.NodeContent(
-    node: Node<T>
-) {
+private fun <T> BonsaiScope<T>.NodeContent(node: Node<T>) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .background(node.backgroundColor.value, style.nodeShape)
-            .defaultMinSize(200.dp)
-            .fillMaxHeight()
-            .run {
-                if (node.isSelected.not()) clip(style.nodeShape)
-                else background(style.nodeSelectedBackgroundColor, style.nodeShape)
-            }
-            .then(clickableNode(node))
-            .padding(style.nodePadding)
-        //.requiredHeight(style.nodeIconSize)
+        modifier =
+            Modifier
+                .background(node.backgroundColor.value, style.nodeShape)
+                .defaultMinSize(200.dp)
+                .fillMaxHeight()
+                .run {
+                    if (node.isSelected.not()) {
+                        clip(style.nodeShape)
+                    } else {
+                        background(style.nodeSelectedBackgroundColor, style.nodeShape)
+                    }
+                }
+                .then(
+                    if (onClick == null && onLongClick == null && onDoubleClick == null) {
+                        Modifier // no click action, return a noop modifier
+                    } else if (onLongClick == null && onDoubleClick == null) {
+                        Modifier.clickable { onClick?.invoke(node) }
+                    } else {
+                        Modifier.combinedClickable(
+                            onClick = { onClick?.invoke(node) },
+                            onDoubleClick = { onDoubleClick?.invoke(node) },
+                            onLongClick = { onLongClick?.invoke(node) },
+                        )
+                    },
+                )
+                .padding(style.nodePadding),
     ) {
         with(node) {
             iconComponent(node)
@@ -112,30 +123,14 @@ private fun <T> BonsaiScope<T>.NodeContent(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun <T> BonsaiScope<T>.clickableNode(
-    node: Node<T>
-): Modifier =
-    if (onClick == null && onLongClick == null && onDoubleClick == null) {
-        Modifier // no click action, return a noop modifier
-    } else if (onLongClick == null && onDoubleClick == null) {
-        Modifier.clickable { onClick?.invoke(node) }
-    } else {
-        Modifier.combinedClickable(
-            onClick = { onClick?.invoke(node) },
-            onDoubleClick = { onDoubleClick?.invoke(node) },
-            onLongClick = { onLongClick?.invoke(node) }
-        )
-    }
-
 @Composable
 internal fun <T> BonsaiScope<T>.DefaultNodeIcon(node: Node<T>) {
-    val (icon, colorFilter) = if (node is BranchNode && node.isExpanded) {
-        style.nodeExpandedIcon(node) to style.nodeExpandedIconColorFilter
-    } else {
-        style.nodeCollapsedIcon(node) to style.nodeCollapsedIconColorFilter
-    }
+    val (icon, colorFilter) =
+        if (node is BranchNode && node.isExpanded) {
+            style.nodeExpandedIcon(node) to style.nodeExpandedIconColorFilter
+        } else {
+            style.nodeCollapsedIcon(node) to style.nodeCollapsedIconColorFilter
+        }
 
     if (icon != null) {
         Image(
@@ -152,33 +147,35 @@ internal fun <T> BonsaiScope<T>.DefaultNodeName(node: Node<T>) {
         BasicText(
             text = node.name,
             style = style.nodeNameTextStyle,
-            modifier = Modifier
-                .padding(
-                    start = style.nodeNameStartPadding,
-                )
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .padding(
+                        start = style.nodeNameStartPadding,
+                    )
+                    .fillMaxWidth(),
         )
     } else {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    start = style.nodeNameStartPadding,
-                )
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(
+                        start = style.nodeNameStartPadding,
+                    ),
         ) {
             BasicText(
                 text = node.name,
                 style = style.nodeNameTextStyle,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
             )
             Spacer(Modifier.height(2.dp))
             BasicText(
-                text = node.secondary!!,
+                text = node.secondary.orEmpty(),
                 style = style.nodeSecondaryTextStyle,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
-
 }

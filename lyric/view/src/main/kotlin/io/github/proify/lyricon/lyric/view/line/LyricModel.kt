@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("unused")
+
 package io.github.proify.lyricon.lyric.view.line
 
 import android.graphics.Paint
@@ -32,7 +34,7 @@ data class LyricModel(
 
     val wordText: String = words.toText()
 
-    fun isPlainText() = words.isEmpty()
+    fun isPlainText(): Boolean = words.isEmpty()
 
     fun updateSizes(paint: Paint) {
         width = paint.measureText(text)
@@ -44,10 +46,7 @@ data class LyricModel(
     }
 }
 
-fun emptyLyricModel() = LyricModel(
-    begin = 0,
-    end = 0,
-    duration = 0,
+fun emptyLyricModel(): LyricModel = LyricModel(
     words = emptyList(),
     text = ""
 )
@@ -55,7 +54,7 @@ fun emptyLyricModel() = LyricModel(
 /**
  * 将 LyricLine 转换为 LyricModel
  */
-fun LyricLine.createModel() = LyricModel(
+fun LyricLine.createModel(): LyricModel = LyricModel(
     begin = begin,
     end = end,
     duration = duration,
