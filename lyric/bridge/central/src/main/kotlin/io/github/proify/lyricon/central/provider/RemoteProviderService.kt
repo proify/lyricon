@@ -16,14 +16,14 @@
 
 package io.github.proify.lyricon.central.provider
 
-import io.github.proify.lyricon.central.provider.player.ProviderActivePlayerDispatcher
+import io.github.proify.lyricon.central.provider.player.ActivePlayerDispatcher
 import io.github.proify.lyricon.central.provider.player.RemotePlayer
 import io.github.proify.lyricon.provider.IRemoteService
 
 class RemoteProviderService(var provider: RemoteProvider?) : IRemoteService.Stub() {
 
     private var remotePlayer: RemotePlayer? =
-        provider?.let { RemotePlayer(it.providerInfo, ProviderActivePlayerDispatcher) }
+        provider?.let { RemotePlayer(it.providerInfo, ActivePlayerDispatcher) }
 
     override fun getPlayer(): RemotePlayer? = remotePlayer
 

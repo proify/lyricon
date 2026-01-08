@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 @Parcelize
-class ProviderInfo(
+data class ProviderInfo(
     val providerPackageName: String,
     val playerPackageName: String,
     val logo: ProviderLogo? = null,
@@ -33,14 +33,4 @@ class ProviderInfo(
         result = 31 * result + playerPackageName.hashCode()
         return result
     }
-
-    override fun toString(): String {
-        return "ProviderInfo(" +
-                "providerPackageName='$providerPackageName', " +
-                "playerPackageName='$playerPackageName', " +
-                "logo=$logo, " +
-                "metadata=$metadata" +
-                ")"
-    }
-
 }

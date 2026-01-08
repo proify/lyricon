@@ -22,6 +22,9 @@ import android.content.SharedPreferences
 fun Context.getPrivateSharedPreferences(name: String): SharedPreferences =
     getSharedPreferences(name, Context.MODE_PRIVATE)
 
+/**
+ * 尝试获取 world-readable 的 SharedPreferences，失败则返回私有的
+ */
 fun Context.getWorldReadableSharedPreferences(name: String): SharedPreferences = try {
     @Suppress("DEPRECATION") getSharedPreferences(name, Context.MODE_WORLD_READABLE)
 } catch (_: Exception) {

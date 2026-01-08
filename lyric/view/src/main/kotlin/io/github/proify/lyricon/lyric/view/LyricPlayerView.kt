@@ -1,6 +1,5 @@
 package io.github.proify.lyricon.lyric.view
 
-import android.animation.LayoutTransition
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -9,24 +8,26 @@ import androidx.core.view.forEach
 import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import androidx.core.view.size
-import io.github.proify.lyricon.lyric.model.DoubleLyricLine
+import io.github.proify.lyricon.lyric.model.RichLyricLine
 import io.github.proify.lyricon.lyric.model.Song
-import io.github.proify.lyricon.lyric.model.extensions.filterByPositionOrPrevious
+import io.github.proify.lyricon.lyric.model.extensions.TimingNavigator
 import io.github.proify.lyricon.lyric.view.line.LyricLineView
+import io.github.proify.lyricon.lyric.view.util.LayoutTransitionX
+import io.github.proify.lyricon.lyric.view.util.visibilityIfChanged
 import io.github.proify.lyricon.lyric.view.util.visible
 
 open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
     LinearLayout(context, attrs) {
 
-    private val activeLines = mutableListOf<DoubleLyricLine>()
+    private val activeLines = mutableListOf<RichLyricLine>()
     private var song: Song? = null
     private var config: DoubleLyricConfig = DoubleLyricConfig()
 
-    private val myLayoutTransition =
-        LayoutTransition().apply { enableTransitionType(LayoutTransition.CHANGING) }
+    private val myLayoutTransition = LayoutTransitionX()
 
-    private val tempViewsToRemove = mutableListOf<DoubleLineView>()
-    private val tempViewsToAdd = mutableListOf<DoubleLineView>()
+    private val tempViewsToRemove = mutableListOf<RichLyricLineView>()
+    private val tempViewsToAdd = mutableListOf<RichLyricLineView>()
+    private val tempFindActiveLines: MutableList<RichLyricLine> = mutableListOf()
 
     private val reusableLayoutParams =
         LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
@@ -52,6 +53,8 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
         }
     }
 
+    private var timingNavigator = TimingNavigator<RichLyricLine>(emptyList())
+
     init {
         orientation = VERTICAL
         layoutTransition = myLayoutTransition
@@ -68,6 +71,10 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
             val newSong = song.copy()
             fillGapAtStart(newSong)
             this.song = newSong
+            timingNavigator = TimingNavigator(song.lyrics ?: emptyList())
+        } else {
+            this.song = null
+            timingNavigator = TimingNavigator(emptyList())
         }
     }
 
@@ -81,8 +88,8 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
         super.removeAllViews()
     }
 
-    private fun createDoubleLineView(line: DoubleLyricLine): DoubleLineView {
-        val view = DoubleLineView(context)
+    private fun createDoubleLineView(line: RichLyricLine): RichLyricLineView {
+        val view = RichLyricLineView(context)
         view.line = line
         view.setStyle(config)
         view.setMainLyricPlayListener(mainLyricPlayListener)
@@ -94,10 +101,10 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
         val childCount = childCount
         if (childCount == 0) return
 
-        val first = getChildAt(0) as DoubleLineView
+        val first = getChildAt(0) as RichLyricLineView
 
         for (i in 0 until childCount) {
-            val view = getChildAt(i) as DoubleLineView
+            val view = getChildAt(i) as RichLyricLineView
 
             view.visibility = VISIBLE
             view.main.setTextSize(config.primary.textSize)
@@ -109,13 +116,13 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
                         && view.main.syllable.isPlayFinished()
                         && childCount > 1
                     ) {
-                        view.main.visibility = GONE
+                        view.main.visibilityIfChanged = GONE
                     }
                 }
 
                 1 -> {
                     if (first.main.isVisible && first.secondary.isVisible) {
-                        view.visibility = GONE
+                        view.visibilityIfChanged = GONE
                     } else {
                         if (first.isVisible && first.main.isVisible) {
                             view.main.setTextSize(config.secondary.textSize)
@@ -125,7 +132,7 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
                 }
 
                 else -> {
-                    view.visibility = GONE
+                    view.visibilityIfChanged = GONE
                 }
             }
         }
@@ -136,20 +143,24 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
     }
 
     fun setPosition(position: Long) {
+        if (isAttachedToWindow.not()) return
+
         val matches = findActiveLines(position)
         updateActiveViews(matches)
 
-        forEach { if (it is DoubleLineView) it.setPosition(position) }
+        forEach {
+            if (it is RichLyricLineView) it.setPosition(position)
+        }
     }
 
-    private fun updateActiveViews(matches: List<DoubleLyricLine>) {
+    private fun updateActiveViews(matches: List<RichLyricLine>) {
         tempViewsToRemove.clear()
         tempViewsToAdd.clear()
 
         // 找出需要移除的视图
         val currentSize = size
         for (i in 0 until currentSize) {
-            val view = getChildAt(i) as DoubleLineView
+            val view = getChildAt(i) as RichLyricLineView
             val line = view.line
             if (line != null && line !in matches) {
                 tempViewsToRemove.add(view)
@@ -174,7 +185,7 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
                 && tempViewsToAdd.size == 1
 
         if (isSingleViewSwap) {
-            val recycleView = getChildAt(0) as DoubleLineView
+            val recycleView = getChildAt(0) as RichLyricLineView
             val newLine = tempViewsToAdd[0].line
 
             newLine?.let { activeLines[0] = it }
@@ -200,20 +211,26 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
         updateViewsVisibility()
     }
 
-    fun autoAddView(view: DoubleLineView) {
+    fun autoAddView(view: RichLyricLineView) {
         if (layoutTransition == null && isNotEmpty()) {
             setLayoutTransition(myLayoutTransition)
         }
-        // 复用LayoutParams对象
         addView(view, reusableLayoutParams)
     }
 
-    private fun findActiveLines(progress: Long) =
-        song?.lyrics?.filterByPositionOrPrevious(progress) ?: emptyList()
+    private fun findActiveLines(progress: Long): List<RichLyricLine> {
+        tempFindActiveLines.clear()
+        timingNavigator.lookupOrPrevious(progress) {
+            tempFindActiveLines.add(it)
+        }
+        return tempFindActiveLines
+    }
 
     fun setStyle(config: DoubleLyricConfig): LyricPlayerView = apply {
         this.config = config
-        forEach { if (it is DoubleLineView) it.setStyle(config) }
+        forEach {
+            if (it is RichLyricLineView) it.setStyle(config)
+        }
     }
 
     fun getStyle(): DoubleLyricConfig = config
@@ -244,7 +261,7 @@ open class LyricPlayerView(context: Context, attrs: AttributeSet? = null) :
         song.lyrics = lyrics
     }
 
-    private fun songTitleLine(songTitle: String) = DoubleLyricLine(text = songTitle)
+    private fun songTitleLine(songTitle: String) = RichLyricLine(text = songTitle)
 
     private fun getSongTitle(song: Song): String? {
         val hasName = song.name?.isNotBlank() ?: false

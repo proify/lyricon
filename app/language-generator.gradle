@@ -53,11 +53,6 @@ object ${className} {
     val LANGUAGES: List<String> = listOf(
 ${langs.collect { "        \"$it\"" }.join(",\n")}
     )
-
-    val LOCALES: Map<String, Locale> = LANGUAGES.associateWith { code ->
-        if (code == "default") Locale.getDefault()
-        else Locale.forLanguageTag(code.replace('-', '-'))
-    }
 }"""
     }
 }

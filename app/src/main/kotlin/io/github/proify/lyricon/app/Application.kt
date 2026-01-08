@@ -18,7 +18,6 @@ package io.github.proify.lyricon.app
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Handler
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.xposed.application.ModuleApplication
 import com.highcapable.yukihookapi.hook.xposed.channel.YukiHookDataChannel
@@ -28,23 +27,18 @@ import io.github.proify.lyricon.app.util.AppLangUtils
 import io.github.proify.lyricon.common.PackageNames
 
 class Application : ModuleApplication() {
+
     override fun attachBaseContext(base: Context) {
-        unwrapContext = base
-        super.attachBaseContext(AppLangUtils.wrap(base))
+        AppLangUtils.setDefaultLocale(base)
+        super.attachBaseContext(AppLangUtils.wrapContext(base))
     }
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        handler = Handler(mainLooper)
     }
 
     companion object {
-        lateinit var handler: Handler
-
-        @SuppressLint("StaticFieldLeak")
-        lateinit var unwrapContext: Context
-
         @SuppressLint("StaticFieldLeak")
         lateinit var instance: Application
 

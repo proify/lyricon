@@ -20,13 +20,13 @@ import android.os.Parcelable
 import io.github.proify.lyricon.lyric.model.extensions.deepCopy
 import io.github.proify.lyricon.lyric.model.extensions.normalize
 import io.github.proify.lyricon.lyric.model.interfaces.DeepCopyable
-import io.github.proify.lyricon.lyric.model.interfaces.IDoubleLyricLine
+import io.github.proify.lyricon.lyric.model.interfaces.IRichLyricLine
 import io.github.proify.lyricon.lyric.model.interfaces.Normalize
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
- * 双行歌词
+ * 富歌词
  *
  * @property begin 开始时间
  * @property end 结束时间
@@ -37,10 +37,12 @@ import kotlinx.serialization.Serializable
  * @property words 主文本单词列表
  * @property secondaryText 次要文本
  * @property secondaryWords 次要文本单词列表
+ * @property translationText 翻译文本
+ * @property translationWords 翻译文本单词列表
  */
 @Serializable
 @Parcelize
-data class DoubleLyricLine(
+data class RichLyricLine(
     override var begin: Long = 0,
     override var end: Long = 0,
     override var duration: Long = 0,
@@ -50,24 +52,27 @@ data class DoubleLyricLine(
     override var words: List<LyricWord>? = null,
     override var secondaryText: String? = null,
     override var secondaryWords: List<LyricWord>? = null,
-) : IDoubleLyricLine, Parcelable, DeepCopyable<DoubleLyricLine>, Normalize<DoubleLyricLine> {
+    override var translationText: String? = null,
+    override var translationWords: List<LyricWord>? = null,
+) : IRichLyricLine, Parcelable, DeepCopyable<RichLyricLine>, Normalize<RichLyricLine> {
 
-    override fun deepCopy(): DoubleLyricLine = copy(
+    override fun deepCopy(): RichLyricLine = copy(
         words = words?.deepCopy(),
-        secondaryWords = secondaryWords?.deepCopy()
+        secondaryWords = secondaryWords?.deepCopy(),
+        translationWords = translationWords?.deepCopy(),
     )
 
-    override fun normalize(): DoubleLyricLine = deepCopy().apply {
+    override fun normalize(): RichLyricLine = deepCopy().apply {
         words = words?.normalize()
-        text = words
-            ?.takeIf { it.isNotEmpty() }
-            ?.joinToString("") { it.text.orEmpty() }
-            ?: text
+        text = words.toText(text)
 
         secondaryWords = secondaryWords?.normalize()
-        secondaryText = secondaryWords
-            ?.takeIf { it.isNotEmpty() }
-            ?.joinToString("") { it.text.orEmpty() }
-            ?: secondaryText
+        secondaryText = secondaryWords.toText(secondaryText)
+
+        translationWords = translationWords?.normalize()
+        translationText = translationWords.toText(translationText)
     }
+
+    private fun List<LyricWord>?.toText(default: String?): String? =
+        if (isNullOrEmpty()) default else joinToString("") { it.text.orEmpty() }
 }

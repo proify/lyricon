@@ -30,6 +30,6 @@ open class BaseActivity : ComponentActivity() {
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(AppLangUtils.wrap(base))
+        super.attachBaseContext(AppLangUtils.wrapContext(base))
     }
 }

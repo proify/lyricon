@@ -44,7 +44,7 @@ data class Song(
     var artist: String? = null,
     var duration: Long = 0,
     var metadata: LyricMetadata? = null,
-    var lyrics: List<DoubleLyricLine>? = null,
+    var lyrics: List<RichLyricLine>? = null,
 ) : Parcelable, DeepCopyable<Song>, Normalize<Song> {
 
     override fun deepCopy(): Song = copy(
@@ -54,7 +54,6 @@ data class Song(
     override fun normalize(): Song = deepCopy().apply {
         lyrics = lyrics
             ?.map { line ->
-                //尝试修复
                 if (line.duration <= 0) {
                     line.copy(duration = line.end - line.begin)
                 } else {

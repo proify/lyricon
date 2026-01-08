@@ -47,10 +47,13 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
     }
 
     internal var lyricModel: LyricModel = emptyLyricModel()
+        private set
+
     internal var scrollXOffset = 0f
+
     internal var isScrollFinished = false
     internal val marquee = Marquee(WeakReference(this))
-    internal var syllable = Syllable(this)
+    internal val syllable = Syllable(this)
     private val animationDriver = AnimationDriver()
 
     fun reset() {
@@ -65,6 +68,8 @@ class LyricLineView(context: Context, attrs: AttributeSet? = null) :
     }
 
     fun setTextSize(size: Float) {
+        if (textPaint.textSize == size) return
+
         textPaint.textSize = size
 
         syllable.backgroundPaint.textSize = size

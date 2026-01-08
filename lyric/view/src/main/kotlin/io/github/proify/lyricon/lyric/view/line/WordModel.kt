@@ -18,6 +18,7 @@ package io.github.proify.lyricon.lyric.view.line
 
 import android.graphics.Paint
 import io.github.proify.lyricon.lyric.model.interfaces.ILyricTiming
+import io.github.proify.lyricon.lyric.view.Constances
 
 data class WordModel(
     override var begin: Long,
@@ -48,13 +49,14 @@ data class WordModel(
 
     private fun isCharChinese(char: Char) = char in '\u4e00'..'\u9fff'
 
-     class CharOffset(
+    class CharOffset(
         var from: Float = 0f,
         var to: Float = 0f,
         var value: Float = 0f
     )
 
-    fun getCharOffsetY(charIndex: Int): Float = charOffsetYArray.getOrNull(charIndex)?.value ?: 0f
+    fun getCharOffsetY(charIndex: Int): Float =
+        if (charOffsetMode) 0f else charOffsetYArray.getOrNull(charIndex)?.value ?: 0f
 
     val offsetY: Float
         get() = charOffsetYArray.firstOrNull()?.from ?: 0f
@@ -63,9 +65,9 @@ data class WordModel(
         paint.getTextWidths(chars, 0, chars.size, charWidths)
         textWidth = charWidths.sum()
 
-        val dropDistance = paint.textSize * 0.07f
+        val dropDistance = paint.textSize * Constances.WORD_DROP_ANIMATION_OFFSET_RATIO
         charOffsetYArray.forEach { offset ->
-            //不允许修改，避免动画重置...😅
+            //初始了就不允许修改，避免动画重置...😅
             if (offset.from != 0f) {
                 return@forEach
             }

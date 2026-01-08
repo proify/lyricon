@@ -32,7 +32,7 @@ import kotlin.concurrent.write
  * 活跃播放器调度器
  * 负责管理当前活跃的音乐播放器,并将播放事件分发给所有监听器
  */
-object ProviderActivePlayerDispatcher : PlayerListener {
+object ActivePlayerDispatcher : PlayerListener {
     private const val TAG = "GPAPlayerDispatcher"
     private const val DEBUG = Constants.DEBUG
 

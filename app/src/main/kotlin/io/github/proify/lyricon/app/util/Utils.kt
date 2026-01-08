@@ -28,7 +28,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import io.github.proify.android.extensions.getWorldReadableSharedPreferences
-import io.github.proify.lyricon.app.Application
 import io.github.proify.lyricon.app.ui.activity.MainActivity
 import java.util.Locale
 
@@ -52,19 +51,17 @@ object Utils {
         Process.killProcess(Process.myPid())
     }
 
-    fun forceStop(packageName: String?) {
-        Application.instance.packageManager.getInstalledPackages(0)
+    fun forceStop(packageName: String?): ShellUtils.CommandResult =
         ShellUtils.execCmd(
             "am force-stop $packageName",
-            isRooted = true,
+            isRoot = true,
             isNeedResultMsg = true,
         )
-    }
 
-    fun killSystemUi(): ShellUtils.CommandResult =
+    fun killSystemUI(): ShellUtils.CommandResult =
         ShellUtils.execCmd(
             "kill -9 $(pgrep systemui)",
-            isRooted = true,
+            isRoot = true,
             isNeedResultMsg = true,
         )
 

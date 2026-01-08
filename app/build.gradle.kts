@@ -75,11 +75,10 @@ dependencies {
     implementation(libs.chrisbanes.haze)
     implementation(libs.bonsai.core)
     implementation(libs.androidx.compose.material.icons.core)
-    implementation("io.github.kyant0:backdrop:1.0.4")
-    implementation("sh.calvin.reorderable:reorderable:3.0.0")
-    implementation("com.mocharealm.gaze:capsule-android:2.1.1-patch2")
-    implementation("com.materialkolor:material-kolor:4.0.5")
 
+    implementation("io.github.kyant0:backdrop:1.0.4")
+
+    implementation("com.mocharealm.gaze:capsule-android:2.1.1-patch2")
     implementation("androidx.appcompat:appcompat-resources:1.7.1")
 
     // Xposed
@@ -98,7 +97,6 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-layout:1.10.0")
     implementation(libs.androidx.room.ktx)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
-    implementation("androidx.compose.runtime:runtime:+")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

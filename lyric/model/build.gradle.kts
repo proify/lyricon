@@ -26,7 +26,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-val version = "0.1.46-SNAPSHOT"
+val version: String = "0.1.48"
 
 android {
     namespace = "io.github.proify.lyricon.lyric.model"

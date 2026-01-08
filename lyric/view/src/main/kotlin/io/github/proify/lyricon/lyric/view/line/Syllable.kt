@@ -25,7 +25,7 @@ import android.graphics.Shader
 import android.text.TextPaint
 import android.view.animation.Interpolator
 import androidx.core.graphics.withSave
-import io.github.proify.lyricon.lyric.model.extensions.filterByPosition
+import io.github.proify.lyricon.lyric.view.Constances
 import io.github.proify.lyricon.lyric.view.LyricPlayListener
 import io.github.proify.lyricon.lyric.view.util.Interpolators
 import kotlin.math.max
@@ -59,10 +59,15 @@ internal class Syllable(val view: LyricLineView) {
         view.scrollXOffset = 0f
     }
 
+    private val tempWords = mutableListOf<WordModel>()
     fun updateProgress(position: Long) {
         val lyricModel = view.lyricModel
-        val words = lyricModel.words
-        val current = words.filterByPosition(position).firstOrNull()
+
+        tempWords.clear()
+        lyricModel.wordTimingNavigator.findAt(position) {
+            tempWords.add(it)
+        }
+        val current = tempWords.firstOrNull()
 
         val targetWidth = when {
             current != null -> current.endPosition
@@ -80,9 +85,7 @@ internal class Syllable(val view: LyricLineView) {
         }
 
         if (targetWidth != highlightAnimator.targetWidth) {
-            val start = current?.begin ?: 0
-            val end = current?.end ?: 0
-            val duration = end - start
+            val duration = current?.duration ?: 0
             highlightAnimator.animateTo(targetWidth, duration)
         }
     }
@@ -201,8 +204,8 @@ internal class Syllable(val view: LyricLineView) {
     }
 
     private inner class DropAnimationManager() {
-        private val interpolator = Interpolators.decelerate
-        private val durationNanos = 700L * 1_000_000L
+        private val interpolator = Constances.WORD_DROP_ANIMATION_INTERPOLATOR
+        private val durationNanos = Constances.WORD_DROP_ANIMATION_DURATION * 1_000_000L
 
         // 活跃的动画列表（按触发时间排序）
         private val activeAnimations = mutableListOf<CharDropAnimation>()

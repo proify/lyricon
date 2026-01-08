@@ -17,7 +17,9 @@ package io.github.proify.lyricon.lyric.model.interfaces
 
 import io.github.proify.lyricon.lyric.model.LyricWord
 
-interface IDoubleLyricLine : ILyricLine {
+interface IRichLyricLine : ILyricLine {
     var secondaryText: String?
     var secondaryWords: List<LyricWord>?
+    var translationText: String?
+    var translationWords: List<LyricWord>?
 }

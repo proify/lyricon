@@ -20,6 +20,7 @@ import android.os.SharedMemory
 import android.util.Log
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.provider.IRemotePlayer
+import io.github.proify.lyricon.provider.extensions.deflate
 import kotlinx.serialization.json.Json
 import java.nio.ByteBuffer
 import kotlin.math.max
@@ -27,7 +28,7 @@ import kotlin.math.max
 internal class RemotePlayerProxy : RemotePlayer, RemoteServiceBinder<IRemotePlayer?> {
     companion object {
         private const val TAG = "RemotePlayerProxy"
-        private val jsonx = Json { ignoreUnknownKeys = true }
+        private val json = Json { ignoreUnknownKeys = true }
     }
 
     @Volatile
@@ -74,7 +75,9 @@ internal class RemotePlayerProxy : RemotePlayer, RemoteServiceBinder<IRemotePlay
     override fun setSong(song: Song?) =
         executeRemoteCall {
             val bytes = if (song != null) {
-                jsonx.encodeToString(song).toByteArray()
+                json.encodeToString(song)
+                    .toByteArray()
+                    .deflate()
             } else null
 
             it.setSong(bytes)

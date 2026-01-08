@@ -286,8 +286,6 @@ private fun InputPreferenceDialog(
     }
 }
 
-// ---------------- Helper Functions ----------------
-
 /**
  * 验证输入值是否有效
  */

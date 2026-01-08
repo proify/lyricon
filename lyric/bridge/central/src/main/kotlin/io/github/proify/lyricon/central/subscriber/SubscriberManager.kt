@@ -17,7 +17,7 @@
 package io.github.proify.lyricon.central.subscriber
 
 import android.util.Log
-import io.github.proify.lyricon.central.provider.player.ProviderActivePlayerDispatcher
+import io.github.proify.lyricon.central.provider.player.ActivePlayerDispatcher
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.provider.ProviderInfo
 import java.util.concurrent.CopyOnWriteArraySet
@@ -28,7 +28,7 @@ internal object SubscriberManager {
     private val subscribers = CopyOnWriteArraySet<RemoteSubscriber>()
 
     init {
-        ProviderActivePlayerDispatcher.addOnActivePlayerListener(PlayerEventBroadcaster)
+        ActivePlayerDispatcher.addOnActivePlayerListener(PlayerEventBroadcaster)
     }
 
     fun register(subscriber: RemoteSubscriber) {

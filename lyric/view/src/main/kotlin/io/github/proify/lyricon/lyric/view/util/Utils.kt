@@ -24,6 +24,12 @@ import android.view.View
 import androidx.core.view.isVisible
 import kotlin.math.roundToInt
 
+var View.visibilityIfChanged: Int
+    get() = visibility
+    set(value) {
+        if (visibility != value) visibility = value
+    }
+
 internal fun View.hide() {
     if (visibility != View.GONE) visibility = View.GONE
 }

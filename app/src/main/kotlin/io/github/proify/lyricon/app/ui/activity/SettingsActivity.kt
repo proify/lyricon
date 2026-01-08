@@ -142,7 +142,7 @@ private fun ThemeModeSelector(onChanged: () -> Unit) {
 private fun LanguageSelector(onChanged: () -> Unit) {
     val context = LocalContext.current
     val languages = remember { AppLangUtils.getLanguages() }
-    val currentLanguage = remember { AppLangUtils.getCurrentLanguage(context) }
+    val currentLanguage = remember { AppLangUtils.getCustomizeLang(context) }
 
     val spinnerEntries = remember(languages) {
         languages.map { code ->
@@ -163,7 +163,7 @@ private fun LanguageSelector(onChanged: () -> Unit) {
         items = spinnerEntries,
         selectedIndex = selectedIndex,
         onSelectedIndexChange = { index ->
-            AppLangUtils.setLanguage(context, languages[index])
+            AppLangUtils.saveCustomizeLanguage(context, languages[index])
             onChanged()
         }
     )

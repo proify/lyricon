@@ -59,7 +59,7 @@ import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.Card
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.basic.CardColors
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperArrow
 import io.github.proify.lyricon.app.ui.compose.custom.miuix.extra.SuperDialog
-import io.github.proify.lyricon.app.util.Utils.killSystemUi
+import io.github.proify.lyricon.app.util.Utils.killSystemUI
 import io.github.proify.lyricon.app.util.Utils.restartApp
 import io.github.proify.lyricon.app.util.collectEvent
 import top.yukonga.miuix.kmp.basic.IconButton
@@ -81,7 +81,7 @@ class MainActivity : BaseActivity() {
         setContent {
             MainContent(
                 showRestartFailDialog = model.showRestartFailDialog,
-                onRestartSysUi = { killSystemUi() },
+                onRestartSysUi = { killSystemUI() },
                 onRestartApp = { restartApp() },
             )
         }

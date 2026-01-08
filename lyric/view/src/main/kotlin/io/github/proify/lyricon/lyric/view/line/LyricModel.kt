@@ -20,6 +20,7 @@ package io.github.proify.lyricon.lyric.view.line
 import android.graphics.Paint
 import io.github.proify.lyricon.lyric.model.LyricLine
 import io.github.proify.lyricon.lyric.model.LyricWord
+import io.github.proify.lyricon.lyric.model.extensions.TimingNavigator
 
 data class LyricModel(
     val begin: Long = 0,
@@ -33,6 +34,8 @@ data class LyricModel(
         private set
 
     val wordText: String = words.toText()
+
+    val wordTimingNavigator: TimingNavigator<WordModel> by lazy { TimingNavigator(words) }
 
     fun isPlainText(): Boolean = words.isEmpty()
 

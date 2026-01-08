@@ -20,27 +20,26 @@ import android.animation.LayoutTransition
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import io.github.proify.lyricon.lyric.model.DoubleLyricLine
 import io.github.proify.lyricon.lyric.model.LyricLine
+import io.github.proify.lyricon.lyric.model.RichLyricLine
 import io.github.proify.lyricon.lyric.view.line.LyricLineView
+import io.github.proify.lyricon.lyric.view.util.LayoutTransitionX
 import io.github.proify.lyricon.lyric.view.util.visible
 
-class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
+class RichLyricLineView(context: Context, attrs: AttributeSet? = null) :
     LinearLayout(context, attrs) {
 
     companion object {
         private val EMPTY_LYRIC_LINE = LyricLine()
     }
 
-    val customLayoutTransition: LayoutTransition = LayoutTransition().apply {
-        enableTransitionType(LayoutTransition.CHANGING)
-    }
+    val customLayoutTransition: LayoutTransition = LayoutTransitionX()
 
     init {
         layoutTransition = customLayoutTransition
     }
 
-    var line: DoubleLyricLine? = null
+    var line: RichLyricLine? = null
         set(value) {
             field = value
             setMainLine(value)
@@ -60,7 +59,7 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
         addView(secondary, lp)
     }
 
-    private fun setMainLine(lyricLine: DoubleLyricLine?) {
+    private fun setMainLine(lyricLine: RichLyricLine?) {
         val line = if (lyricLine == null) {
             EMPTY_LYRIC_LINE
         } else {
@@ -87,7 +86,7 @@ class DoubleLineView(context: Context, attrs: AttributeSet? = null) :
         secondary.syllable.lyricPlayListener = listener
     }
 
-    private fun setSecondaryLine(source: DoubleLyricLine?) {
+    private fun setSecondaryLine(source: RichLyricLine?) {
         val line = LyricLine().apply {
             if (source == null) return@apply
             begin = source.begin

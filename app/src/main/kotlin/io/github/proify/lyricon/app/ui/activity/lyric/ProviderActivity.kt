@@ -25,7 +25,6 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -285,13 +284,12 @@ class LyricProviderActivity : BaseActivity() {
 
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             if (certified) {
-                                                Box {
-                                                    Icon(
-                                                        painter = painterResource(id = R.drawable.verified_24px),
-                                                        contentDescription = null,
-                                                        tint = Color(color = 0XFF66BB6A)
-                                                    )
-                                                }
+                                                Icon(
+                                                    modifier = Modifier.size(24.dp),
+                                                    painter = painterResource(id = R.drawable.verified_24px),
+                                                    contentDescription = null,
+                                                    tint = Color(color = 0XFF66BB6A)
+                                                )
                                                 Spacer(modifier = Modifier.width(4.dp))
                                             }
                                             Text(

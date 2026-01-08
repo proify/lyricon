@@ -29,29 +29,52 @@ object AppLangUtils {
     const val DEFAULT_LANGUAGE: String = "system"
     val DEFAULT_LOCALE: Locale = Locale.getDefault()
 
-    fun wrap(context: Context): Context = wrap(context, getCurrentLanguage(context))
+    fun wrapContext(context: Context): Context =
+        wrapContext(context, getCustomizeLang(context))
 
-    private fun wrap(context: Context, language: String): Context {
-        val locale = if (language == DEFAULT_LANGUAGE) {
+    fun setDefaultLocale(context: Context) {
+        val language = getCustomizeLang(context)
+        val locale = forLanguageTag(language)
+        Locale.setDefault(locale ?: DEFAULT_LOCALE)
+    }
+
+    fun forLanguageTag(language: String): Locale? {
+        return if (language == DEFAULT_LANGUAGE) {
             DEFAULT_LOCALE
-        } else Locale.forLanguageTag(language)
+        } else runCatching {
+            Locale.forLanguageTag(language)
+        }.getOrNull()
+    }
 
-        Locale.setDefault(locale)
+    fun wrapContext(context: Context, language: String): Context {
+        val locale = forLanguageTag(language) ?: return context
 
         val config = context.resources.configuration
         config.setLocale(locale)
+
         val newContext = context.createConfigurationContext(config)
-        return ContextWrapper(newContext)
+        return Cold(newContext)
     }
 
-    fun getCurrentLanguage(context: Context): String =
-        getDefaultSharedPreferences(context).safe().getString(KEY_LANGUAGE, DEFAULT_LANGUAGE)
+    fun getCustomizeLang(context: Context): String =
+        getDefaultSharedPreferences(context)
+            .safe()
+            .getString(KEY_LANGUAGE, DEFAULT_LANGUAGE)
             ?: DEFAULT_LANGUAGE
 
-    fun setLanguage(context: Context, language: String) {
-        getDefaultSharedPreferences(context).commitEdit { putString(KEY_LANGUAGE, language) }
+    fun saveCustomizeLanguage(context: Context, language: String) {
+        val locale = forLanguageTag(language)
+        getDefaultSharedPreferences(context)
+            .commitEdit {
+                if (locale != null) {
+                    putString(KEY_LANGUAGE, language)
+                } else {
+                    remove(KEY_LANGUAGE)
+                }
+            }
     }
 
     fun getLanguages(): List<String> = GeneratedLangs.LANGUAGES
 
+    class Cold(base: Context) : ContextWrapper(base)
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.provider.IRemotePlayer
 import io.github.proify.lyricon.provider.ProviderInfo
+import io.github.proify.lyricon.provider.extensions.inflate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,7 +20,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.math.max
 
 class RemotePlayer(
     info: ProviderInfo,
@@ -37,13 +37,11 @@ class RemotePlayer(
 
     private val recorder = PlayerRecorder(info)
 
-    // ---------- SharedMemory ----------
     private var positionSharedMemory: SharedMemory? = null
 
     @Volatile
     private var positionReadBuffer: ByteBuffer? = null
 
-    // ---------- Coroutine ----------
     private val scope = CoroutineScope(
         SupervisorJob() + Dispatchers.Default
     )
@@ -59,8 +57,6 @@ class RemotePlayer(
     init {
         initSharedMemory()
     }
-
-    // ---------- Lifecycle ----------
 
     fun release() {
         if (!released.compareAndSet(false, true)) return
@@ -80,12 +76,10 @@ class RemotePlayer(
         scope.cancel()
     }
 
-    // ---------- SharedMemory ----------
-
     private fun initSharedMemory() {
         try {
             positionSharedMemory = SharedMemory.create(
-                "music_position_${android.os.Process.myPid()}",
+                "lyricon_music_position_${android.os.Process.myPid()}",
                 Long.SIZE_BYTES
             ).apply {
                 setProtect(OsConstants.PROT_READ or OsConstants.PROT_WRITE)
@@ -101,7 +95,8 @@ class RemotePlayer(
         val buffer = positionReadBuffer ?: return 0
         return try {
             synchronized(buffer) {
-                max(0, buffer.getLong(0))
+                val position = buffer.getLong(0)
+                position.coerceIn(0, recorder.song?.duration ?: 0)
             }
         } catch (t: Throwable) {
             Log.w(TAG, "Read position failed", t)
@@ -149,29 +144,31 @@ class RemotePlayer(
     // ---------- AIDL ----------
 
     @OptIn(ExperimentalSerializationApi::class)
-    override fun setSong(songByteArray: ByteArray?) {
+    override fun setSong(bytes: ByteArray?) {
         check(!released.get()) { "Player is released" }
 
-        val song = songByteArray?.let {
+        val song = bytes?.let {
             try {
                 val start = System.currentTimeMillis()
-                val parsed = json.decodeFromStream(
+                val decompressedBytes = bytes.inflate()
+                val song = json.decodeFromStream(
                     Song.serializer(),
-                    it.inputStream()
+                    decompressedBytes.inputStream()
                 )
                 Log.d(TAG, "Song parsed in ${System.currentTimeMillis() - start} ms")
-                parsed
+                song
             } catch (t: Throwable) {
                 Log.e(TAG, "Song parse failed", t)
                 null
             }
         }
 
-        recorder.song = song
+        val normalized = song?.normalize()
+        recorder.song = normalized
         recorder.text = null
 
         Log.i(TAG, "Song changed")
-        playerListener.onSongChanged(recorder, song)
+        playerListener.onSongChanged(recorder, normalized)
     }
 
     override fun setPlaybackState(isPlaying: Boolean) {
@@ -192,10 +189,9 @@ class RemotePlayer(
     override fun seekTo(position: Long) {
         check(!released.get()) { "Player is released" }
 
-        val safe = max(0, position)
+        val safe = position.coerceIn(0, recorder.song?.duration ?: 0)
         recorder.lastPosition = safe
 
-        Log.d(TAG, "SeekTo $safe")
         playerListener.onSeekTo(recorder, safe)
     }
 
@@ -205,7 +201,6 @@ class RemotePlayer(
         recorder.song = null
         recorder.text = text
 
-        Log.i(TAG, "Receive text")
         playerListener.onPostText(recorder, text)
     }
 
