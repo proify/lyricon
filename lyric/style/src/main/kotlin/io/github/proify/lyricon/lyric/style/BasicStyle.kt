@@ -47,7 +47,7 @@ data class BasicStyle(
 
     var margins: RectF = Defaults.MARGINS,
     var paddings: RectF = Defaults.PADDINGS,
-    var visibilityRules: List<VisibilityRule> = Defaults.VISIBILITY_RULES,
+    var visibilityRules: List<VisibilityRule> = defaultVisibilityRules(),
     var hideOnLockScreen: Boolean = Defaults.HIDE_ON_LOCK_SCREEN,
     var noLyricHideTimeout: Int = Defaults.NO_LYRIC_HIDE_TIMEOUT,
     var noUpdateHideTimeout: Int = Defaults.NO_UPDATE_HIDE_TIMEOUT,
@@ -130,12 +130,11 @@ data class BasicStyle(
             preferences.getString("lyric_style_base_paddings", null),
             Defaults.PADDINGS
         )
-        visibilityRules = json.safeDecode<MutableList<VisibilityRule>>(
-            preferences.getString(
-                "lyric_style_base_visibility_rules",
-                "[]"
-            ), Defaults.VISIBILITY_RULES.toMutableList()
+        val configuredVisibilityRules = json.safeDecode<MutableList<VisibilityRule>>(
+            preferences.getString(PREF_KEY_VISIBILITY_RULES, null),
+            mutableListOf()
         )
+        visibilityRules = resolveVisibilityRules(configuredVisibilityRules)
 
         hideOnLockScreen = preferences.getBoolean(
             "lyric_style_base_hide_on_lock_screen",
@@ -198,7 +197,7 @@ data class BasicStyle(
 
         editor.putString("lyric_style_base_margins", margins.toJson())
         editor.putString("lyric_style_base_paddings", paddings.toJson())
-        editor.putString("lyric_style_base_visibility_rules", visibilityRules.toJson())
+        editor.putString(PREF_KEY_VISIBILITY_RULES, visibilityRules.toJson())
         editor.putBoolean("lyric_style_base_hide_on_lock_screen", hideOnLockScreen)
         editor.putInt("lyric_style_base_no_lyric_hide_timeout", noLyricHideTimeout)
         editor.putInt("lyric_style_base_no_update_hide_timeout", noUpdateHideTimeout)
@@ -314,7 +313,7 @@ data class BasicStyle(
     }
 
     object Defaults {
-        const val ANCHOR: String = "clock"
+        const val ANCHOR: String = CLOCK_VIEW_ID
         const val INSERTION_ORDER: Int = INSERTION_ORDER_BEFORE
         const val WIDTH: Float = 100f
         const val WIDTH_LAND: Float = 200f
@@ -324,7 +323,12 @@ data class BasicStyle(
 
         val MARGINS: RectF = RectF()
         val PADDINGS: RectF = RectF()
-        val VISIBILITY_RULES: List<VisibilityRule> = emptyList()
+        val VISIBILITY_RULES: List<VisibilityRule> = listOf(
+            VisibilityRule(
+                id = CLOCK_VIEW_ID,
+                mode = VisibilityRule.MODE_HIDE_WHEN_PLAYING
+            )
+        )
         const val HIDE_ON_LOCK_SCREEN: Boolean = true
         const val NO_LYRIC_HIDE_TIMEOUT: Int = 0
         const val NO_UPDATE_HIDE_TIMEOUT: Int = 0
@@ -335,8 +339,37 @@ data class BasicStyle(
     }
 
     companion object {
+        const val CLOCK_VIEW_ID: String = "clock"
+        const val PREF_KEY_VISIBILITY_RULES: String = "lyric_style_base_visibility_rules"
+
         const val INSERTION_ORDER_BEFORE: Int = 0
         const val INSERTION_ORDER_AFTER: Int = 1
+
+        fun defaultVisibilityRules(): List<VisibilityRule> =
+            Defaults.VISIBILITY_RULES.map(VisibilityRule::copy)
+
+        fun resolveVisibilityRules(
+            configuredRules: List<VisibilityRule>?
+        ): List<VisibilityRule> {
+            val resolvedRules = linkedMapOf<String, VisibilityRule>()
+            defaultVisibilityRules().forEach { rule ->
+                resolvedRules[rule.id] = rule
+            }
+            configuredRules.orEmpty().forEach { rule ->
+                resolvedRules[rule.id] = rule.copy()
+            }
+            return resolvedRules.values.toList()
+        }
+
+        fun compactVisibilityRulesForStorage(
+            rules: List<VisibilityRule>
+        ): List<VisibilityRule> {
+            val defaultRuleIds = Defaults.VISIBILITY_RULES
+                .mapTo(mutableSetOf()) { it.id }
+            return rules.filterNot { rule ->
+                rule.mode == VisibilityRule.MODE_NORMAL && rule.id !in defaultRuleIds
+            }
+        }
 
         /** 中文转换模式：关闭 */
         const val CHINESE_CONVERSION_OFF = 0

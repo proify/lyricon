@@ -42,6 +42,7 @@ import io.github.proify.lyricon.app.util.AppThemeUtils
 import io.github.proify.lyricon.app.util.LyricPrefs
 import io.github.proify.lyricon.common.PackageNames
 import io.github.proify.lyricon.common.util.ViewTreeNode
+import io.github.proify.lyricon.lyric.style.BasicStyle
 import io.github.proify.lyricon.lyric.style.VisibilityRule
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.preference.CheckboxPreference
@@ -59,7 +60,9 @@ class ViewRulesTreeActivity : ViewTreeActivity() {
 
     private fun clearNormalRules() {
         LyricPrefs.setViewVisibilityRule(
-            LyricPrefs.getViewVisibilityRule().filterNot { it.mode == VisibilityRule.MODE_NORMAL }
+            BasicStyle.compactVisibilityRulesForStorage(
+                LyricPrefs.getViewVisibilityRule()
+            )
         )
     }
 

@@ -7,7 +7,6 @@
 package io.github.proify.lyricon.app.util
 
 import android.content.SharedPreferences
-import io.github.proify.android.extensions.fromJson
 import io.github.proify.android.extensions.getPrivateSharedPreferences
 import io.github.proify.android.extensions.json
 import io.github.proify.android.extensions.safeDecode
@@ -16,6 +15,7 @@ import io.github.proify.lyricon.app.LyriconApp
 import io.github.proify.lyricon.app.bridge.AppBridge.LyricStylePrefs
 import io.github.proify.lyricon.app.bridge.AppBridge.LyricStylePrefs.KEY_CONFIGURED_PACKAGES
 import io.github.proify.lyricon.app.bridge.AppBridge.LyricStylePrefs.KEY_ENABLED_PACKAGES
+import io.github.proify.lyricon.lyric.style.BasicStyle
 import io.github.proify.lyricon.lyric.style.VisibilityRule
 
 object LyricPrefs {
@@ -78,15 +78,18 @@ object LyricPrefs {
     fun setViewVisibilityRule(rules: List<VisibilityRule>?) {
         basicStylePrefs.editCommit {
             if (rules.isNullOrEmpty()) {
-                remove("lyric_style_base_visibility_rules")
+                remove(BasicStyle.PREF_KEY_VISIBILITY_RULES)
             } else {
-                putString("lyric_style_base_visibility_rules", rules.toJson())
+                putString(BasicStyle.PREF_KEY_VISIBILITY_RULES, rules.toJson())
             }
         }
     }
 
     fun getViewVisibilityRule(): List<VisibilityRule> {
-        val json = basicStylePrefs.getString("lyric_style_base_visibility_rules", null)
-        return json?.fromJson<List<VisibilityRule>>() ?: emptyList()
+        val configuredRules = json.safeDecode<List<VisibilityRule>>(
+            basicStylePrefs.getString(BasicStyle.PREF_KEY_VISIBILITY_RULES, null),
+            emptyList()
+        )
+        return BasicStyle.resolveVisibilityRules(configuredRules)
     }
 }
