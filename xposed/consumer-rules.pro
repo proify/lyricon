@@ -14,6 +14,13 @@
 -keep class io.github.proify.lyricon.xposed.hook.** { *; }
 -keep class io.github.proify.lyricon.xposed.systemui.hook.** { *; }
 
+# libxposed API 102 官方 R8 规则：保留入口构造器，并在入口类混淆时同步资源内容
+-adaptresourcefilecontents META-INF/xposed/java_init.list
+-keep,allowoptimization,allowobfuscation public class * extends io.github.libxposed.api.XposedModule {
+    public <init>();
+}
+
 # 忽略 Xposed 框架的警告（避免因注解缺失导致构建中断）
+-dontwarn io.github.libxposed.annotation.**
 -dontwarn io.github.libxposed.api.**
 -dontwarn javax.annotation.Nullable

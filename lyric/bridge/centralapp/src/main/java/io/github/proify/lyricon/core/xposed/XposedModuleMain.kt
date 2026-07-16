@@ -8,6 +8,7 @@ package io.github.proify.lyricon.core.xposed
 
 import android.app.Application
 import androidx.annotation.Keep
+import io.github.libxposed.api.XposedInterface
 import io.github.libxposed.api.XposedModule
 import io.github.libxposed.api.XposedModuleInterface
 import io.github.proify.lyricon.central.BridgeCentral
@@ -23,30 +24,33 @@ class XposedModuleMain : XposedModule() {
         private var isInitialized = false
     }
 
-    override fun onPackageLoaded(param: XposedModuleInterface.PackageLoadedParam) {
+    override fun onPackageReady(param: XposedModuleInterface.PackageReadyParam) {
         if (param.packageName != TARGET_PACKAGE) {
             return
         }
 
-        val appClassName = param.applicationInfo?.className ?: "android.app.Application"
+        val appClassName = param.applicationInfo.className ?: "android.app.Application"
 
         try {
-            val appClass = Class.forName(appClassName, true, param.defaultClassLoader)
+            val appClass = Class.forName(appClassName, true, param.classLoader)
             val onCreateMethod = appClass.getDeclaredMethod("onCreate")
 
-            hook(onCreateMethod).intercept { chain ->
-                chain.proceed()
-                val app = chain.thisObject as? Application
+            hook(onCreateMethod).intercept(
+                object : XposedInterface.Hooker {
+                    override fun intercept(chain: XposedInterface.Chain): Any? {
+                        chain.proceed()
+                        val app = chain.thisObject as? Application
 
-                synchronized(this@XposedModuleMain) {
-                    if (isInitialized) return@intercept null
-                    if (app != null) {
-                        initLyriconCentral(app)
-                        isInitialized = true
+                        synchronized(this@XposedModuleMain) {
+                            if (!isInitialized && app != null) {
+                                initLyriconCentral(app)
+                                isInitialized = true
+                            }
+                        }
+                        return null
                     }
                 }
-                null
-            }
+            )
         } catch (e: Throwable) {
             log(
                 android.util.Log.ERROR,
