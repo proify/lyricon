@@ -20,6 +20,8 @@ class XposedModuleMain : XposedModule() {
         private const val TAG = "Lyricon-Xposed"
         private const val TARGET_PACKAGE = "com.android.systemui"
 
+        private val initializationLock = Any()
+
         @Volatile
         private var isInitialized = false
     }
@@ -41,7 +43,7 @@ class XposedModuleMain : XposedModule() {
                         chain.proceed()
                         val app = chain.thisObject as? Application
 
-                        synchronized(this@XposedModuleMain) {
+                        synchronized(initializationLock) {
                             if (!isInitialized && app != null) {
                                 initLyriconCentral(app)
                                 isInitialized = true

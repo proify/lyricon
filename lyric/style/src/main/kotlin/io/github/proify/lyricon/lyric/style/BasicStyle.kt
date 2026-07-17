@@ -364,10 +364,14 @@ data class BasicStyle(
         fun compactVisibilityRulesForStorage(
             rules: List<VisibilityRule>
         ): List<VisibilityRule> {
-            val defaultRuleIds = Defaults.VISIBILITY_RULES
-                .mapTo(mutableSetOf()) { it.id }
+            val defaultRules = Defaults.VISIBILITY_RULES.associateBy { it.id }
             return rules.filterNot { rule ->
-                rule.mode == VisibilityRule.MODE_NORMAL && rule.id !in defaultRuleIds
+                val defaultRule = defaultRules[rule.id]
+                if (defaultRule != null) {
+                    rule.mode == defaultRule.mode
+                } else {
+                    rule.mode == VisibilityRule.MODE_NORMAL
+                }
             }
         }
 

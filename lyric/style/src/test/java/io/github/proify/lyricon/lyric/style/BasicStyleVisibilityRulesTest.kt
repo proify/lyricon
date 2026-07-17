@@ -90,6 +90,20 @@ class BasicStyleVisibilityRulesTest {
     }
 
     @Test
+    fun defaultClockRuleIsRemovedFromStorage() {
+        val rules = BasicStyle.compactVisibilityRulesForStorage(
+            listOf(
+                VisibilityRule(
+                    id = BasicStyle.CLOCK_VIEW_ID,
+                    mode = VisibilityRule.MODE_HIDE_WHEN_PLAYING
+                )
+            )
+        )
+
+        assertTrue(rules.isEmpty())
+    }
+
+    @Test
     fun redundantNormalRuleIsRemovedFromStorage() {
         val rules = BasicStyle.compactVisibilityRulesForStorage(
             listOf(
