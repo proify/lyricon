@@ -85,14 +85,18 @@ abstract class PackageHooker {
         try {
             val onCreateMethod = Application::class.java.getDeclaredMethod("onCreate")
 
-            module.hook(onCreateMethod).intercept { chain ->
-                chain.proceed()
-                val instance = chain.thisObject as? Application
-                if (instance != null) {
-                    handleApplicationInstance(instance)
+            module.hook(onCreateMethod).intercept(
+                object : XposedInterface.Hooker {
+                    override fun intercept(chain: XposedInterface.Chain): Any? {
+                        chain.proceed()
+                        val instance = chain.thisObject as? Application
+                        if (instance != null) {
+                            handleApplicationInstance(instance)
+                        }
+                        return null
+                    }
                 }
-                null
-            }
+            )
         } catch (t: Throwable) {
             YLog.error(TAG, "Critical failure: Global Hook failed", t)
         }

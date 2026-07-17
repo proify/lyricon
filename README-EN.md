@@ -44,11 +44,12 @@
 ### 📋 Requirements
 
 - **System Version**: Android 9.0 (API 28) or later.
-- **Prerequisites**: The device must have **Root** access and the **LSPosed** framework, or a
-  compatible Xposed framework, installed.
+- **Prerequisites**: The device must have **Root** access and **LSPosed**, or a compatible Xposed
+  framework, with libxposed API 101 or 102 support installed.
 
 > [!TIP]
-> For better stability, the latest stable version of LSPosed is recommended.
+> For better stability, use a framework version that explicitly supports libxposed API 102. API 101
+> remains supported.
 
 ### ⚙️ Installation & Configuration
 
@@ -60,8 +61,9 @@
 4. **Install Plugins**: Download the corresponding plugin
    from [LyricProvider](https://github.com/tomakino/LyricProvider) according to the music player you
    use.
-5. **Adjust Parameters**: Open the Lyricon app and adjust the position anchor, width, and visual
-   style according to your screen.
+5. **Adjust Parameters**: Open Lyricon and adjust the anchor, width, and visual style for your
+   screen. To prevent overlap, `clock` is hidden while lyrics are visible by default; set its view
+   rule to **Default** if both should remain visible.
 6. **Test It**: Launch your music player and play music, then check whether lyrics are displayed
    correctly in the status bar.
 
