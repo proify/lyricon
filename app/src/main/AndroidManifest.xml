@@ -61,6 +61,19 @@
             android:name=".activity.lyric.AiLaboratoryActivity"
             android:label="@string/activity_ai_laboratory" />
 
+        <!--
+            AI 歌词解读：独立空 taskAffinity，避免并入 lyricon 主任务导致
+            透明弹层落在 MainActivity 之上；配合 NEW_TASK + CLEAR_TASK
+            使其作为覆盖层显示在当前使用的应用之上。
+        -->
+        <activity
+            android:name=".activity.lyric.AiExplainActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Translucent" />
+
         <activity
             android:name=".activity.lyric.AnchorViewTreeActivity"
             android:label="@string/activity_anchor" />

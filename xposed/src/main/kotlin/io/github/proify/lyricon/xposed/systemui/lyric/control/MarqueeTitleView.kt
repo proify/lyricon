@@ -8,150 +8,262 @@ package io.github.proify.lyricon.xposed.systemui.lyric.control
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Typeface
 import android.os.SystemClock
-import android.widget.TextView
+import android.text.TextPaint
+import android.view.View
+import io.github.proify.android.extensions.dp
+import io.github.proify.lyricon.xposed.systemui.lyric.control.MarqueeTitleView.Companion.GHOST_SPACING_DP
+import io.github.proify.lyricon.xposed.systemui.lyric.control.MarqueeTitleView.Companion.LOOP_DELAY_MS
 
 /**
- * 跑马灯标题视图（自驱动滚动，不依赖 TextView 原生跑马灯）。
+ * 跑马灯标题视图。
  *
- * 原生 [TextView] 跑马灯的启动依赖焦点/选中状态（startMarquee 要求 isFocused()
- * 或 isSelected()），并且窗口焦点回调与文本重排（makeNewLayout 每次都先
- * stopMarquee 再 startMarquee、mScroll 清零）随时会让它停下重来。本控件运行在
- * [LyricControlPopup] 的非焦点 PopupWindow 内（isFocusable = false），窗口拿不到
- * 焦点，滚动状态完全不可控，原生跑马灯表现为"不滚动"或"滚动不断被重置"。
- *
- * 因此这里完全关闭系统跑马灯（ellipsize = null，整行文本按完整宽度布局），
- * 由本控件用 Choreographer 帧回调自行驱动滚动，并在 onDraw 中绘制主副本 + 幽灵
- * 副本实现无缝循环：
- * - 不依赖焦点/选中/窗口焦点，任何环境下的行为都一致；
- * - 文本换行时自动重新测量并从头开始；
- * - 静止时不再投递帧回调，零后台开销。
+ * 与 [LyricLineView] 一样继承 [View]，自成一套文本绘制与滚动：
+ * - 滚动模型参照同仓库 [io.github.proify.lyricon.lyric.view.line.ScrollTextRenderer]：
+ *   完全绕过 TextView 的文本布局与系统跑马灯（startMarquee 依赖焦点/选中状态、窗口
+ *   焦点回调与重排时会 stop/重开），改由本控件用帧回调自行推进偏移，并在 onDraw 里用
+ *   [textPaint] 直接绘制"主副本 + 幽灵副本"，副本间留 [GHOST_SPACING_DP] 空隙，
+ *   循环间延迟 [LOOP_DELAY_MS]。行为不依赖焦点/选中/窗口焦点，任何环境下都一致。
+ * - 渐隐边复用系统机制（同 [LyricLineView]）：[setHorizontalFadingEdgeEnabled] +
+ *   重写 [getLeftFadingEdgeStrength] / [getRightFadingEdgeStrength]，把强度绑定到本控件的
+ *   [unitOffset]，由系统按滚动状态绘制左右渐隐。
  *
  * @author Tomakino
  * @since 2026
  */
-internal class MarqueeTitleView(context: Context) : TextView(context) {
+internal class MarqueeTitleView(context: Context) : View(context) {
+
+    /** 文本画笔（字号/颜色/字体由面板通过 [textSize]/[textColor]/[textTypeface] 驱动）。 */
+    val textPaint: TextPaint = TextPaint().apply {
+        isAntiAlias = true
+    }
+
+    /** 当前文本。 */
+    var text: String = ""
+        set(value) {
+            if (field == value) return
+            field = value
+            textWidth = textPaint.measureText(value)
+            unitOffset = 0f
+            resetState()
+            start()
+            invalidate()
+        }
+
+    /** 字号（px）。 */
+    var textSize: Float
+        get() = textPaint.textSize
+        set(value) {
+            if (textPaint.textSize == value) return
+            textPaint.textSize = value
+            textWidth = textPaint.measureText(text)
+            invalidate()
+        }
+
+    /** 文本颜色。 */
+    var textColor: Int
+        get() = textPaint.color
+        set(value) {
+            if (textPaint.color == value) return
+            textPaint.color = value
+            invalidate()
+        }
+
+    /** 字体。 */
+    var textTypeface: Typeface?
+        get() = textPaint.typeface
+        set(value) {
+            if (textPaint.typeface == value) return
+            textPaint.typeface = value
+            textWidth = textPaint.measureText(text)
+            invalidate()
+        }
 
     /** 当前文本的单行宽度（px），超过视图宽度时启动滚动。 */
     private var textWidth = 0f
 
-    /** 当前滚动偏移（px），在 [0, textWidth + 视口宽) 内循环。 */
-    private var scrollOffset = 0f
+    /** 单次滚动周期内的偏移（px），单位 = textWidth + ghostSpacing。 */
+    private var unitOffset = 0f
 
-    /** 上一帧时间戳，用于计算帧间隔。 */
+    /** 帧推进行程是否在跑。 */
+    private var isRunning = false
+
+    /** 是否处于循环间/入场延迟。 */
+    private var isPendingDelay = false
+
+    private var delayRemainingMs = 0L
     private var frameAt = 0L
 
-    /** 是否处于跑马灯滚动状态。 */
-    private var isScrolling = false
-
-    private val marqueeSpeedPx = MARQUEE_DP_PER_SECOND * resources.displayMetrics.density
+    private val ghostSpacing = GHOST_SPACING_DP.dp.toFloat()
+    private val scrollSpeedPxPerMs =
+        (DEFAULT_SPEED_DP * resources.displayMetrics.density) / 1000f
 
     init {
-        // 关闭系统跑马灯与渐隐边：布局按整行文本宽度构建，滚动完全由本控件控制
-        setSingleLine(true)
-        ellipsize = null
-        // 关键：让 TextView 用 VERY_WIDE 宽度构建布局（一行完整文本，不按视口换行截断），
-        // 否则超宽文本会被 StaticLayout 截到第一处换行点，getLineWidth(0) 只有视口宽，
-        // 跑马灯将永远判定"文本未超宽"而不滚动
-        setHorizontallyScrolling(true)
-        isHorizontalFadingEdgeEnabled = false
+        // 渐隐边交给系统绘制，强度由 getLeft/RightFadingEdgeStrength 绑定滚动状态
+        setFadingEdgeLength(FADING_EDGE_LENGTH_DP.dp)
+        isHorizontalFadingEdgeEnabled = true
     }
 
-    override fun onTextChanged(
-        text: CharSequence?,
-        start: Int,
-        lengthBefore: Int,
-        lengthAfter: Int
-    ) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        textWidth = paint.measureText(text?.toString() ?: "")
-        scrollOffset = 0f
-        ensureScrolling()
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        // 宽度撑满可用（视口 = 列宽），高度按文本行高
+        val w = MeasureSpec.getSize(widthMeasureSpec)
+        val textHeight = (textPaint.descent() - textPaint.ascent()).toInt()
+        setMeasuredDimension(w, resolveSize(textHeight, heightMeasureSpec))
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        // 布局完成后以真实 mLayout 校准文本宽度（布局宽度才是实际绘制宽度）
-        textWidth = layout?.getLineWidth(0) ?: textWidth
-        ensureScrolling()
+        start()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        // 与系统跑马灯一致：入场后延迟片刻再开始滚动
-        postDelayed({ ensureScrolling() }, START_DELAY_MS)
+        // 入场延迟后开始滚动
+        postDelayed({ start() }, START_DELAY_MS)
     }
 
     override fun onDetachedFromWindow() {
-        isScrolling = false
-        scrollOffset = 0f
+        resetState()
         super.onDetachedFromWindow()
     }
 
+    /** 主副本 + 幽灵副本自绘。 */
     override fun onDraw(canvas: Canvas) {
-        val viewWidth = innerWidth()
-        if (scrollOffset <= 0.01f || textWidth <= viewWidth) {
-            super.onDraw(canvas)
-            return
-        }
+        val vw = width.toFloat()
+        if (text.isEmpty() || textWidth <= 0f) return
+
+        val fm = textPaint.fontMetrics
+        val baseline = (height - (fm.descent - fm.ascent)) / 2f - fm.ascent
+        val unit = textWidth + ghostSpacing
+        val offset = -unitOffset
+        val right = offset + textWidth
+
         // 主副本：向左滚动出视口
-        canvas.save()
-        canvas.translate(-scrollOffset, 0f)
-        super.onDraw(canvas)
-        canvas.restore()
-        // 幽灵副本：主副本尾部离开视口后从右侧无缝进入，循环无"跳回起点"的瞬间
-        if (scrollOffset > textWidth) {
+        if (offset < vw && right > 0) {
             canvas.save()
-            canvas.translate(textWidth + viewWidth - scrollOffset, 0f)
-            super.onDraw(canvas)
+            canvas.translate(offset, 0f)
+            canvas.drawText(text, 0f, baseline, textPaint)
             canvas.restore()
+        }
+
+        // 幽灵副本：主副本尾部离开视口后，从右侧以 ghostSpacing 间距进入
+        if (textWidth > vw && right < vw) {
+            val ghostX = right + ghostSpacing
+            if (ghostX < vw) {
+                canvas.save()
+                canvas.translate(ghostX, 0f)
+                canvas.drawText(text, 0f, baseline, textPaint)
+                canvas.restore()
+            }
         }
     }
 
-    /** 视口内可用宽度（px）。 */
-    private fun innerWidth(): Float = (width - compoundPaddingLeft - compoundPaddingRight).toFloat()
+    /** 左缘渐隐强度：滚动偏移在 (0, textWidth] 内随偏移渐显。 */
+    override fun getLeftFadingEdgeStrength(): Float {
+        if (textWidth <= width + 0.5f || horizontalFadingEdgeLength <= 0) return 0f
+        val edgeL = horizontalFadingEdgeLength.toFloat()
+        val offsetInUnit = unitOffset
+        if (offsetInUnit <= 0f) return 0f
+        if (offsetInUnit > textWidth) return 0f
+        return (offsetInUnit / edgeL).coerceIn(0f, 1f)
+    }
 
-    /** 文本超宽且已挂载时启动滚动帧循环（已滚动则不重复）。 */
-    private fun ensureScrolling() {
-        if (isScrolling || !isAttachedToWindow) return
-        if (innerWidth() < 1f || textWidth <= innerWidth() + 0.5f) return
-        isScrolling = true
+    /** 右缘渐隐强度：主文本尾部与幽灵之间跨越视口右缘的空隙处为零，否则常驻。 */
+    override fun getRightFadingEdgeStrength(): Float {
+        if (textWidth <= width + 0.5f || horizontalFadingEdgeLength <= 0) return 0f
+        val viewW = width.toFloat()
+        val primaryRightEdge = textWidth - unitOffset
+        val ghostLeftEdge = primaryRightEdge + ghostSpacing
+        return if (primaryRightEdge < viewW && ghostLeftEdge > viewW) 0f else 1.0f
+    }
+
+    /** 文本超宽且已挂载时启动滚动帧循环（已在跑或宽度未知则不重复）。 */
+    private fun start() {
+        if (!isAttachedToWindow) return
+        if (width < 1) return
+        if (textWidth <= width + 0.5f) {
+            resetState()
+            invalidate()
+            return
+        }
+        if (isRunning || isPendingDelay) return
+        scheduleDelay(START_DELAY_MS)
         frameAt = SystemClock.uptimeMillis()
         postOnAnimationDelayed(tick, FRAME_DELAY_MS)
         invalidate()
     }
 
-    /** 每帧推进滚动偏移；文本不再超宽时退出帧循环。 */
+    private fun scheduleDelay(delayMs: Long) {
+        if (delayMs <= 0L) {
+            isRunning = true
+            isPendingDelay = false
+            delayRemainingMs = 0L
+        } else {
+            isRunning = false
+            isPendingDelay = true
+            delayRemainingMs = delayMs
+        }
+    }
+
+    private fun resetState() {
+        isRunning = false
+        isPendingDelay = false
+        delayRemainingMs = 0L
+    }
+
+    /** 每帧推进滚动偏移；文本不再超宽时退出帧循环（零后台开销）。 */
     private val tick = object : Runnable {
         override fun run() {
             if (!isAttachedToWindow) {
-                isScrolling = false
+                resetState()
                 return
             }
-            val viewWidth = innerWidth()
-            if (viewWidth < 1f || textWidth <= viewWidth + 0.5f) {
-                isScrolling = false
-                scrollOffset = 0f
+            if (textWidth <= width + 0.5f) {
+                resetState()
+                unitOffset = 0f
                 invalidate()
                 return
             }
             val now = SystemClock.uptimeMillis()
-            val dt = (now - frameAt).coerceIn(0L, MAX_FRAME_DELTA_MS) / 1000f
+            val deltaMs = (now - frameAt).coerceIn(0L, MAX_FRAME_DELTA_MS)
             frameAt = now
-            scrollOffset += marqueeSpeedPx * dt
-            val cycle = textWidth + viewWidth
-            if (scrollOffset >= cycle) scrollOffset -= cycle
-            invalidate()
+
+            if (isPendingDelay) {
+                delayRemainingMs -= deltaMs
+                if (delayRemainingMs <= 0) {
+                    isPendingDelay = false
+                    isRunning = true
+                }
+            } else if (isRunning) {
+                unitOffset += scrollSpeedPxPerMs * deltaMs
+                val unit = textWidth + ghostSpacing
+                if (unitOffset >= unit) {
+                    unitOffset -= unit
+                    // 循环间停顿，与系统跑马灯节奏一致
+                    scheduleDelay(LOOP_DELAY_MS)
+                }
+                invalidate()
+            }
             postOnAnimationDelayed(this, FRAME_DELAY_MS)
         }
     }
 
     private companion object {
-        /** 滚动速度（dp/s），与系统跑马灯 MARQUEE_DP_PER_SECOND 一致。 */
-        const val MARQUEE_DP_PER_SECOND = 30f
+        /** 滚动速度（dp/s）。 */
+        const val DEFAULT_SPEED_DP = 40f
 
-        /** 面板显示后延迟开始滚动（ms），与系统跑马灯节奏接近。 */
-        const val START_DELAY_MS = 500L
+        /** 相邻副本之间的空隙（dp），详见 ScrollTextRenderer.ghostSpacing。 */
+        const val GHOST_SPACING_DP = 40
+
+        /** 渐隐边长度（dp）。 */
+        const val FADING_EDGE_LENGTH_DP = 14
+
+        /** 入场后延迟开始滚动（ms）。 */
+        const val START_DELAY_MS = 400L
+
+        /** 一次循环结束后的停顿（ms）。 */
+        const val LOOP_DELAY_MS = 800L
 
         /** 帧间隔（ms）。 */
         const val FRAME_DELAY_MS = 16L

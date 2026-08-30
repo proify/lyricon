@@ -21,6 +21,7 @@ import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.subscriber.ActivePlayerListener
 import io.github.proify.lyricon.subscriber.ProviderInfo
 import io.github.proify.lyricon.xposed.logger.YLog
+import io.github.proify.lyricon.xposed.systemui.ai.explain.AiExplainLauncher
 import io.github.proify.lyricon.xposed.systemui.lyric.LyricDataHub
 import io.github.proify.lyricon.xposed.systemui.lyric.LyricViewController
 import io.github.proify.lyricon.xposed.systemui.util.MediaTrackMeta
@@ -57,6 +58,17 @@ object LyricControlPopup : ActivePlayerListener, NotificationCoverHelper.OnCover
     private const val MIN_WIDTH_DP = 280
     private const val ELEVATION_DP = 28
 
+    /** 拖动：自由移动区间（相对锚点），超出后施加阻尼。 */
+    private const val DRAG_FREE_UP_DP = 120
+    private const val DRAG_FREE_DOWN_DP = 220
+
+    /** 超出自由区间后的阻尼系数（0~1，越小越"拽不动"，iOS 橡皮筋手感）。 */
+    private const val DRAG_DAMPEN = 0.35f
+
+    /** 松手回弹时长（ms）与过冲量（0~1）。 */
+    private const val DRAG_SPRING_MS = 320L
+    private const val DRAG_BOUNCE = 0.45f
+
     private val mainHandler = Handler(Looper.getMainLooper())
 
     // ---- 当前弹窗状态（主线程访问） ----
@@ -68,7 +80,7 @@ object LyricControlPopup : ActivePlayerListener, NotificationCoverHelper.OnCover
     private var dismissing = false
 
     /**
-     * 面板交互回调：转发到系统媒体控制器；AI 按钮交给 [LyricAiExplain]。
+     * 面板交互回调：转发到系统媒体控制器；AI 按钮交给 [AiExplainLauncher]。
      */
     private val actionListener = object : LyricControlPanel.ActionListener {
         override fun onPrevious() {
@@ -90,7 +102,8 @@ object LyricControlPopup : ActivePlayerListener, NotificationCoverHelper.OnCover
 
         override fun onAiExplain(button: View) {
             val anchor = anchorView ?: return
-            LyricAiExplain.launch(anchor, button, LyricViewController.currentSong)
+            AiExplainLauncher.launch(anchor, button, LyricViewController.currentSong)
+            dismiss()
         }
     }
 
@@ -241,13 +254,12 @@ object LyricControlPopup : ActivePlayerListener, NotificationCoverHelper.OnCover
         }
     }
 
-    /** 关闭控制窗口（同时关闭 AI 解读弹窗并注销监听）。 */
+    /** 关闭控制窗口并注销监听（AI 解读界面由 App 进程管理，无需在此处理）。 */
     @JvmStatic
     fun dismiss() {
         if (dismissing) return
         dismissing = true
 
-        LyricAiExplain.dismiss()
         LyricDataHub.removeListener(this)
         SystemUIMediaUtils.unregisterListener(mediaCallback)
         NotificationCoverHelper.unregisterListener(this)

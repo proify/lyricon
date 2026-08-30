@@ -14,7 +14,7 @@ import io.github.proify.android.extensions.inflate
 import io.github.proify.lyricon.app.util.LyricPrefs
 import io.github.proify.lyricon.app.util.LyricPrefs.getLyricStylePrefNames
 import io.github.proify.lyricon.app.util.editCommit
-import io.github.proify.lyricon.lyric.style.TextStyle.Companion.KEY_AI_TRANSLATION_API_KEY
+import io.github.proify.lyricon.lyric.ai.core.AiConfig.Companion.KEY_AI_CONFIG_API_KEY
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.InputStream
@@ -25,7 +25,7 @@ object AppBackup {
     private const val TAG = "AppBackup"
 
     private val BLACKLIST_KEYS = listOf(
-        KEY_AI_TRANSLATION_API_KEY
+        KEY_AI_CONFIG_API_KEY
     )
 
     fun export(outputStream: OutputStream): Boolean {

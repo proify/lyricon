@@ -307,25 +307,6 @@ class BasicLyricStyleActivity : AbstractLyricActivity() {
                 }
             }
 
-            item(key = "ai_translation") {
-                SmallTitle(
-                    text = stringResource(R.string.section_translation),
-                    insideMargin = PaddingValues(
-                        start = 26.dp,
-                        top = 16.dp,
-                        end = 26.dp,
-                        bottom = 10.dp
-                    )
-                )
-                Card(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 0.dp)
-                        .fillMaxWidth(),
-                ) {
-                    AiTranslationPreference(preferences)
-                }
-            }
-
             item("bottom_spacer") {
                 Spacer(Modifier.height(16.dp))
             }

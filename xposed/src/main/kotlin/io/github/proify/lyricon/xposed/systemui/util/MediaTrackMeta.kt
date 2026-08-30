@@ -28,6 +28,7 @@ object MediaTrackMeta {
     data class TrackMeta(
         val title: String?,
         val artist: String?,
+        val album: String?,
         val durationMs: Long?
     )
 
@@ -54,11 +55,13 @@ object MediaTrackMeta {
         val artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST)
             ?: metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST)
             ?: metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)
+        val album = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM)
         val durationMs = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION)
 
         return TrackMeta(
             title = title?.takeIf { it.isNotBlank() },
             artist = artist?.takeIf { it.isNotBlank() },
+            album = album?.takeIf { it.isNotBlank() },
             durationMs = durationMs.takeIf { it > 0 }
         )
     }

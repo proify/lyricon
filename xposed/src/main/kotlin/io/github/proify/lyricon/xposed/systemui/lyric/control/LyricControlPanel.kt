@@ -8,13 +8,14 @@ package io.github.proify.lyricon.xposed.systemui.lyric.control
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.SystemClock
 import android.text.TextUtils
 import android.view.Gravity
@@ -27,6 +28,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.view.setPadding
 import io.github.proify.android.extensions.dp
+import io.github.proify.android.extensions.sp
 import io.github.proify.lyricon.lyric.model.Song
 import io.github.proify.lyricon.xposed.R
 import io.github.proify.lyricon.xposed.systemui.lyric.control.LyricControlPanel.Companion.NO_SEEK_TARGET
@@ -121,12 +123,10 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
         }
 
         titleView = MarqueeTitleView(context).apply {
-            textSize = TITLE_TEXT_SIZE_SP
-            setTextColor(TEXT_COLOR_PRIMARY)
-            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-            // 单行、ellipsize、滚动参数均由 MarqueeTitleView 内部管理，
-            // 此处不再设置，避免覆盖自驱动滚动实现
-
+            textSize = TITLE_TEXT_SIZE_SP.sp
+            textColor = TEXT_COLOR_PRIMARY
+            textTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            // 单行、滚动与渐隐参数均由 MarqueeTitleView 内部管理
         }
 
         artistView = TextView(context).apply {
@@ -137,14 +137,12 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
         }
 
         seekBar = SeekBar(context).apply {
-            progressTintList = ColorStateList.valueOf(TEXT_COLOR_PRIMARY)
-            thumbTintList = ColorStateList.valueOf(TEXT_COLOR_PRIMARY)
-            progressBackgroundTintList = ColorStateList.valueOf(SEEK_TRACK_COLOR)
-            thumb = GradientDrawable().apply {
-                shape = GradientDrawable.OVAL
-                setSize(SEEK_THUMB_SIZE_DP.dp, SEEK_THUMB_SIZE_DP.dp)
-                setColor(TEXT_COLOR_PRIMARY)
-            }
+            // 长圆形（胶囊）轨道：非 Material 细线，两端为半圆
+            progressDrawable = longRoundedTrack()
+            // 去掉拖动圆球（thumb），纯进度条；仍可点击/拖动轨道进行 seek
+            thumb = null
+            // 取消素材主题自带的按压圆形 ripple
+            background = null
             max = SEEK_MAX
             splitTrack = false
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -264,7 +262,8 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
         lastBoundTitle = titleText
         songDurationMs = newDurationMs
 
-        setTextIfChanged(titleView, titleText)
+        // 标题为自绘 View，其 text setter 内部已做"文本相同则不刷新"
+        titleView.text = titleText
 
         setTextIfChanged(artistView, artist)
         setTextIfChanged(totalTimeView, formatTime(songDurationMs))
@@ -315,6 +314,32 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
         card.background = ControlUi.roundedDrawable(color, CARD_RADIUS_DP.dp.toFloat())
     }
 
+    /**
+     * 长圆（胶囊）轨道 Drawable：底轨 + 已填充进度两层，两端为半圆。
+     * 每层以固定高度、垂直居中放置，避免 Material 细线样式。
+     */
+    private fun longRoundedTrack(): Drawable {
+        val h = LONG_ROUNDED_TRACK_HEIGHT_DP.dp
+        val radius = h / 2f
+        val track = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radius
+            setColor(SEEK_TRACK_COLOR)
+            setSize(0, h)
+        }
+        val fill = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radius
+            setColor(TEXT_COLOR_PRIMARY)
+            setSize(0, h)
+        }
+        val clip = ClipDrawable(fill, Gravity.START, ClipDrawable.HORIZONTAL)
+        val layers = LayerDrawable(arrayOf(track, clip))
+        layers.setLayerGravity(0, Gravity.CENTER_VERTICAL)
+        layers.setLayerGravity(1, Gravity.CENTER_VERTICAL)
+        return layers
+    }
+
     // -------------------------------------------------------------------------
     // 布局组装
     // -------------------------------------------------------------------------
@@ -331,7 +356,7 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply { weight = 1f }
-            clipChildren = false
+           // clipChildren = false
             clipToPadding = false
         }
         titleColumn.addView(titleView)
@@ -378,7 +403,7 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
         addActionSlot(row, previousButton)
         addActionSlot(row, playButton)
         addActionSlot(row, nextButton)
-        addActionSlot(row, aiButton, 28.dp)
+        addActionSlot(row, aiButton, 26.dp)
 
         card.addView(
             row,
@@ -445,7 +470,7 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
     // -------------------------------------------------------------------------
 
     private companion object {
-        const val CARD_RADIUS_DP = 32
+        const val CARD_RADIUS_DP = 28
         const val COVER_RADIUS_DP = 16
         const val COVER_SIZE_DP = 72
         const val CARD_PADDING_DP = 16
@@ -453,11 +478,13 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
         const val INFO_ROW_BOTTOM_PADDING_DP = 10
         const val TITLE_COLUMN_LEFT_PADDING_DP = 10
         const val SEEK_BAR_TOP_MARGIN_DP = 5
-        const val TIME_ROW_TOP_PADDING_DP = 4
-        const val ACTION_ROW_TOP_PADDING_DP = 5
+        const val TIME_ROW_TOP_PADDING_DP = 5
+        const val ACTION_ROW_TOP_PADDING_DP = 0
         const val ACTION_BUTTON_SIZE_DP = 36
-        const val SEEK_THUMB_SIZE_DP = 8
         const val SEEK_MAX = 1000
+
+        /** 长圆（胶囊）进度轨道高度（dp）。 */
+        const val LONG_ROUNDED_TRACK_HEIGHT_DP = 5
 
         /** 无 seek 锁定目标。 */
         const val NO_SEEK_TARGET = Long.MIN_VALUE
@@ -468,7 +495,7 @@ class LyricControlPanel(context: Context) : FrameLayout(context) {
         /** 判定"已到达 seek 目标"的容差（毫秒，覆盖 1s 位置上报粒度）。 */
         const val SEEK_TARGET_TOLERANCE_MS = 2000L
 
-        const val TITLE_TEXT_SIZE_SP = 18f
+        const val TITLE_TEXT_SIZE_SP = 17f
         const val ARTIST_TEXT_SIZE_SP = 14f
         const val TIME_TEXT_SIZE_SP = 11f
 

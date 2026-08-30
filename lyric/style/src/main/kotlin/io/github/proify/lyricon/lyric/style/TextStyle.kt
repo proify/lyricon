@@ -69,26 +69,13 @@ data class TextStyle(
         const val TRANSITION_CONFIG_SLOW: String = "slow"
         const val TRANSITION_CONFIG_NONE = "none"
 
-        const val KEY_AI_TRANSLATION_ENABLED = "lyric_style_text_ai_translation_enabled"
-        const val KEY_AI_TRANSLATION_PROVIDER = "lyric_style_text_ai_translation_provider"
-        const val KEY_AI_TRANSLATION_TARGET_LANGUAGE =
-            "lyric_style_text_ai_translation_target_language"
-        const val KEY_AI_TRANSLATION_TARGET_LANGUAGE_CODE =
-            "lyric_style_text_ai_translation_target_language_code"
-
-        const val KEY_AI_TRANSLATION_API_KEY = "lyric_style_text_ai_translation_key"
-        const val KEY_AI_TRANSLATION_MODEL = "lyric_style_text_ai_translation_model"
-        const val KEY_AI_TRANSLATION_BASE_URL = "lyric_style_text_ai_translation_base_url"
-
-        // const val KEY_AI_TRANSLATION_IGNORE_REGEX = "lyric_style_text_ai_translation_ignore_regex"
-        const val KEY_AI_TRANSLATION_PROMPT = "lyric_style_text_ai_translation_prompt"
-        const val KEY_AI_TRANSLATION_TEMPERATURE = "lyric_style_text_ai_translation_temperature"
-        const val KEY_AI_TRANSLATION_TOP_P = "lyric_style_text_ai_translation_top_p"
-        const val KEY_AI_TRANSLATION_MAX_TOKENS = "lyric_style_text_ai_translation_max_tokens"
-        const val KEY_AI_TRANSLATION_PRESENCE_PENALTY =
-            "lyric_style_text_ai_translation_presence_penalty"
-        const val KEY_AI_TRANSLATION_FREQUENCY_PENALTY =
-            "lyric_style_text_ai_translation_frequency_penalty"
+        // ===== AI 连接配置 keys 已迁移至 :lyric:ai（AiConfig） =====
+        // ===== AI 歌词翻译（功能级配置）=====
+        const val KEY_AI_TRANSLATION_ENABLED = "ai_translation_enabled"
+        const val KEY_AI_TRANSLATION_TARGET_LANGUAGE = "ai_translation_target_language"
+        const val KEY_AI_TRANSLATION_TARGET_LANGUAGE_CODE = "ai_translation_target_language_code"
+        const val KEY_AI_TRANSLATION_PROMPT = "ai_translation_prompt"
+        const val KEY_AI_TRANSLATION_IGNORE_CHINESE = "ai_translation_ignore_chinese"
 
         const val KEY_TEXT_TRANSLATION_ONLY = "lyric_style_text_translation_only"
         const val KEY_TEXT_TRANSLATION_DISABLE = "lyric_style_text_translation_disable"
@@ -99,9 +86,6 @@ data class TextStyle(
             "lyric_style_text_word_motion_latin_lift_factor"
         const val KEY_WORD_MOTION_LATIN_WAVE_FACTOR =
             "lyric_style_text_word_motion_latin_wave_factor"
-        const val KEY_AI_TRANSLATION_IGNORE_CHINESE: String =
-            "lyric_style_text_ai_translation_auto_ignore_chinese"
-
         const val KEY_ENABLED_ENTER_ANIM = "lyric_style_text_enable_enter_anim"
     }
 
@@ -115,8 +99,8 @@ data class TextStyle(
         const val TRANSLATION_ONLY: Boolean = false
         const val TRANSLATION_DISABLE: Boolean = false
 
+        // ===== AI 歌词翻译（功能级默认值）=====
         const val AI_TRANSLATION_ENABLED: Boolean = false
-        val AI_TRANSLATION_PROVIDER = AiTranslationProvider.OPENAI.provider
         val AI_TRANSLATION_TARGET_LANGUAGE_DISPLAY_NAME: String
             get() {
                 val locale = Locale.getDefault()
@@ -129,20 +113,11 @@ data class TextStyle(
                 }
             }
 
-        val AI_TRANSLATION_HOST: String by lazy {
-            val p = AiTranslationProvider.entries.find {
-                it.provider == AI_TRANSLATION_PROVIDER
-            }
-            p?.url.orEmpty()
-        }
-
-        val AI_TRANSLATION_MODEL: String = AiTranslationProvider.OPENAI.model
-        val AI_TRANSLATION_PROMPT: String = AiTranslationConfigs.USER_PROMPT
-        const val AI_TRANSLATION_TEMPERATURE = AiTranslationConfigs.DEFAULT_TEMPERATURE
-        const val AI_TRANSLATION_TOP_P = AiTranslationConfigs.DEFAULT_TOP_P
-        const val AI_TRANSLATION_MAX_TOKENS = AiTranslationConfigs.DEFAULT_MAX_TOKENS
-        const val AI_TRANSLATION_PRESENCE_PENALTY = AiTranslationConfigs.DEFAULT_PRESENCE_PENALTY
-        const val AI_TRANSLATION_FREQUENCY_PENALTY = AiTranslationConfigs.DEFAULT_FREQUENCY_PENALTY
+        const val AI_TRANSLATION_PROMPT: String =
+            "语境迁移：贴合背景、身份和情感。\n" +
+                    "隐喻转化：替换为本地惯用比喻，舍字面保意境。\n" +
+                    "曲风适配：民谣克制留白，摇滚直接锋利，说唱押韵顺 flow。\n" +
+                    "习惯优先：完全用目标语言习惯用语和自然语序，杜绝翻译腔。"
         const val AI_TRANSLATION_IGNORE_CHINESE = false
 
         const val PLACEHOLDER_FORMAT: String = PlaceholderFormat.NAME

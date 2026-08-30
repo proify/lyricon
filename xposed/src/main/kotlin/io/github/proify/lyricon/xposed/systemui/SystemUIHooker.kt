@@ -23,7 +23,7 @@ import io.github.proify.lyricon.subscriber.LyriconSubscriber
 import io.github.proify.lyricon.xposed.ModuleEntry
 import io.github.proify.lyricon.xposed.hook.PackageHooker
 import io.github.proify.lyricon.xposed.logger.YLog
-import io.github.proify.lyricon.xposed.systemui.aitrans.AITranslator
+import io.github.proify.lyricon.xposed.systemui.ai.translate.AiTranslator
 import io.github.proify.lyricon.xposed.systemui.hook.OplusCapsuleHooker
 import io.github.proify.lyricon.xposed.systemui.hook.StatusBarColorMonitor
 import io.github.proify.lyricon.xposed.systemui.hook.StatusBarDisableHooker
@@ -153,7 +153,7 @@ object SystemUIHooker : PackageHooker() {
         })
 
         StatusBarColorMonitor.initialize(module, classLoader)
-        AITranslator.init(context)
+        AiTranslator.init(context)
         SystemUIMediaUtils.init(context)
         StatusBarViewResolver.init(module, context)
     }
@@ -229,7 +229,7 @@ object SystemUIHooker : PackageHooker() {
             }
 
             onCommand(AppBridgeConstants.REQUEST_CLEAR_TRANSLATION_DB) {
-                AITranslator.clearCache { LyricDataHub.reprocessCurrentSong() }
+                AiTranslator.clearCache { LyricDataHub.reprocessCurrentSong() }
             }
         }
     }

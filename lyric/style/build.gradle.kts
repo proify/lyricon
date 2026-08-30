@@ -54,6 +54,7 @@ configure<LibraryExtension> {
 
 dependencies {
     implementation(project(":common"))
+    implementation(project(":lyric:ai"))
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)

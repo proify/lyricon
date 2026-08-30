@@ -28,7 +28,7 @@ object LyricDataProcessor {
 
     /** 注册后置加工插件列表 */
     private val postProcessors = listOf(
-        AiTranslationProcessor()
+        AiTranslationPostProcessor()
     ).sortedBy { it.priority }
 
     /**

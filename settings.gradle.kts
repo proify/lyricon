@@ -40,6 +40,7 @@ include(":lyric:bridge:localcentralapp")
 include(":lyric:model")
 include(":lyric:view")
 include(":lyric:style")
+include(":lyric:ai")
 include(":lyric:viewAppTest")
 include(":lyric:statusbarlyric")
 

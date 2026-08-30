@@ -6,9 +6,9 @@
 
 package io.proify.lyricon.xposed
 
+import io.github.proify.lyricon.lyric.ai.core.AiConfig
 import io.github.proify.lyricon.lyric.model.Song
-import io.github.proify.lyricon.lyric.style.AiTranslationConfigs
-import io.github.proify.lyricon.xposed.systemui.aitrans.AITranslator
+import io.github.proify.lyricon.xposed.systemui.ai.translate.AiTranslator
 import kotlinx.coroutines.runBlocking
 import org.junit.Assume
 import org.junit.Test
@@ -20,7 +20,7 @@ import org.junit.Test
  * 2. 语境关联（前后句是否押韵或语义连贯）
  * 3. 知名音乐 Benchmark 模仿能力
  */
-class AITranslatorManagerTest {
+class AiTranslatorManagerTest {
 
     @Test
     fun testLyricTranslation(): Unit = runBlocking {
@@ -28,11 +28,10 @@ class AITranslatorManagerTest {
         Assume.assumeTrue("AI_TRANSLATION_API_KEY is not set", !apiKey.isNullOrBlank())
 
         // 配置信息：建议使用支持长上下文的模型
-        val configs = AiTranslationConfigs(
+        val configs = AiConfig(
             apiKey = apiKey,
             provider = "openai",
             model = System.getenv("AI_TRANSLATION_MODEL") ?: "deepseek-chat",
-            targetLanguage = "中文",
             baseUrl = System.getenv("AI_TRANSLATION_BASE_URL") ?: "https://api.deepseek.com/v1"
         )
 
@@ -52,7 +51,7 @@ class AITranslatorManagerTest {
 
         println("--- Starting Translation Request ---")
 
-        val result = AITranslator.doOpenAiRequest(
+        val result = AiTranslator.doOpenAiRequest(
             configs = configs,
             song = mockSong,
             texts = testLyrics
@@ -63,7 +62,7 @@ class AITranslatorManagerTest {
             val original = testLyrics[item.index]
             println("[ID:${item.index}]")
             println("Original: $original")
-            println("Singable: ${item.tran}")
+            println("Singable: ${item.translation}")
             println("--------------------------")
         }
     }

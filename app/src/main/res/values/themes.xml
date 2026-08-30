@@ -20,4 +20,20 @@
     <style name="Theme.SplashScreen.DayNight" parent="Theme.DayNight" />
 
     <style name="Theme.SplashScreen" parent="Theme.SplashScreen.DayNight" />
+
+    <style name="Theme.Translucent" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <!-- 系统栏透明：让弹层直接叠在当前应用之上，不再出现黑状态栏。
+             注意不要使用 windowTranslucentStatus/WindowTranslucentNavigation（老式半透明黑 scrim），
+             也不要让系统叠加对比度 scrim（enforceStatusBarContrast）。 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+<!--        <item name="android:windowEnforceStatusBarContrast">false</item>-->
+<!--        <item name="android:windowEnforceNavigationBarContrast">false</item>-->
+    </style>
 </resources>

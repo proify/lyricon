@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/bridge" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/lyric" />
+            <option value="$PROJECT_DIR$/lyric/ai" />
             <option value="$PROJECT_DIR$/lyric/bridge" />
             <option value="$PROJECT_DIR$/lyric/bridge/central" />
             <option value="$PROJECT_DIR$/lyric/bridge/centralapp" />
