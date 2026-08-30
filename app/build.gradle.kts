@@ -27,18 +27,6 @@ configure<LibraryExtension> {
         buildConfigField("long", "BUILD_TIME", "${buildTime}L")
     }
 
-    flavorDimensions += "locale"
-    productFlavors {
-        create("standard") {
-            dimension = "locale"
-            buildConfigField("boolean", "ENABLE_CHINESE_CONVERSION", "false")
-        }
-        create("zh") {
-            dimension = "locale"
-            buildConfigField("boolean", "ENABLE_CHINESE_CONVERSION", "true")
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false

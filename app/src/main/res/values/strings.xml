@@ -38,6 +38,14 @@
     <string name="activity_basic_settings">Basic Settings</string>
     <string name="activity_app_style_manager">App style manager</string>
     <string name="activity_lyric_provider_services">Lyric Providers</string>
+    <string name="activity_ai_laboratory">AI Laboratory</string>
+    <string name="item_ai_laboratory">AI Laboratory</string>
+    <string name="item_summary_ai_laboratory">Configure AI translation and lyric explanation</string>
+    <string name="section_ai_laboratory">AI Laboratory</string>
+    <string name="item_ai_laboratory_summary">All AI features (translation and lyric explanation) are managed here. They share the same OpenAI-compatible configuration below.</string>
+    <string name="section_ai_explain">Lyric explanation</string>
+    <string name="item_ai_explain">Explain lyrics with AI</string>
+    <string name="item_ai_explain_summary">Tap the status-bar lyric to open the control window, then tap “Use AI to explain this lyric”. The current lyric and its context are sent to the configured AI service.</string>
     <string name="activity_open_source_licenses">Open-source licenses</string>
     <string name="item_basic_settings">Basic settings</string>
     <string name="item_summary_basic_settings">Set lyric position, size and status-bar display rules</string>

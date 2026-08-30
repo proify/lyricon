@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     id("com.vanniktech.maven.publish") version "0.37.0" apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
-    id("com.mikepenz.aboutlibraries.plugin.android") version "15.0.4" apply false
+    id("com.mikepenz.aboutlibraries.plugin.android") version "15.1.1" apply false
 }
 
 extra["appPackageName"] = "io.github.proify.lyricon"
@@ -17,9 +17,9 @@ extra["compileSdkVersion"] = 37
 extra["targetSdkVersion"] = 37
 extra["minSdkVersion"] = 29
 
-extra["providerSdkVersion"] = "0.1.71"
-extra["subscriberSdkVersion"] = "0.1.71"
-extra["lyricModelVersion"] = "0.1.71"
+extra["providerSdkVersion"] = "0.1.80"
+extra["subscriberSdkVersion"] = "0.1.80"
+extra["lyricModelVersion"] = "0.1.80"
 
 // apk自动导出
 /**

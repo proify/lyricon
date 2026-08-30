@@ -38,26 +38,15 @@ configure<ApplicationExtension> {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        androidResources {
-            @Suppress("UnstableApiUsage")
-            localeFilters += listOf(
-                "en",
-                "zh-rCN",
-                "zh-rTW",
-                "zh-rHK"
-            )
-        }
-    }
-
-    flavorDimensions += "locale"
-    productFlavors {
-        create("standard") {
-            dimension = "locale"
-        }
-        create("zh") {
-            dimension = "locale"
-            versionNameSuffix = "-zh"
-        }
+//        androidResources {
+//            @Suppress("UnstableApiUsage")
+//            localeFilters += listOf(
+//                "en",
+//                "zh-rCN",
+//                "zh-rTW",
+//                "zh-rHK"
+//            )
+//        }
     }
 
     signingConfigs {

@@ -38,6 +38,14 @@
     <string name="activity_basic_settings">基本设置</string>
     <string name="activity_app_style_manager">应用样式管理</string>
     <string name="activity_lyric_provider_services">歌词提供服务</string>
+    <string name="activity_ai_laboratory">AI 实验室</string>
+    <string name="item_ai_laboratory">AI 实验室</string>
+    <string name="item_summary_ai_laboratory">配置 AI 翻译与歌词解读</string>
+    <string name="section_ai_laboratory">AI 实验室</string>
+    <string name="item_ai_laboratory_summary">所有 AI 功能（翻译、歌词解读）都集中在此管理，共用下方同一套 OpenAI 兼容配置。</string>
+    <string name="section_ai_explain">歌词解读</string>
+    <string name="item_ai_explain">用 AI 解读歌词</string>
+    <string name="item_ai_explain_summary">点击状态栏歌词打开控制窗口，再点“用 AI 解释这段歌词”。当前歌词及其上下文会发送给配置的 AI 服务。</string>
     <string name="activity_open_source_licenses">开放源代码许可</string>
     <string name="item_basic_settings">基本设置</string>
     <string name="item_summary_basic_settings">歌词位置、大小及状态栏显示规则</string>

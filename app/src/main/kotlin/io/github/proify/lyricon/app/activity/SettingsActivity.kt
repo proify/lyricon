@@ -41,7 +41,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.SpinnerEntry
+import top.yukonga.miuix.kmp.basic.DropdownItem
 import top.yukonga.miuix.kmp.preference.ArrowPreference
 import top.yukonga.miuix.kmp.preference.OverlayDropdownPreference
 import top.yukonga.miuix.kmp.preference.OverlaySpinnerPreference
@@ -258,7 +258,7 @@ class SettingsActivity : BaseActivity() {
                 val primaryName = context.resolveLanguageName(code)
                 val fallbackName =
                     context.resolveLanguageName(code, AppLangUtils.DEFAULT_LOCALE)
-                SpinnerEntry(
+                DropdownItem(
                     title = primaryName,
                     summary = if (primaryName == fallbackName) null else fallbackName
                 )

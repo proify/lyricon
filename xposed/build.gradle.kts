@@ -25,16 +25,6 @@ configure<LibraryExtension> {
         )
     }
 
-    flavorDimensions += "locale"
-    productFlavors {
-        create("standard") {
-            dimension = "locale"
-        }
-        create("zh") {
-            dimension = "locale"
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -63,7 +53,7 @@ dependencies {
     implementation(project(":lyric:style"))
     implementation(project(":lyric:statusbarlyric"))
     implementation(project(":lyric:bridge:central"))
-    "zhImplementation"(project(":opencc-lite"))
+    implementation(project(":opencc-lite"))
 
     compileOnly(libs.libxposed.api)
     implementation(libs.libxposed.service)

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2026 Proify, Tomakino
+  ~ Licensed under the Apache License, Version 2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  -->
+<resources>
+    <string name="yoyo_default">標準</string>
+    <string name="yoyo_fade_out_fade_in">フェード</string>
+    <string name="yoyo_fade_out_up_fade_in_up">ライズフェード</string>
+    <string name="yoyo_fade_out_down_fade_in_down">ドロップフェード</string>
+    <string name="yoyo_fade_out_left_fade_in_right">スライド横断</string>
+    <string name="yoyo_fade_out_left_fade_in_up">左から上へスライド</string>
+    <string name="yoyo_fade_out_left_zoom_in">左ズームイン</string>
+    <string name="yoyo_fade_out_left_landing">ソフト左着地</string>
+    <string name="yoyo_fade_out_right_fade_in_left">逆向きスライド横断</string>
+    <string name="yoyo_fade_out_right_fade_in_up">右から上へスライド</string>
+    <string name="yoyo_fade_out_right_zoom_in">右ズームイン</string>
+    <string name="yoyo_fade_out_right_landing">ソフト右着地</string>
+    <string name="yoyo_fade_out_left_zoom_in_right">左から右へズーム</string>
+    <string name="yoyo_fade_out_right_zoom_in_left">右から左へズーム</string>
+    <string name="yoyo_slide_out_left_slide_in_right">左から右へプッシュ</string>
+    <string name="yoyo_slide_out_left_fade_in_up">左から上へスライド</string>
+    <string name="yoyo_slide_out_left_zoom_in">左プッシュズーム</string>
+    <string name="yoyo_slide_out_left_landing">左ソフト着地</string>
+    <string name="yoyo_slide_out_right_slide_in_left">右から左へプッシュ</string>
+    <string name="yoyo_slide_out_right_fade_in_up">右から上へスライド</string>
+    <string name="yoyo_slide_out_right_zoom_in">右プッシュズーム</string>
+    <string name="yoyo_slide_out_right_landing">右ソフト着地</string>
+    <string name="yoyo_flip_out_x_flip_in_x">横方向に反転</string>
+    <string name="yoyo_flip_out_y_flip_in_y">縦方向に反転</string>
+    <string name="yoyo_rotate_out_rotate_in">回転</string>
+    <string name="yoyo_zoom_out_zoom_in">ズーム</string>
+</resources>

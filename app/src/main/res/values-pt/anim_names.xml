@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2026 Proify, Tomakino
+  ~ Licensed under the Apache License, Version 2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  -->
+<resources>
+    <string name="yoyo_default">Padrão</string>
+    <string name="yoyo_fade_out_fade_in">Dissolver</string>
+    <string name="yoyo_fade_out_up_fade_in_up">Dissolver ascendente</string>
+    <string name="yoyo_fade_out_down_fade_in_down">Dissolver descendente</string>
+    <string name="yoyo_fade_out_left_fade_in_right">Deslizar horizontal</string>
+    <string name="yoyo_fade_out_left_fade_in_up">Deslizar para cima pela esquerda</string>
+    <string name="yoyo_fade_out_left_zoom_in">Zoom pela esquerda</string>
+    <string name="yoyo_fade_out_left_landing">Pouso suave à esquerda</string>
+    <string name="yoyo_fade_out_right_fade_in_left">Deslizar horizontal inverso</string>
+    <string name="yoyo_fade_out_right_fade_in_up">Deslizar para cima pela direita</string>
+    <string name="yoyo_fade_out_right_zoom_in">Zoom pela direita</string>
+    <string name="yoyo_fade_out_right_landing">Pouso suave à direita</string>
+    <string name="yoyo_fade_out_left_zoom_in_right">Zoom da esquerda para a direita</string>
+    <string name="yoyo_fade_out_right_zoom_in_left">Zoom da direita para a esquerda</string>
+    <string name="yoyo_slide_out_left_slide_in_right">Empurrar da esquerda para a direita</string>
+    <string name="yoyo_slide_out_left_fade_in_up">Deslizar para cima pela esquerda</string>
+    <string name="yoyo_slide_out_left_zoom_in">Zoom de empurrão pela esquerda</string>
+    <string name="yoyo_slide_out_left_landing">Pouso suave à esquerda</string>
+    <string name="yoyo_slide_out_right_slide_in_left">Empurrar da direita para a esquerda</string>
+    <string name="yoyo_slide_out_right_fade_in_up">Deslizar para cima pela direita</string>
+    <string name="yoyo_slide_out_right_zoom_in">Zoom de empurrão pela direita</string>
+    <string name="yoyo_slide_out_right_landing">Pouso suave à direita</string>
+    <string name="yoyo_flip_out_x_flip_in_x">Virar horizontalmente</string>
+    <string name="yoyo_flip_out_y_flip_in_y">Virar verticalmente</string>
+    <string name="yoyo_rotate_out_rotate_in">Girar</string>
+    <string name="yoyo_zoom_out_zoom_in">Zoom</string>
+</resources>

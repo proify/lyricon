@@ -32,6 +32,7 @@ import io.github.proify.lyricon.xposed.systemui.hook.ClockViewFinder
 import io.github.proify.lyricon.xposed.systemui.hook.OplusCapsuleHooker
 import io.github.proify.lyricon.xposed.systemui.hook.StatusBarColorMonitor
 import io.github.proify.lyricon.xposed.systemui.lyric.LyricViewController.isPlaying
+import io.github.proify.lyricon.xposed.systemui.lyric.control.LyricControlPopup
 import io.github.proify.lyricon.xposed.systemui.util.OnColorChangeListener
 import io.github.proify.lyricon.xposed.systemui.util.ViewVisibilityController
 import java.io.File
@@ -86,6 +87,11 @@ class StatusBarViewController(
         ScreenStateMonitor.addListener(this)
         lyricView.onPlayingChanged = { _ -> }
 
+        // 点击状态栏歌词 -> 弹出 iOS 质感控制窗口（含 AI 解释歌词）
+        lyricView.setOnClickListener { v ->
+            LyricControlPopup.show(v)
+        }
+
         StatusBarColorMonitor.bindStatusBar(statusBarView)
         colorMonitorView = getClockView()
         StatusBarColorMonitor.bindClockView(colorMonitorView)
@@ -101,6 +107,8 @@ class StatusBarViewController(
         lyricView.removeOnAttachStateChangeListener(lyricAttachListener)
         ScreenStateMonitor.removeListener(this)
         lyricView.onPlayingChanged = null
+        lyricView.setOnClickListener(null)
+        LyricControlPopup.dismissIfOwnedBy(lyricView)
         StatusBarColorMonitor.removeListener(colorChangeListener)
         colorMonitorView?.let { StatusBarColorMonitor.unbindClockView(it) }
         colorMonitorView = null

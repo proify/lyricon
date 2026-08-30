@@ -46,6 +46,10 @@ object LyricDataHub : ActivePlayerListener {
         listeners.add(listener)
     }
 
+    fun removeListener(listener: ActivePlayerListener) {
+        listeners.remove(listener)
+    }
+
     /**
      * 启动后台加工流水线。
      * 所有歌词加工都在后台协程执行，避免阻塞播放器回调线程。

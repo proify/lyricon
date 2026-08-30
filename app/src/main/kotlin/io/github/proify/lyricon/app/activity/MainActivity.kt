@@ -64,6 +64,7 @@ import io.github.proify.lyricon.app.LyriconApp
 import io.github.proify.lyricon.app.LyriconApp.Companion.addXposedServiceStateListener
 import io.github.proify.lyricon.app.LyriconApp.Companion.removeXposedServiceStateListener
 import io.github.proify.lyricon.app.R
+import io.github.proify.lyricon.app.activity.lyric.AiLaboratoryActivity
 import io.github.proify.lyricon.app.activity.lyric.BasicLyricStyleActivity
 import io.github.proify.lyricon.app.activity.lyric.pkg.PackageStyleActivity
 import io.github.proify.lyricon.app.activity.lyric.provider.LyricProviderActivity
@@ -638,6 +639,21 @@ class MainActivity : BaseActivity(), LyriconApp.XposedServiceStateListener {
         Card(
             modifier = modifier
         ) {
+            ArrowPreference(
+                startAction = {
+                    ColoredIconBox(
+                        Modifier,
+                        MaterialPalette.Purple.Primary,
+                        R.drawable.psychology_24px
+                    )
+                },
+                title = stringResource(id = R.string.item_ai_laboratory),
+                summary = stringResource(id = R.string.item_summary_ai_laboratory),
+                onClick = {
+                    context.startActivity(Intent(context, AiLaboratoryActivity::class.java))
+                }
+            )
+
             ArrowPreference(
                 startAction = {
                     ColoredIconBox(

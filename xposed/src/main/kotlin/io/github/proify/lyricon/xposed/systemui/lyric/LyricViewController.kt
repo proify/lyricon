@@ -54,7 +54,13 @@ object LyricViewController : ActivePlayerListener,
 
     /** 当前歌曲的逻辑播放进度（毫秒） */
     @Volatile
-    private var currentLogicPosition: Long = 0
+    var currentLogicPosition: Long = 0
+        private set
+
+    /** 当前播放歌曲（已加工），供控制窗口读取歌名/歌手/歌词 */
+    @Volatile
+    var currentSong: Song? = null
+        private set
 
     /** 用于处理 UI 刷新任务的 Handler */
     private val mainHandler by lazy { Handler(MAIN_LOOPER) }
@@ -83,6 +89,7 @@ object LyricViewController : ActivePlayerListener,
      */
     override fun onSongChanged(song: Song?) {
         YLog.info(TAG, "onSongChanged: $song")
+        this.currentSong = song
 
         updateAllControllers {
             lyricView.setSong(song)
